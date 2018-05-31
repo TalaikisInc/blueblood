@@ -1,0 +1,26 @@
+{
+  "name": "blueblood",
+  "version": "1.0.0",
+  "description": "```\r npm i\r npm start\r ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BlueBloodLtd/blueblood.git"
+  },
+  "author": "Tadas Talaikis <info@talaikis.com>",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/BlueBloodLtd/blueblood/issues"
+  },
+  "homepage": "https://github.com/BlueBloodLtd/blueblood#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "jest": "^23.1.0"
+  },
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
