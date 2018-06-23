@@ -1,6 +1,2 @@
-node_modules/
 .env
-src/contracts/
-build/
-cypress/videos/
-cypress/screenshots/
+api/

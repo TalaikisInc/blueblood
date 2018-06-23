@@ -4,19 +4,14 @@
   </a>
 </p>
 
-# [Blue Blood Server](https://blueblood.ltd/)
+# Blue Blood Engine
 
-## How to start
+Blue Blood Engine is a set of trading related software.
 
-```
-npm i
-npm start
-```
-
-## Deploy live
+## Install
 
 ```
-./build.sh [folder] [port] install
+pip install -r requirements.txt
 ```
 
 ## License
