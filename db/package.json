@@ -1,0 +1,19 @@
+{
+  "name": "db-connector",
+  "version": "1.0.0",
+  "description": "Blue Blood Db connector",
+  "main": "conn.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BlueBloodLtd/blueblood/db"
+  },
+  "author": "Tadas Talaikis",
+  "license": "LGPL-v3.0",
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "pg": "^7.4.3"
+  }
+}
