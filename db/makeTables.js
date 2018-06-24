@@ -7,7 +7,13 @@ const createTables = `
 
     CREATE TABLE IF NOT EXISTS contracts (
         addr varchar(42) PRIMARY KEY,
-        byteCode text
+        byteCode text,
+        balance NUMERIC CHECK (balance > 0.5)
+    );
+
+    CREATE TABLE IF NOT EXISTS addrs (
+        addr varchar(42) PRIMARY KEY,
+        balance NUMERIC CHECK (balance > 0.5)
     );
 `
 
