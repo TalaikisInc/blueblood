@@ -4,6 +4,7 @@
   "description": "Blue Blood Db connector",
   "main": "conn.js",
   "scripts": {
+    "start": "node makeTables.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -11,9 +12,12 @@
     "url": "https://github.com/BlueBloodLtd/blueblood/db"
   },
   "author": "Tadas Talaikis",
-  "license": "LGPL-v3.0",
+  "license": "LGPLv3",
   "dependencies": {
     "dotenv": "^6.0.0",
     "pg": "^7.4.3"
+  },
+  "devDependencies": {
+    "eslint": "^5.0.0"
   }
 }

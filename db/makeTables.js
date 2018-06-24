@@ -1,21 +1,17 @@
-const client = './conn'
+const client = require('./conn')
 
 const createTables = `
-    CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-
     CREATE TABLE IF NOT EXISTS blocks (
-        PRIMARY KEY block integer
+        block integer PRIMARY KEY
     );
 
     CREATE TABLE IF NOT EXISTS contracts (
-        PRIMARY KEY addr varchar(42),
+        addr varchar(42) PRIMARY KEY,
         byteCode text
-    );
-
-    CREATE TABLE IF NOT EXISTS users (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        data JSONB
     );
 `
 
-await client.query(createTableText)
+client.query(createTables, (err, res) => {
+  console.log(err ? err.message : res)
+  client.end()
+})
