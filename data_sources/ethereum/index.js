@@ -8,13 +8,38 @@ const chalk = require('chalk')
 let blockNum = 0
 client.query('SELECT block FROM blocks ORDER BY block DESC LIMIT 1', (err, res) => {
   if (!err) {
-    blockNum = res.rows[0].block + 2
+    blockNum = res.rows[0] ? res.rows[0].block : 0
   } else {
     console.log(chalk.red(err.message))
   }
 })
 
-const collectContracts = async () => {
+const getBalance = async (client, tx) => {
+  await web3.eth.getBalance(tx.to, (err, balance) => {
+    if (!err) {
+      client.query('INSERT INTO addrs(addr, balance) VALUES($1, $2)', [tx.to, balance], (err, res) => {
+        console.log(err ? chalk.red(err.message) : chalk.green(`Addr: ${tx.to}`))
+      })
+    } else {
+      console.log(chalk.red(err.message))
+    }
+  })
+  return balance
+}
+
+const getCodes = async (client, balance, tx) => {
+  await web3.eth.getCode(tx.to, (err, code) => {
+    if (!err) {
+      client.query('INSERT INTO contracts(addr, balance, byteCode) VALUES($1, $2, $3)', [tx.to, balance, code], (err, res) => {
+        console.log(err ? chalk.red(err.message) : chalk.green(`Block: ${blck}`))
+      })
+    } else {
+      console.log(chalk.red(err.message))
+    }
+  })
+}
+
+const collect = async () => {
   while (true) {
     let blck = blockNum++
     let block = await web3.eth.getBlock(blck)
@@ -23,17 +48,10 @@ const collectContracts = async () => {
     }
 
     for(let i = 0; i < block.transactions.length; i++) {
-      let tx = web3.eth.getTransaction(block.transactions[i])
+      let tx = await web3.eth.getTransaction(block.transactions[i])
       if (parseInt(tx.value) > 0) {
-        web3.eth.getCode(tx.to, (err, code) => {
-          if (!err) {
-            client.query('INSERT INTO contracts(addr, byteCode) VALUES($1, $2)', [tx.to, code], (err, res) => {
-              console.log(err ? chalk.red(err.message) : chalk.green(`Block: ${blck}`))
-            })
-          } else {
-            console.log(chalk.red(err.message))
-          }
-        })
+        const balance = await getBalance(client, tx)
+        await getCodes(client, balance, tx)
       }
     }
 
@@ -45,4 +63,4 @@ const collectContracts = async () => {
   client.end()
 }
 
-collectContracts()
+collect()
