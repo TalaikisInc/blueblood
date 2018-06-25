@@ -1,1 +1,5 @@
 pandas==0.23.1
+beautifulsoup4
+requests
+psycopg2
+python-dotenv

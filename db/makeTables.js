@@ -13,6 +13,11 @@ const createTables = `
         byteCode text NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS verified_contracts (
+        addr varchar(42) PRIMARY KEY,
+        code text NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS addrs (
         addr varchar(42) PRIMARY KEY,
         balance NUMERIC CHECK (balance > 0.5)
