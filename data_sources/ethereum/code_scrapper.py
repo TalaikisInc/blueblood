@@ -1,5 +1,6 @@
 from os.path import join, dirname, abspath
 from os import getenv
+from time import sleep
 
 from requests import Session, get
 from bs4 import BeautifulSoup
@@ -31,9 +32,17 @@ def getContracts(sess, page=1):
 
 def saveContract(sess, contract):
     page = getPage(sess, 'address', contract['Address']).find('pre')
-    cur = conn.cursor()
-    sql = "INSERT INTO verified_contracts (addr, code) VALUES (%s, %s);"
-    cur.execute(sql, (contract['Address'], page.contents[0]))
+    try:
+        cur = conn.cursor()
+        sql = "INSERT INTO verified_contracts (addr, code) VALUES (%s, %s);"
+        print('Address' , contract['Address'])
+        print('Code' , page.contents[0])
+        cur.execute(sql, (contract['Address'], page.contents[0]))
+        conn.commit()
+        cur.close()
+    except Exception as err:
+        print(err)
+        conn.rollback()
 
 
 def main():
@@ -46,10 +55,9 @@ def main():
         for contract in getContracts(sess, pageno):
             try:
                 saveContract(sess, contract)
-                conn.commit()
             except Exception as err:
                 print(err)
-    cur.close()
+            sleep(5)
     conn.close()
 
 if __name__ == "__main__":
