@@ -25,9 +25,15 @@ def getPage(sess, *args):
 
 
 def getContracts(sess, page=1):
-    table = getPage(sess, 'contractsVerified', str(int(page))).find('table')
-    headings = [X.text for X in table.find('thead').find_all('th')]
-    return [dict(zip(headings, [X.text.strip() for X in row.find_all('td')])) for row in table.find('tbody').find_all('tr')]
+    print('Page:', page)
+    try:
+        table = getPage(sess, 'contractsVerified', str(int(page))).find('table')
+        headings = [X.text for X in table.find('thead').find_all('th')]
+        lst = [dict(zip(headings, [X.text.strip() for X in row.find_all('td')])) for row in table.find('tbody').find_all('tr')]
+    except Exception as err:
+        print(err)
+        lst = []
+    return lst
 
 
 def saveContract(sess, contract):
@@ -35,8 +41,7 @@ def saveContract(sess, contract):
     try:
         cur = conn.cursor()
         sql = "INSERT INTO verified_contracts (addr, code) VALUES (%s, %s);"
-        print('Address' , contract['Address'])
-        print('Code' , page.contents[0])
+        # print('Code' , page.contents[0])
         cur.execute(sql, (contract['Address'], page.contents[0]))
         conn.commit()
         cur.close()
@@ -49,7 +54,7 @@ def main():
     resp = get(ETHERSCAN_URL + "contractsVerified")
     sess = Session()
 
-    pageno = 0
+    pageno = 805
     while True:
         pageno += 1
         for contract in getContracts(sess, pageno):

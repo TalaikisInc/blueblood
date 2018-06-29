@@ -1,7 +1,12 @@
-pandas==0.23.1
+numpy
+pandas
 beautifulsoup4
 requests
 psycopg2
 python-dotenv
 cython
 TA-Lib
+sklearn
+scipy
+dask
+pymc3

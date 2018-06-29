@@ -15,6 +15,8 @@ client.query('SELECT block FROM blocks ORDER BY block DESC LIMIT 1', (err, res) 
 })
 
 const getBalance = async (client, tx) => {
+  console.log('on get bal')
+  consle.log(tx.to)
   await web3.eth.getBalance(tx.to, (err, balance) => {
     if (!err) {
       client.query('INSERT INTO addrs(addr, balance) VALUES($1, $2)', [tx.to, balance], (err, res) => {
@@ -28,6 +30,8 @@ const getBalance = async (client, tx) => {
 }
 
 const getCodes = async (client, balance, tx) => {
+  console.log('on get codes')
+  consle.log(tx.to)
   await web3.eth.getCode(tx.to, (err, code) => {
     if (!err) {
       client.query('INSERT INTO contracts(addr, balance, byteCode) VALUES($1, $2, $3)', [tx.to, balance, code], (err, res) => {
@@ -46,10 +50,20 @@ const collect = async () => {
     if (!block) {
       break
     }
+    console.log('here')
+    console.log('len')
+    console.log(block.transactions.length)
 
     for(let i = 0; i < block.transactions.length; i++) {
+      console.log(i)
+      console.log('tx')
+      console.log(block.transactions[i])
       let tx = await web3.eth.getTransaction(block.transactions[i])
+      console.log('tx')
+      console.log(tx)
       if (parseInt(tx.value) > 0) {
+        console.log('value')
+        console.log(parseInt(tx.value))
         const balance = await getBalance(client, tx)
         await getCodes(client, balance, tx)
       }
