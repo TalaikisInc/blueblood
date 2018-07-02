@@ -7,6 +7,7 @@ import chalk
 from requests import get
 from peewee import IntegrityError
 
+from db.models.base import DB
 from db.models.reddit import RedditKeyword, RedditComment
 
 def request(start_date, end_date, size, keyword):
@@ -20,22 +21,22 @@ def request(start_date, end_date, size, keyword):
     return r.json()
 
 def insert(data, keyword):
-  RedditComment.create(
-      comment_id=data["id"],
-      keyword=keyword[0],
-      content=data["body"],
-      sentiment=0,
-      created_date=datetime.fromtimestamp(data["created_utc"]))
+  try:
+      RedditComment.create(
+          comment_id=data["id"],
+          keyword=keyword[0],
+          content=data["body"],
+          sentiment=0,
+          created_date=datetime.fromtimestamp(data["created_utc"]))
+  except IntegrityError:
+      DB.rollback()
+  except Exception as err:
+      print(chalk.red(err))
 
 def create(keyword, data):
-    try:
-        if len(data["body"]) > 100:
-            key = RedditKeyword.get_or_create(keyword=keyword)
-            insert(data=data, keyword=key)
-    except IntegrityError:
-      pass
-    except Exception as err:
-      print(chalk.red(err))
+    if len(data["body"]) > 100:
+        key = RedditKeyword.get_or_create(keyword=keyword)
+        insert(data=data, keyword=key)
 
 def count():
     pass
@@ -45,24 +46,13 @@ def analyze():
 
 def run():
     keywords = ["hodl"]
-    parts = [
-      ("365d", "335d"),
-      ("335d", "305d"),
-      ("305d", "275d"),
-      ("275d", "245d"),
-      ("245d", "215d"),
-      ("215d", "175d"),
-      ("175d", "145d"),
-      ("115d", "85d"),
-      ("85d", "55d"),
-      ("55d", "25d"),
-      ("25d", "0d")
-      ]
     for keyword in keywords:
-      for part in parts:
-        data = request(start_date=part[0], end_date=part[1], size=500, keyword=keyword)
+      for i in range(0, 365):
+        s = i + 1
+        part = ("{0}d".format(s), "{0}d".format(i))
+        print(part)
+        data = request(start_date=part[0], end_date=part[1], size=100, keyword=keyword)
         for row in data["data"]:
-            print(row)
             create(keyword="bitcoin", data=row)
 
 run()
