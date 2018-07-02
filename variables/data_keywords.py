@@ -1,1 +1,2 @@
 REDDIT_KEYWORDS = ["hodl", "bitcoin"]
+FRED_KEYWORDS = ["GDP", "WLEMUINDXD"]

@@ -2,3 +2,5 @@
 api/
 storage/data/
 models/
+variables/
+.pyc
