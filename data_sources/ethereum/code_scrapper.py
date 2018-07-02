@@ -15,6 +15,7 @@ conn = connect("dbname={0} user={1} password={2} host={3} port={4}".format(
     getenv("PG_SERVER"),
     getenv("PG_PORT")
 ))
+
 ETHERSCAN_URL = "https://etherscan.io/"
 
 

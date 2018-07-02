@@ -2,7 +2,6 @@ beautifulsoup4
 requests
 psycopg2
 python-dotenv
-cython
-TA-Lib
 dask
-pymc3
+peewee
+pychalk

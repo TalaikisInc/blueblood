@@ -3,26 +3,6 @@ const assert = require('assert')
 assert.equal(typeof process.env.ENCODING_SECRET, 'string', 'You should set database encryption password')
 
 const createTables = `
-    CREATE TABLE IF NOT EXISTS blocks (
-        block integer PRIMARY KEY
-    );
-
-    CREATE TABLE IF NOT EXISTS contracts (
-        addr varchar(42) PRIMARY KEY,
-        balance NUMERIC CHECK (balance > 0.5),
-        byteCode text NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS verified_contracts (
-        addr varchar(42) PRIMARY KEY,
-        code text NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS addrs (
-        addr varchar(42) PRIMARY KEY,
-        balance NUMERIC CHECK (balance > 0.5)
-    );
-
     CREATE SCHEMA IF NOT EXISTS basic_auth;
 
     CREATE TABLE IF NOT EXISTS basic_auth.users (
