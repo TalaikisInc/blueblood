@@ -27,12 +27,25 @@ pip install -r requirements.txt
 
 ## Start
 
-Create (Postgres) database 'blueblood'.
+Edit .env, create (Postgres) database 'blueblood', then:
 
 ```
 cd db
 node makeTables.js
+cd ../models
+python create_tables.py
 ```
+
+
+## Modules
+
+1. Data collection.
+2. Alpha models.
+3. Risk models.
+4. Index models.
+5. Execution models.
+6. Statistics.
+7. Watchdogs.
 
 ## License
 

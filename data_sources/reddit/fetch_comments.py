@@ -9,6 +9,7 @@ from peewee import IntegrityError
 
 from db.models.base import DB
 from db.models.reddit import RedditKeyword, RedditComment
+from variables.data_keywords import REDDIT_KEYWORDS
 
 def request(start_date, end_date, size, keyword):
     payload = {
@@ -45,13 +46,12 @@ def analyze():
   pass
 
 def run():
-    keywords = ["hodl"]
-    for keyword in keywords:
+    for keyword in REDDIT_KEYWORDS:
       for i in range(0, 365):
         s = i + 1
         part = ("{0}d".format(s), "{0}d".format(i))
         print(part)
-        data = request(start_date=part[0], end_date=part[1], size=100, keyword=keyword)
+        data = request(start_date=part[0], end_date=part[1], size=500, keyword=keyword)
         for row in data["data"]:
             create(keyword="bitcoin", data=row)
 

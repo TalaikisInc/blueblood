@@ -1,0 +1,1 @@
+REDDIT_KEYWORDS = ["hodl", "bitcoin"]
