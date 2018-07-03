@@ -6,3 +6,4 @@ dask
 peewee
 pychalk
 ccxt
+nltk
