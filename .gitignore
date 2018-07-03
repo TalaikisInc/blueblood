@@ -1,6 +1,5 @@
 .env
 api/
-storage/
 *.csv
 *.pkl
 *.json
@@ -9,3 +8,4 @@ app/utils/
 app/variables/
 .pyc
 logs_file
+app/storage/

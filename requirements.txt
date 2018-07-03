@@ -7,3 +7,4 @@ peewee
 pychalk
 ccxt
 nltk
+git+https://github.com/n1analytics/python-paillier
