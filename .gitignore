@@ -9,3 +9,4 @@ app/variables/
 .pyc
 logs_file
 app/storage/
+*.whl
