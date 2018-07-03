@@ -1,6 +1,7 @@
 .env
 api/
-storage/data/
-models/
-variables/
+storage/
+app/features/
+app/utils/
+app/variables/
 .pyc
