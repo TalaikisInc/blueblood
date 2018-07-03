@@ -1,12 +1,10 @@
 .env
 api/
-.pkl
-.json
 app/features/
 app/utils/
 app/variables/
 .pyc
 logs_file
 app/storage/
-.whl
+*.whl
 *.csv

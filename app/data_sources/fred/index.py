@@ -11,3 +11,10 @@ fred = Fred(api_key=getenv("FRED_API_KEY"))
 
 def get(keyword):
     data = fred.get_series_all_releases(keyword)
+    print(data)
+
+def run():
+    for keyword in FRED_KEYWORDS:
+        get(keyword=keyword)
+
+run()
