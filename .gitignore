@@ -6,5 +6,6 @@ app/variables/
 .pyc
 logs_file
 app/storage/
+app/data_sources/dukas/go-duka/
 *.whl
 *.csv
