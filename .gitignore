@@ -1,6 +1,5 @@
 .env
 api/
-.csv
 .pkl
 .json
 app/features/
@@ -10,3 +9,4 @@ app/variables/
 logs_file
 app/storage/
 .whl
+*.csv
