@@ -1,4 +1,4 @@
-from numpy import cov, std, matrix, abs, mean, empty, sort, empty, sum, sqrt, pow, maximum, round
+from numpy import cov, std, matrix, abs, mean, empty, sort, empty, sum, sqrt, pow, maximum, round, where
 import scipy.stats as sc
 
 
@@ -117,3 +117,22 @@ def returns_by_month():
 
 def returns_by_year():
     pass
+
+def trade_count(signals):
+    trades = where((signals == 0) & (signals.shift() == 1), 1, 0)
+    trades += where((signals == 1) & (signals.shift() == 0), 1, 0)
+    trades += where((signals == 0) & (signals.shift() == -1), 1, 0)
+    trades += where((signals == -1) & (signals.shift() == 0), 1, 0)
+    trades += where((signals == 1) & (signals.shift() == -1), 1, 0)
+    trades += where((signals == -1) & (signals.shift() == 1), 1, 0)
+    return trades.sum()
+
+
+def commissions(signals, com):
+    com = where((signals == 0) & (signals.shift() == 1), com, 0)
+    com += where((signals == 1) & (signals.shift() == 0), com, 0)
+    com += where((signals == 0) & (signals.shift() == -1), com, 0)
+    com += where((signals == -1) & (signals.shift() == 0), com, 0)
+    com += where((signals == 1) & (signals.shift() == -1), com, 0)
+    com += where((signals == -1) & (signals.shift() == 1), com, 0)
+    return com

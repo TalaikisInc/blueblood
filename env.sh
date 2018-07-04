@@ -7,6 +7,7 @@ conda install pymc3 -y
 conda install cython -y
 conda install lxml -y
 conda install scikit-learn -y
+conda install -c conda-forge fastparquet -y
 pip install -r requirements.txt
 python -m nltk.downloader all
 source deactivate
