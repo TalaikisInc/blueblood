@@ -41,6 +41,7 @@ RUN conda install tensorflow -y
 RUN conda install pymc3 -y
 RUN conda install cython -y
 RUN conda install lxml -y
+RUN conda install scikit-learn -y
 RUN pip install -r requirements.txt
 RUN python -m nltk.downloader all
 
