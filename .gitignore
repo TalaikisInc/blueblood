@@ -9,3 +9,6 @@ app/storage/
 app/data_sources/dukas/go-duka/
 *.whl
 *.csv
+__pycache__/
+*.py[cod]
+*$py.class

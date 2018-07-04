@@ -22,7 +22,15 @@ This project is the child, totally not compatible next generation of the [Quantr
 ```
 chmod +x env.sh
 ./env.sh
-pip install -r requirements.txt
+```
+
+Or, just use Docker:
+
+```
+chmod +x build.sh
+chmod +x run.sh
+./build.sh
+./run.sh
 ```
 
 ## Start
