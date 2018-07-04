@@ -1,12 +1,12 @@
 .env
 api/
-app/features/
+app/models/
 app/utils/
 app/variables/
 .pyc
 logs_file
 app/storage/
-app/data_sources/dukas/go-duka/
+app/data/dukas/go-duka/
 *.whl
 *.csv
 __pycache__/

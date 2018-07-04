@@ -2,7 +2,7 @@ from os import getenv
 from os.path import join, dirname, abspath
 from os.path import abspath, join, dirname
 import sys
-sys.path.append(abspath(join(dirname(dirname(__file__)), "../..")))
+sys.path.append(abspath(join(dirname(dirname(__file__)), "..")))
 
 from dotenv import load_dotenv
 load_dotenv(dotenv_path=join(dirname(dirname(dirname(dirname(abspath(__file__))))), '.env'))
@@ -22,5 +22,3 @@ def get(keyword):
 def run():
     for keyword in FRED_KEYWORDS:
         get(keyword=keyword)
-
-run()
