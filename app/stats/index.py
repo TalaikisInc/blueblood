@@ -143,3 +143,9 @@ def percentiles(returns):
     for per in p_list:
         res.append(percentile(returns, per))
     return res
+
+def rolling_sharpe():
+    pass
+
+def capital_utilization():
+    pass

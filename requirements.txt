@@ -4,6 +4,7 @@ psycopg2
 python-dotenv
 dask
 peewee
+alphalens
 pychalk
 ccxt
 fredapi
@@ -11,6 +12,9 @@ nltk
 git+https://github.com/n1analytics/python-paillier
 git+https://github.com/GPflow/GPflow
 stochastic
+git+https://github.com/blue-yonder/tsfresh
 git+https://github.com/femtotrader/pandas_talib.git
 iexfinance
 requests-cache
+IbPy2
+twisted
