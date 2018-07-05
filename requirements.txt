@@ -11,3 +11,6 @@ nltk
 git+https://github.com/n1analytics/python-paillier
 git+https://github.com/GPflow/GPflow
 stochastic
+git+https://github.com/femtotrader/pandas_talib.git
+iexfinance
+requests-cache

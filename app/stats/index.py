@@ -1,4 +1,4 @@
-from numpy import cov, std, matrix, abs, mean, empty, sort, empty, sum, sqrt, pow, maximum, round, where
+from numpy import cov, std, matrix, abs, mean, empty, sort, empty, sum, sqrt, pow, maximum, round, where, percentile
 import scipy.stats as sc
 
 
@@ -136,3 +136,10 @@ def commissions(signals, com):
     com += where((signals == 1) & (signals.shift() == -1), com, 0)
     com += where((signals == -1) & (signals.shift() == 1), com, 0)
     return com
+
+def percentiles(returns):
+    p_list = [p for p in range(100)]
+    res = []
+    for per in p_list:
+        res.append(percentile(returns, per))
+    return res
