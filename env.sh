@@ -26,8 +26,7 @@ wget https://storage.googleapis.com/golang/go1.10.3.linux-amd64.tar.gz
 sudo tar -C /usr/bin -xzf go1.10.3.linux-amd64.tar.gz
 export PATH=$PATH:/usr/bin/go/bin
 export GOROOT=/usr/bin/go
-export PATH=/home/conda/bin:$PATH
-mkdir /home/go
+sudo mkdir /home/go
 export GOPATH=/home/go
 
 sudo apt-get -qy autoremove

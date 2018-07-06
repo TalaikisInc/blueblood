@@ -3,7 +3,7 @@ import sys
 sys.path.append(abspath(join(dirname(dirname(__file__)), "..")))
 
 import ccxt
-import chalk
+from clint.textui import colored as chalk
 from peewee import IntegrityError
 
 from models import DB, CryptoExchange, CryptoMarket
