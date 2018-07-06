@@ -88,7 +88,7 @@ def calmar(er, returns, rf):
     return (er - rf) / max_dd(returns)
 
 def drawdowns(cumulative):
-    maxims = maximum.accumulate(cumulatives.dropna())
+    maxims = maximum.accumulate(cumulative)
     return cumulative - maxims
 
 def average_dd(cumulative):
@@ -105,18 +105,6 @@ def burke_ratio(er, returns, rf, periods):
 
 def average_month_return(returns):
     return sum(returns) / len(returns) * 30.416
-
-def best_month():
-    pass
-
-def worst_month():
-    pass
-
-def returns_by_month():
-    pass
-
-def returns_by_year():
-    pass
 
 def trade_count(signals):
     trades = where((signals == 0) & (signals.shift() == 1), 1, 0)
@@ -143,6 +131,77 @@ def percentiles(returns):
     for per in p_list:
         res.append(percentile(returns, per))
     return res
+
+def alpha(portfolio_return, rf, beta, market_return):
+    return portfolio_return - rf - beta * (market_return * rf)
+
+def average_trade(returns):
+    return mean(returns)
+
+def average_win(returns):
+    return mean(where(returns > 0, returns, 0))
+
+def average_loss(returns):
+    return mean(where(returns <= 0, returns, 0))
+
+def total_wins(returns):
+    return sum(where(returns > 0, 1, 0))
+
+def total_losses(returns):
+    return sum(where(returns <= 0, 1, 0))
+
+def win_rate(returns):
+    w = total_wins(returns)
+    l = sum(where(returns <= 0, 1, 0))
+    return l > 0 ? w / l : 0
+
+def mae(high, low, close, pos=0):
+    if pos == 1:
+        return cl(close, low)
+    else:
+        return hc(high, close)
+
+def mfe(high, low, close, pos=0):
+    if pos == 1:
+        return hc(high, close)
+    else:
+        return cl(close, low)        
+
+def max_mae(cumulative, mae):
+    return (cumulative - mae).max()
+
+def max_mfe(cumulative, mfe):
+    return (mfe - cumulative).max()
+
+def cl(close, low):
+    return (close - low)
+
+def hc(high, close):
+    return (high - close)
+ 
+def periodize_returns(r, p=252):
+    return (1 + r) ^ p – 1
+
+def ulcer_index(cumulative):
+    m = maximum.accumulate(cumulative)
+    r = (cumulative - m) / m * 100
+    r2 = pow(r, 2)
+    return sum(r2) / len(cumulative)
+
+def ulcer_performance_index(cumulative, r, rf):
+    return (periodize_returns(r=r) - rf) / ulcer_index(cumulative)
+
+def best_month():
+    pass
+
+def worst_month():
+    pass
+
+def returns_by_month():
+    pass
+
+def returns_by_year():
+    pass
 
 def rolling_sharpe():
     pass
