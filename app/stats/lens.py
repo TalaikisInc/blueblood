@@ -1,7 +1,9 @@
-from alphalens.tears import create_returns_tear_sheet, create_information_tear_sheet,
+from alphalens.tears import (create_returns_tear_sheet, create_information_tear_sheet,
     create_turnover_tear_sheet, create_summary_tear_sheet, create_full_tear_sheet,
-    create_event_returns_tear_sheet, create_event_study_tear_sheet
+    create_event_returns_tear_sheet, create_event_study_tear_sheet)
 from alphalens.utils import get_clean_factor_and_forward_returns
+
+from data.local import get_mt
 
 
 def run_factor_analysis(factor, prices):
@@ -16,3 +18,16 @@ def run_event_analsyis(event, prices):
 
 def event_distribution(event, prices):
     create_event_study_tear_sheet(run_event_analsyis(event=event, prices=prices), prices, avgretplot=(5, 10))
+
+def run_analyze(factor):
+    from importlib import import_module
+
+    module_name = 'app.models.alpha.{}'.format(factor)
+    imported_module = import_module(module_name, package='blueblood')
+
+    SYMBOLS = ['EURUSD', 'SP500', 'BTCUSD', 'GOLD', 'CrudeOIL']
+    PERIODS = [1440, 10080, 43200]
+    for symbol in SYMBOLS:
+        for period in PERIODS:
+            data = get_mt(symbol, period)
+            run_factor_analysis(factor=imported_module.compute(data), prices=data.Close)

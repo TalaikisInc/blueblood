@@ -47,3 +47,4 @@ cd $GOPATH/src/github.com/alpacahq/marketstore
 make configure
 make install
 make install
+go get github.com/quickfixgo/quickfix

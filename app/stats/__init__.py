@@ -1,5 +1,7 @@
 from .index import percentiles
+from .lens import run_analyze
 
 __ALL__ = [
-    'percentiles'
+    'percentiles',
+    'run_analyze'
 ]

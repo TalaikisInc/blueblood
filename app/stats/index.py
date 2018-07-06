@@ -1,4 +1,4 @@
-from numpy import cov, std, matrix, abs, mean, empty, sort, empty, sum, sqrt, pow, maximum, round, where, percentile
+from numpy import cov, std, matrix, abs, mean, empty, sort, empty, sum, sqrt, power, maximum, round, where, percentile
 import scipy.stats as sc
 
 
@@ -41,7 +41,7 @@ def var(returns, alpha):
     index = int(alpha * len(sorted_returns))
     return abs(sorted_returns[index])
 
- def cvar(returns, alpha):
+def cvar(returns, alpha):
     sorted_returns = sort(returns)
     index = int(alpha * len(sorted_returns))
     sum_var = sorted_returns[0]
@@ -76,7 +76,7 @@ def sortino(er, returns, rf, target=0):
     return (er - rf) / sqrt(lpm(returns, target, 2))
 
 def kappa_three(er, returns, rf, target=0):
-    return (er - rf) / pow(lpm(returns, target, 3), float(1/3))
+    return (er - rf) / power(lpm(returns, target, 3), float(1/3))
  
 def gain_loss(returns, target=0):
     return hpm(returns, target, 1) / lpm(returns, target, 1)
@@ -95,7 +95,7 @@ def average_dd(cumulative):
     return mean(drawdowns(cumulative))
 
 def average_dd_squared(cumulative):
-    return pow(average_dd(cumulative), 2.0)
+    return power(average_dd(cumulative), 2.0)
 
 def sterling_ration(er, returns, rf, periods):
     return (er - rf) / average_dd(returns, periods)
@@ -153,7 +153,10 @@ def total_losses(returns):
 def win_rate(returns):
     w = total_wins(returns)
     l = sum(where(returns <= 0, 1, 0))
-    return l > 0 ? w / l : 0
+    if l > 0:
+        return w / l
+    else:
+        return 0
 
 def mae(high, low, close, pos=0):
     if pos == 1:
@@ -180,12 +183,12 @@ def hc(high, close):
     return (high - close)
  
 def periodize_returns(r, p=252):
-    return (1 + r) ^ p – 1
+    return ((1 + r) ^ p - 1)
 
 def ulcer_index(cumulative):
     m = maximum.accumulate(cumulative)
     r = (cumulative - m) / m * 100
-    r2 = pow(r, 2)
+    r2 = power(r, 2)
     return sum(r2) / len(cumulative)
 
 def ulcer_performance_index(cumulative, r, rf):

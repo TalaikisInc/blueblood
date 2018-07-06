@@ -12,3 +12,4 @@ app/data/dukas/go-duka/
 __pycache__/
 *.py[cod]
 *$py.class
+*.sqlite

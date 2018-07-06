@@ -1,10 +1,9 @@
-from datetime import datetime
+from datetime import timedelta, datetime
 
-from iexfinance import Stock, get_historical_data, get_available_symbols,
-    get_corporate_actions, get_dividends, get_iex_next_day_ex_date
+from iexfinance import Stock, get_historical_data, get_available_symbols, get_iex_next_day_ex_date
 import requests_cache
 
-expiry = datetime.timedelta(days=1)
+expiry = timedelta(days=1)
 session = requests_cache.CachedSession(cache_name='iex_cache', backend='sqlite', expire_after=expiry)
 
 def quote(name):

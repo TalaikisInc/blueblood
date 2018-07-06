@@ -10,6 +10,6 @@ def get_pickle(folder, name):
     return read_pickle(join(BASE_PATH, folder, '{}.p'.format(name)))
 
 def get_parquet(name):
-    apth = join(BASE_PATH, 'parq', '{}.parq'.format(name))
+    path = join(BASE_PATH, 'parq', '{}.parq'.format(name))
     pf = ParquetFile(path)
     return pf.to_pandas()
