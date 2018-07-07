@@ -21,3 +21,4 @@ raccoon
 clint
 python-twitter
 facebook-sdk
+hdbscan

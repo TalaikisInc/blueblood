@@ -1,4 +1,4 @@
-from numpy import cov, std, matrix, abs, mean, empty, sort, empty, sum, sqrt, power, maximum, round, where, percentile
+from numpy import cov, std, array, matrix, abs, mean, empty, sort, empty, sum, sqrt, power, maximum, round, where, percentile
 import scipy.stats as sc
 
 
@@ -88,7 +88,7 @@ def calmar(er, returns, rf):
     return (er - rf) / max_dd(returns)
 
 def drawdowns(cumulative):
-    maxims = maximum.accumulate(cumulative)
+    maxims = maximum.accumulate(cumulative.dropna())
     return cumulative - maxims
 
 def average_dd(cumulative):
@@ -97,11 +97,11 @@ def average_dd(cumulative):
 def average_dd_squared(cumulative):
     return power(average_dd(cumulative), 2.0)
 
-def sterling_ration(er, returns, rf, periods):
-    return (er - rf) / average_dd(returns, periods)
+def sterling_ration(er, cumulative, rf, periods):
+    return (er - rf) / average_dd(cumulative)
 
-def burke_ratio(er, returns, rf, periods):
-    return (er - rf) / sqrt(average_dd_squared(returns, periods))
+def burke_ratio(er, cumulative, rf, periods):
+    return (er - rf) / sqrt(average_dd_squared(cumulative))
 
 def average_month_return(returns):
     return sum(returns) / len(returns) * 30.416
@@ -130,7 +130,7 @@ def percentiles(returns):
     res = []
     for per in p_list:
         res.append(percentile(returns, per))
-    return res
+    return array(res)
 
 def alpha(portfolio_return, rf, beta, market_return):
     return portfolio_return - rf - beta * (market_return * rf)
