@@ -1,7 +1,6 @@
 .env
 api/
 app/models/
-app/utils/
 app/variables/
 .pyc
 logs_file

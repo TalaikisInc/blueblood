@@ -1,6 +1,8 @@
 from numpy import cov, std, array, matrix, abs, mean, empty, sort, empty, sum, sqrt, power, maximum, round, where, percentile
 import scipy.stats as sc
 
+from utils import periodize_returns
+
 
 def max_dd(drawdowns):
     return abs(drawdowns.min())
@@ -181,9 +183,6 @@ def cl(close, low):
 
 def hc(high, close):
     return (high - close)
- 
-def periodize_returns(r, p=252):
-    return ((1 + r) ^ p - 1)
 
 def ulcer_index(cumulative):
     m = maximum.accumulate(cumulative)
@@ -193,6 +192,15 @@ def ulcer_index(cumulative):
 
 def ulcer_performance_index(cumulative, r, rf):
     return (periodize_returns(r=r) - rf) / ulcer_index(cumulative)
+
+def drawdown_probability(cumulative):
+    dd = drawdowns(cumulative=cumulative)
+    dd = dd.loc[dd != 0]
+    return mean(percentiles(returns=dd)) / 100
+
+def return_probability(returns):
+    returns = returns.loc[returns != 0]
+    return mean(percentiles(returns=returns)) / 100
 
 def best_month():
     pass
