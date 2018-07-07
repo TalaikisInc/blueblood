@@ -36,11 +36,9 @@ def clean(folder, data):
 def join_data(primary, folder, factors):
     i = 0
     for factor in factors:
-        print(factor)
         data = get_pickle(folder, factor)
         data = clean(folder=folder, data=data)
         data.columns = [factors[i]]
-        print(data)
         primary = primary.join(data, how='left')
         i = i + 1
     return fill_forward(data=primary)
