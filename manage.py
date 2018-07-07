@@ -5,17 +5,19 @@ from app.data.iex import symbols, history
 from app.data.coinmarketcap import get_capitalization
 from app.models.playground import run_play
 from app.stats import run_analyze
+from app.utils import convert_mt_pickle
 
 parser = ArgumentParser(description="BlueBlood management point.")
 
 parser.add_argument('--collect')
 parser.add_argument('--play')
 parser.add_argument('--analyze')
+parser.add_argument('--convert')
 args = parser.parse_args()
 
 if __name__ == '__main__':
     if args.collect:
-        fred()
+        #fred()
         #get_capitalization()
         symbols()
 
@@ -24,3 +26,6 @@ if __name__ == '__main__':
 
     if args.analyze:
         run_analyze(args.analyze)
+
+    if args.convert:
+        convert_mt_pickle()

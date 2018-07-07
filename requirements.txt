@@ -22,3 +22,4 @@ clint
 python-twitter
 facebook-sdk
 hdbscan
+seaborn
