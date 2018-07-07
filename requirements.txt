@@ -9,7 +9,7 @@ ccxt
 fredapi
 nltk
 git+https://github.com/n1analytics/python-paillier
-git+https://github.com/GPflow/GPflow
+gpflow
 stochastic
 git+https://github.com/blue-yonder/tsfresh
 git+https://github.com/femtotrader/pandas_talib.git
