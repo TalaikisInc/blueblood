@@ -13,13 +13,14 @@ parser.add_argument('--play')
 parser.add_argument('--analyze')
 args = parser.parse_args()
 
-if args.collect:
-    fred()
-    #get_capitalization()
-    symbols()
+if __name__ == '__main__':
+    if args.collect:
+        fred()
+        #get_capitalization()
+        symbols()
 
-if args.play:
-    run_play(args.play)
+    if args.play:
+        run_play(args.play)
 
-if args.analyze:
-    run_analyze(args.analyze)
+    if args.analyze:
+        run_analyze(args.analyze)

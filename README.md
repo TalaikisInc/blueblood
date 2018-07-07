@@ -55,6 +55,21 @@ python create_tables.py
 6. Statistics.
 7. Watchdogs.
 
+## Management
+
+Single point management:
+
+```bash
+python manage.py --<sommand>=<params>
+```
+
+## Commands
+
+* collect=True - collect data for non-daemonized collectors
+* play=script - run the specified script from playground.
+* analyze=factor - analyze specified alpha factor.
+...
+
 ## License
 
 GPL v3.0

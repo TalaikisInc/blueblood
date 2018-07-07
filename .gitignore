@@ -5,11 +5,13 @@ app/utils/
 app/variables/
 .pyc
 logs_file
-app/storage/
 app/data/dukas/go-duka/
 *.whl
 *.csv
+*.p
+*.parq
 __pycache__/
 *.py[cod]
 *$py.class
 *.sqlite
+*.bi5

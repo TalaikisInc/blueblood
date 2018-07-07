@@ -30,4 +30,4 @@ def run_analyze(factor):
     for symbol in SYMBOLS:
         for period in PERIODS:
             data = get_mt(symbol, period)
-            run_factor_analysis(factor=imported_module.compute(data), prices=data.Close)
+            run_factor_analysis(factor=imported_module.compute(data), prices=data.CLOSE)
