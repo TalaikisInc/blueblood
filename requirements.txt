@@ -7,12 +7,6 @@ peewee
 alphalens
 ccxt
 fredapi
-nltk
-git+https://github.com/n1analytics/python-paillier
-gpflow
-stochastic
-git+https://github.com/blue-yonder/tsfresh
-git+https://github.com/femtotrader/pandas_talib.git
 iexfinance
 requests-cache
 IbPy2
@@ -21,5 +15,5 @@ raccoon
 clint
 python-twitter
 facebook-sdk
-hdbscan
 seaborn
+pika
