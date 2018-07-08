@@ -1,13 +1,9 @@
 from bt import Strategy, Backtest, run
 from bt.algos import (RunMonthly, RunOnce, RunPeriod, RunDaily, RunWeekly, RunQuarterly,
     RunYearly, RunOnDate, RunAfterDate, RunAfterDays, RunEveryNPeriods)
-from bt.algos import (SelectAll, SelectThese, SelectHasData, SelectN, SelectMomentum,
-    SelectWhere, SelectRandomly, StatTotalReturn)
+from bt.algos import SelectWhere, Rebalance
 from bt.algos import (WeighEqually, WeighSpecified, WeighTarget, WeighInvVol,
     WeighERC, WeighMeanVar, WeighRandomly)
-from bt.algos import (Rebalance, LimitDeltas, LimitWeights, CapitalFlow, CloseDead,
-    RebalanceOverTime)
-from pandas import DateOffset
 from matplotlib import pyplot as plt
 
 from data.local import get_pickle
@@ -24,6 +20,8 @@ def res(s, data):
     res.display()
     res.plot()
     plt.show()
+    # #TODO add MAE< MFE
+    # @TODO add more stats
 
 def basic_runs():
     # @TODO abstract this idiocy:
@@ -40,5 +38,5 @@ def basic_runs():
     initial = initial.dropna()
     data, test = train_test_split(data=initial, part=0.6)
 
-    s = Strategy('s2', [RunDaily(), SelectWhere(alpha(data) < 8), WeighEqually(), Rebalance()])
+    s = Strategy('s', [RunDaily(), SelectWhere(alpha(data) > 8), WeighEqually(), Rebalance()])
     res(s, data)

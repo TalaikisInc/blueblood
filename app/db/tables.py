@@ -1,4 +1,5 @@
-from . import DB, RedditKeyword, RedditComment, CryptoExchange, CryptoMarket, Block, Address, Contract
+from . import (DB, RedditKeyword, RedditComment, CryptoExchange,
+    CryptoMarket, Block, Address, Contract, Exchange, Market)
 
 
 def create_tables():
@@ -10,5 +11,7 @@ def create_tables():
         CryptoMarket,
         Block,
         Address,
-        Contract
+        Contract,
+        Exchange,
+        Market
     ])
