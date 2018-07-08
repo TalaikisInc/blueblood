@@ -208,6 +208,18 @@ def best_month():
 def worst_month():
     pass
 
+def best_day():
+    pass
+
+def worst_day():
+    pass
+
+def best_year():
+    pass
+
+def worst_year():
+    pass
+
 def returns_by_month():
     pass
 
@@ -218,4 +230,10 @@ def rolling_sharpe():
     pass
 
 def capital_utilization():
+    pass
+
+def average_up_month(returns):
+    pass
+
+def average_down_month(returns):
     pass
