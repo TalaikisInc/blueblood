@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 
 from app.data.fred import run as fred
-from app.data.iex import run_symbols, run_history
+from app.data.iex import run_symbols, run_history #, get_spread
 from app.data.coinmarketcap import get_capitalization
 from app.models.playground import run_play
 from app.stats import run_analyze
@@ -25,7 +25,8 @@ if __name__ == '__main__':
         #get_capitalization()
         if args.collect == 'one_time':
             run_symbols()
-        # run_history()
+        run_history()
+        get_spread()
 
     if args.play:
         run_play(args.play)
