@@ -20,3 +20,5 @@ pika
 bt
 arrow
 peewee_extra_fields
+git+https://github.com/femtotrader/python-eodhistoricaldata.git
+click

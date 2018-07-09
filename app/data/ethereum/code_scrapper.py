@@ -1,20 +1,9 @@
-from os.path import join, dirname, abspath
-from os import getenv
 from time import sleep
 
 from requests import Session, get
 from bs4 import BeautifulSoup
-from psycopg2 import connect
-from dotenv import load_dotenv
 
-load_dotenv(dotenv_path=join(dirname(dirname(dirname(abspath(__file__)))), '.env'))
-conn = connect("dbname={0} user={1} password={2} host={3} port={4}".format(
-    getenv("PG_DB"),
-    getenv("PG_USER"),
-    getenv("PG_PASS"),
-    getenv("PG_SERVER"),
-    getenv("PG_PORT")
-))
+#@ TODO breaking changes, this wouldn't work
 
 ETHERSCAN_URL = "https://etherscan.io/"
 

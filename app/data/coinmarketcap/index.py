@@ -1,11 +1,10 @@
 import datetime
-from os.path import dirname, join, abspath
+from os.path import join
 
 from pandas import read_html, to_datetime, DataFrame
 
 from .coinmarketcappy import total_market_cap, dominance, historical_snapshots, available_snaps
-BASE_PATH = join(dirname(dirname(dirname(abspath(__file__)))), "storage", "cmc")
-from utils import filenames
+from utils import filenames, STORAGE_PATH
 
 
 def get(params):
@@ -23,10 +22,10 @@ def get(params):
 def _cap(date):
     snaps = historical_snapshots(date)
     df = DataFrame(snaps[date], columns=['id', 'symbol', 'name', 'cap', 'price', 'supply', 'volume'])
-    df.to_pickle(join(BASE_PATH, '{}.p'.format(date)))
+    df.to_pickle(join(STORAGE_PATH, 'cmc', '{}.p'.format(date)))
 
 def get_capitalization():
-    fs = filenames(BASE_PATH)
+    fs = filenames(join(STORAGE_PATH, 'cmc'))
     dates = available_snaps()
     if len(fs) == 0:
         for i in range(len(dates)):

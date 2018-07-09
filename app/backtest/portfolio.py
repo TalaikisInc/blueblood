@@ -38,5 +38,7 @@ def basic_runs():
     initial = initial.dropna()
     data, test = train_test_split(data=initial, part=0.6)
 
+    # @TODO:
+    # breaking changes: alpha(model, data)
     s = Strategy('s', [RunDaily(), SelectWhere(alpha(data) > 8), WeighEqually(), Rebalance()])
     res(s, data)

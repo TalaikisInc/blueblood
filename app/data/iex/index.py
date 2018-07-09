@@ -12,7 +12,8 @@ expiry = timedelta(days=1)
 session = requests_cache.CachedSession(cache_name='iex_cache', backend='sqlite', expire_after=expiry)
 from app.db import get_exchange, Market
 from app.db import DB
-BASE_PATH = join(dirname(dirname(dirname(abspath(__file__)))), 'storage', 'iex')
+from utils import STORAGE_PATH
+
 
 def quote(name):
     stock = Stock(name)
@@ -70,7 +71,7 @@ def run_history():
     start_time = datetime.now() - timedelta(days=365*5)
     for n in Market.select()[486:]:
         try:
-            path = join(BASE_PATH, '{}.p'.format(n.symbol))
+            path = join(STORAGE_PATH, '{}.p'.format(n.symbol))
             data = get_historical_data(n.symbol, start=start_time, output_format='pandas')
             data.rename(columns={ 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume' }, inplace=True)
             data.to_pickle(path)
@@ -78,6 +79,6 @@ def run_history():
         except Exception as err:
             print(colored.red(err))
 
-def append_data():
-    df = DataFrme(data=read_data)
-    df.append(new_data)
+def append_data(data):
+    df = DataFrame(data=read_data)
+    df.append(data)

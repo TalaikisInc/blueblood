@@ -1,7 +1,5 @@
 from asyncnotify import AsyncNotify
 from twisted.internet import reactor
-from dotenv import load_dotenv
-load_dotenv(dotenv_path=join(dirname(dirname(dirname(abspath(__file__)))), '.env'))
 
 from .notify import Notify
 

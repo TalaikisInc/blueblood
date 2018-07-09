@@ -1,4 +1,8 @@
 from argparse import ArgumentParser
+from os.path import join, dirname, abspath
+
+from dotenv import load_dotenv
+load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
 
 from app.data.fred import run as fred
 from app.data.iex import run_symbols, run_history #, get_spread
