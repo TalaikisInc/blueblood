@@ -19,14 +19,14 @@ This project is the child, totally not compatible next generation of the [Quantr
 
 ## Install
 
-```
+```bash
 chmod +x env.sh
 ./env.sh
 ```
 
 Or, just use Docker:
 
-```
+```bash
 chmod +x build.sh
 chmod +x run.sh
 ./build.sh
@@ -37,11 +37,10 @@ chmod +x run.sh
 
 Edit .env, create (Postgres) database 'blueblood', then:
 
-```
+```bash
+python manage.py --db=one_time
 cd db
 node makeTables.js
-cd ../models
-python create_tables.py
 ```
 
 
@@ -65,9 +64,22 @@ python manage.py --<sommand>=<params>
 
 ## Commands
 
+### Initializers
+
+* python manage.py --db=one_time - creates required tables
+
+### Data
+
 * collect=True - collect data for non-daemonized collectors
+* collect=one_time - 
+
+### R&D
+
 * play=script - run the specified script from playground.
 * analyze=factor - analyze specified alpha factor.
+
+### Tests
+
 ...
 
 ## License
