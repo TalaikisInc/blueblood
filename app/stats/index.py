@@ -2,6 +2,7 @@ from numpy import cov, std, array, matrix, abs, mean, empty, sort, empty, sum, s
 import scipy.stats as sc
 
 from utils import periodize_returns
+from db import Strategy, Stats
 
 
 def max_dd(drawdowns):
@@ -14,29 +15,22 @@ def beta(returns, benchmark):
 def vol(returns):
     return std(returns)
 
-def treynor(er, returns, benchmark, rf):
-    return (er - rf) / beta(returns, benchmark)
+def treynor(returns, benchmark, rf):
+    return (returns.mean() - rf) / beta(returns, benchmark)
   
-def sharpe_ratio(er, returns, rf):
-    return (er - rf) / vol(returns)
+def sharpe_ratio(returns, rf):
+    return (returns.mean() - rf) / vol(returns)
 
 def ir(returns, benchmark):
     diff = returns - benchmark
     return mean(diff) / vol(diff)
 
-def modigliani(er, returns, benchmark, rf):
+def modigliani(returns, benchmark, rf):
     np_rf = empty(len(returns))
     np_rf.fill(rf)
     rdiff = returns - np_rf
     bdiff = benchmark - np_rf
-    return (er - rf) * (vol(rdiff) / vol(bdiff)) + rf
-
-def value_at_risk(data, confidence_level):
-    returns_mean = data.mean()
-    returns_volatility = data.std()
-    params = sc.t.fit(data)
-    alpha = sc.t.ppf(q=(1-confidence_level), df=params[0], loc=returns_mean, scale=returns_volatility)
-    return 1 - (alpha + 1)
+    return (returns.mean() - rf) * (vol(rdiff) / vol(bdiff)) + rf
 
 def var(returns, alpha):
     sorted_returns = sort(returns)
@@ -65,20 +59,20 @@ def hpm(returns, threshold, order):
     diff = diff.clip(min=0)
     return sum(diff ** order) / len(returns)
 
-def excess_var(er, returns, rf, alpha):
-    return (er - rf) / var(returns, alpha)
+def excess_var(returns, rf, alpha):
+    return (returns.mean() - rf) / var(returns, alpha)
 
-def conditional_sharpe(er, returns, rf, alpha):
-    return (er - rf) / cvar(returns, alpha)
+def conditional_sharpe(returns, rf, alpha):
+    return (returns.mean() - rf) / cvar(returns, alpha)
 
-def omega_ratio(er, returns, rf, target=0):
-    return (er - rf) / lpm(returns, target, 1)
+def omega_ratio(returns, rf, target=0):
+    return (returns.mean() - rf) / lpm(returns, target, 1)
  
-def sortino(er, returns, rf, target=0):
-    return (er - rf) / sqrt(lpm(returns, target, 2))
+def sortino(returns, rf, target=0):
+    return (returns.mean() - rf) / sqrt(lpm(returns, target, 2))
 
-def kappa_three(er, returns, rf, target=0):
-    return (er - rf) / power(lpm(returns, target, 3), float(1/3))
+def kappa_three(returns, rf, target=0):
+    return (returns.mean() - rf) / power(lpm(returns, target, 3), float(1/3))
  
 def gain_loss(returns, target=0):
     return hpm(returns, target, 1) / lpm(returns, target, 1)
@@ -86,8 +80,8 @@ def gain_loss(returns, target=0):
 def upside_potential(returns, target=0):
     return hpm(returns, target, 1) / sqrt(lpm(returns, target, 2))
 
-def calmar(er, returns, rf):
-    return (er - rf) / max_dd(returns)
+def calmar(returns, rf):
+    return (returns.mean() - rf) / max_dd(returns)
 
 def drawdowns(cumulative):
     maxims = maximum.accumulate(cumulative.dropna())
@@ -99,11 +93,11 @@ def average_dd(cumulative):
 def average_dd_squared(cumulative):
     return power(average_dd(cumulative), 2.0)
 
-def sterling_ration(er, cumulative, rf, periods):
-    return (er - rf) / average_dd(cumulative)
+def sterling_ration(retruns, cumulative, rf):
+    return (returns.mean() - rf) / average_dd(cumulative)
 
-def burke_ratio(er, cumulative, rf, periods):
-    return (er - rf) / sqrt(average_dd_squared(cumulative))
+def burke_ratio(returns, cumulative, rf):
+    return (returns.mean() - rf) / sqrt(average_dd_squared(cumulative))
 
 def average_month_return(returns):
     return sum(returns) / len(returns) * 30.416
@@ -175,8 +169,8 @@ def mfe(high, low, close, pos=0):
 def max_mae(cumulative, mae):
     return (cumulative - mae).max()
 
-def max_mfe(cumulative, mfe):
-    return (mfe - cumulative).max()
+def min_mfe(cumulative, mfe):
+    return (mfe - cumulative).min()
 
 def cl(close, low):
     return (close - low)
@@ -201,6 +195,12 @@ def drawdown_probability(cumulative):
 def return_probability(returns):
     returns = returns.loc[returns != 0]
     return mean(percentiles(returns=returns)) / 100
+
+def average_mae(high, low, close, pos=0):
+    return mae(high, low, close, pos).mean()
+
+def average_mfe(high, low, close, pos=0):
+    return mfe(high, low, close, pos).mean()
 
 def best_month():
     pass
@@ -237,3 +237,81 @@ def average_up_month(returns):
 
 def average_down_month(returns):
     pass
+
+def average_trades_month(signals, retruns):
+    return trade_count(signals=signals) / len(returns) * 30.416
+
+def average_dd_duration():
+    pass
+
+def run_stats():
+    for strategy in Strategy.select():
+        returns = DataFrame() # READ RETURNS HERE
+        data = DataFrame()
+        pos = 0 # get position type from strategy
+        cumulative = returns.cumsum()
+        benchmark = DataFrame()
+        signals = DataFrame()
+        ma = mae(high=data['High'], low=data['Low'], close=data['Close'], pos=pos)
+        mf = mae(high=data['High'], low=data['Low'], close=data['Close'], pos=pos)
+        rf = 0.05
+        alpha = 0.05
+        target = 0.05
+        b = beta(returns=returns, benchmark=benchmark)
+        Stats.create(
+            strategy=strategy,
+            max_dd=max_dd(drawdowns=drawdowns(cumulative=cumulative)),
+            beta=b,
+            vol=vol(returns=returns),
+            treynor=treynor(returns=returns, benchmark=benchmark, rf=rf),
+            sharpe_ratio=sharpe_ratio(returnsreturns, rf=rf),
+            ir=ir(returns=returns, benchmark=benchmark),
+            modigliani=modigliani(returns=returns, benchmark=benchmark, rf=rf),
+            var=var(returns=returns, alpha=alpha),
+            cvar=cvar(returns=returns, alpha=alpha),
+            excess_var=excess_var(returns=returns, rf=rf, alpha=alpha),
+            conditional_sharpe=conditional_sharpe(returns=returns, rf=rf, alpha=alpha),
+            omega_ratio=omega_ratio(returns=returns, rf=rf, target=target),
+            sortino=sortino(returns=returns, rf, target=target),
+            kappa_three=kappa_three(returns=returns, rf=rf, target=target),
+            gain_loss=gain_loss(returns=returns, target=target),
+            upside_potential=upside_potential(returns=returns, target=target),
+            calmar=calmar(returns=returns, rf=rf),
+            average_dd=average_dd(cumulative=cumulative=cumulative),
+            average_dd_squared=average_dd_squared(cumulative=cumulative),
+            sterling_ration=sterling_ration(retruns=retruns, cumulative=cumulative, rf=rf),
+            burke_ratio=burke_ratio(returns=returns, cumulative=cumulative, rf=rf),
+            average_month_return=average_month_return(returns=returns),
+            average_trades_month=average_trades_month(signals=signals, retruns=retruns),
+            average_dd_duration=
+            trade_count=trade_count(signals=signals),
+            alpha=alpha(portfolio_return=returns, rf=rf, beta=b, market_return=benchmark),
+            average_trade=average_trade(returns=returns),
+            average_win=average_win(returns=returns),
+            average_loss=average_loss(returns=returns),
+            total_wins=total_wins(returns=returns),
+            total_losses=total_losses(returns=returns),
+            win_rate=win_rate(returns=returns),
+            # thos two should show only on trade days:
+            average_mae=average_mae(high=data['High'], lowdata['Low'], closedata['Close'], pos=pos)
+            average_mfe=average_mfe(high=data['High'], low=data['Low'], close=data['Close'], pos=pos)
+            max_mae=max_mae(cumulative=cumulative, mae=ma),
+            min_mfe=min_mfe(cumulative=cumulative, mfe=mf),
+            ulcer_index=ulcer_index(cumulative=cumulative),
+            ulcer_performance_index=ulcer_performance_index(cumulative=cumulative, r=returns.mean(), rf=rf),
+            best_month=
+            worst_month=
+            best_day=
+            worst_day=
+            best_year=
+            worst_year=
+            average_up_month=
+            average_down_month=
+            capital_utilization=
+            rolling_sharpe=
+            returns_by_month=
+            returns_by_year=
+            percentiles=
+            drawdown_probability=
+            return_probability=
+        )

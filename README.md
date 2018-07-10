@@ -84,6 +84,10 @@ python manage.py --<sommand>=<params>
 
 ### Example of alpha formatting
 
+For alpha providers.
+
+Model:
+
 ```python
 def compute(data):
     def owner():
@@ -94,7 +98,7 @@ def compute(data):
     # your code
     # ...
     # your code
-    return data['Close'] # whatever you do here
+    return data
 ```
 
 ## License

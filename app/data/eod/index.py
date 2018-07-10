@@ -38,12 +38,14 @@ def eod_symbols(e='US'):
 def run_eod():
     for n in Market.select():
         try:
+            exchanges = ['NASDAQ', 'NYSE']
             e = Exchange.get(id=n.exchange)
-            if e.title == 'US':
+            if any(e for e in exchanges):
                 path = join(STORAGE_PATH, 'eod', '{}.p'.format(n.symbol))
-                df = get_eod_data(symbol=n.symbol, exchange=e.title)
-                df.to_pickle(path)
-                print(colored.green(n.symbol))
+                df = get_eod_data(symbol=n.symbol, exchange='US')
+                if len(df) > 100:
+                    df.to_pickle(path)
+                    print(colored.green(n.symbol))
         except Exception as err:
             print(colored.red(err))
 
