@@ -1,14 +1,15 @@
 from os import chdir
+from os.path import join, dirname, abspath
+import sys
+sys.path.append(abspath(join(dirname(dirname(__file__)), '...')))
 
 from .split import train_test_split
-from .index import filenames, join_data, convert_mt_pickle, periodize_returns
-STORAGE_PATH = chdir('G:\\storage')
+from .index import periodize_returns, filenames
+STORAGE_PATH = abspath(chdir('G:\\storage'))
 
 __ALL__ = [
     'train_test_split',
-    'filenames',
-    'join_data',
-    'convert_mt_pickle',
     'periodize_returns',
-    'STORAGE_PATH'
+    'STORAGE_PATH',
+    'filenames'
   ]

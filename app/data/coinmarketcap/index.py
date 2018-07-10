@@ -24,6 +24,7 @@ def _cap(date):
     df = DataFrame(snaps[date], columns=['id', 'symbol', 'name', 'cap', 'price', 'supply', 'volume'])
     df.to_pickle(join(STORAGE_PATH, 'cmc', '{}.p'.format(date)))
 
+# @TODO get last available and request only after that
 def get_capitalization():
     fs = filenames(join(STORAGE_PATH, 'cmc'))
     dates = available_snaps()

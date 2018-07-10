@@ -19,7 +19,7 @@ def quote(name):
     stock = Stock(name)
     return stock.get_price()
 
-def run_symbols():
+def iex_symbols():
     markets = get_available_symbols(output_format='pandas', session=session)
     e = get_exchange('IEX')
     for m in markets:

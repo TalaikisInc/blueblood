@@ -6,8 +6,8 @@ from bt.algos import (WeighEqually, WeighSpecified, WeighTarget, WeighInvVol,
     WeighERC, WeighMeanVar, WeighRandomly)
 from matplotlib import pyplot as plt
 
-from data.local import get_pickle
-from utils import train_test_split, join_data
+from data.local import get_pickle, join_data
+from utils import train_test_split
 from models.alpha import alpha
 
 

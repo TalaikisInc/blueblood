@@ -3,7 +3,7 @@ from alphalens.tears import (create_returns_tear_sheet, create_information_tear_
     create_event_returns_tear_sheet, create_event_study_tear_sheet)
 from alphalens.utils import get_clean_factor_and_forward_returns
 
-from data.local import get_mt
+from data.local.readers import get_pickle
 
 
 def run_factor_analysis(factor, prices):
@@ -29,5 +29,5 @@ def run_analyze(factor):
     PERIODS = [1440, 10080, 43200]
     for symbol in SYMBOLS:
         for period in PERIODS:
-            data = get_mt(symbol, period)
+            data = get_pickle('mt', '{}_{}'.format(symbol, period))
             run_factor_analysis(factor=imported_module.compute(data), prices=data.CLOSE)
