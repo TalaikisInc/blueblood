@@ -13,6 +13,7 @@ from app.stats import run_analyze
 from app.data.local import convert_mt_pickle
 from app.backtest import basic_runs
 from app.db import create_tables
+from app.models.alpha import create_owners
 
 parser = ArgumentParser(description="BlueBlood management point.")
 
@@ -31,6 +32,7 @@ if __name__ == '__main__':
         if args.collect == 'one_time':
             #iex_symbols()
             eod_symbols()
+            create_owners()
         # run_iex()
         # get_spread()
         run_eod()
