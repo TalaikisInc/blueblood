@@ -71,7 +71,7 @@ python manage.py --<sommand>=<params>
 ### Data
 
 * collect=True - collect data for non-daemonized collectors
-* collect=one_time - 
+* collect=one_time - rarely run collections (like sysmbols)
 
 ### R&D
 
@@ -81,6 +81,21 @@ python manage.py --<sommand>=<params>
 ### Tests
 
 ...
+
+### Example of alpha formatting
+
+```python
+def compute(data):
+    def owner():
+        return 'Your Name <your@email.com>'
+    '''
+    Description (optional)
+    '''
+    # your code
+    # ...
+    # your code
+    return data['Close'] # whatever you do here
+```
 
 ## License
 

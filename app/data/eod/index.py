@@ -1,4 +1,5 @@
 from datetime import timedelta
+from os.path import join
 
 import requests_cache
 expire_after = timedelta(days=1)
@@ -7,7 +8,7 @@ from peewee import IntegrityError
 from clint.textui import colored
 
 from .eodhist.eod import get_eod_data, get_exchanges, get_exchange_symbols, get_dividends, get_currencies, get_indexes
-from app.db import get_exchange, Market, DB
+from app.db import get_exchange, Exchange, Market, DB
 from utils import STORAGE_PATH
 
 
@@ -15,7 +16,7 @@ def exchanges():
     return get_exchanges()
 
 def eod_symbols(e='US'):
-    df = get_exchange_symbols(exchange_code=e)
+    df = get_exchange_symbols(exchange_code=e, session=session)
     for i in range(len(df)):
         try:
             symbol = df.ix[i].name
@@ -35,7 +36,16 @@ def eod_symbols(e='US'):
             DB.rollback()
 
 def run_eod():
-    df = get_eod_data(symbol='AAPL', exchange='US', session=session)
+    for n in Market.select():
+        try:
+            e = Exchange.get(id=n.exchange)
+            if e.title == 'US':
+                path = join(STORAGE_PATH, 'eod', '{}.p'.format(n.symbol))
+                df = get_eod_data(symbol=n.symbol, exchange=e.title)
+                df.to_pickle(path)
+                print(colored.green(n.symbol))
+        except Exception as err:
+            print(colored.red(err))
 
 def run_dividends():
     df = get_dividends(symbol, exchange)

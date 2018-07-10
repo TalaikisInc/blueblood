@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
 
 from app.data.fred import run as fred
-from app.data.iex import iex_symbols, run_history #, get_spread
-from app.data.eod import eod_symbols
+from app.data.iex import iex_symbols, run_iex #, get_spread
+from app.data.eod import eod_symbols, run_eod
 from app.data.coinmarketcap import get_capitalization
 from app.models.playground import run_play
 from app.stats import run_analyze
@@ -31,8 +31,9 @@ if __name__ == '__main__':
         if args.collect == 'one_time':
             #iex_symbols()
             eod_symbols()
-        #run_history()
+        # run_iex()
         # get_spread()
+        run_eod()
 
     if args.play:
         run_play(args.play)

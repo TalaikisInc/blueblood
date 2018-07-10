@@ -20,24 +20,23 @@ def get_parquet(name):
 def fill_forward(data):
     return data.fillna(method='ffill')
 
+def transform_multi_data(data, symbol):
+    for col in data.columns:
+        data['{}_{}'.format(symbol, col)] = data[col]
+        del data[col]
+    return data
+
 def clean(folder, data):
     if folder == 'fred':
         del data['realtime_start']
-    if folder == 'mt':
-        del data['Open']
-        del data['High']
-        del data['Low']
-        del data['Volume']
     return data
 
-def join_data(primary, folder, factors):
-    i = 0
-    for factor in factors:
-        data = get_pickle(folder, factor)
+def join_data(primary, folder, symbols):
+    for symbol in symbols:
+        data = get_pickle(folder, symbol)
         data = clean(folder=folder, data=data)
-        data.columns = [factors[i]]
+        data = transform_multi_data(data=data, symbol=symbol)
         primary = primary.join(data, how='left')
-        i = i + 1
     return fill_forward(data=primary)
 
 def convert_mt_pickle():

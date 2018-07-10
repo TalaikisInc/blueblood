@@ -66,9 +66,9 @@ def get_splits():
     s = StockReader(symbols='AAPL', output_format='pandas')
     print(s.get_splits(symbols='AAPL', range='5y', output_format='pandas'))
 
-def run_history():
+def run_iex():
     start_time = datetime.now() - timedelta(days=365*5)
-    for n in Market.select()[486:]:
+    for n in Market.select():
         try:
             path = join(STORAGE_PATH, '{}.p'.format(n.symbol))
             data = get_historical_data(n.symbol, start=start_time, output_format='pandas')
