@@ -10,8 +10,7 @@ from raccoon.dataframe import DataFrame
 
 expiry = timedelta(days=1)
 session = requests_cache.CachedSession(cache_name='iex_cache', backend='sqlite', expire_after=expiry)
-from app.db import get_exchange, Market
-from app.db import DB
+from app.db import get_exchange, Market, DB
 from utils import STORAGE_PATH
 
 

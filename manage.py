@@ -31,7 +31,7 @@ if __name__ == '__main__':
         if args.collect == 'one_time':
             #iex_symbols()
             eod_symbols()
-        run_history()
+        #run_history()
         # get_spread()
 
     if args.play:
