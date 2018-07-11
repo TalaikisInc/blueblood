@@ -28,13 +28,16 @@ def transform_multi_data(data, symbol):
 
 def clean(folder, data):
     if folder == 'fred':
-        del data['realtime_start']
+        data = data.drop(['realtime_start'], axis=1)
+    if folder == 'eod':
+        data = data.drop(['Open', 'High', 'Low', 'Volume', 'Adjusted_close'], axis=1)
     return data
 
-def join_data(primary, folder, symbols):
+def join_data(primary, folder, symbols, clr=False):
     for symbol in symbols:
-        data = get_pickle(folder, symbol)
-        data = clean(folder=folder, data=data)
+        data = get_pickle(folder, symbol).dropna()
+        if clr:
+            data = clean(folder=folder, data=data)
         data = transform_multi_data(data=data, symbol=symbol)
         primary = primary.join(data, how='left')
     return fill_forward(data=primary)
@@ -47,8 +50,8 @@ def convert_mt_pickle():
             per = f.split('_')[4].split('.')[0]
             dest_path = join(STORAGE_PATH, 'mt', '{}_{}.p'.format(name, per))
             data = get_mt(name, per)
-            if len(data) > 100:
-                data.rename(columns={'OPEN': 'Open', 'HIGH': 'High', 'LOW': 'Low', 'CLOSE': 'Close', 'VOLUME': 'Volume'}, inplace=True)
+            if len(data) > 1000:
+                data = data.rename(columns={'OPEN': 'Open', 'HIGH': 'High', 'LOW': 'Low', 'CLOSE': 'Close', 'VOLUME': 'Volume'}, inplace=True)
                 data.to_pickle(dest_path)
                 print(colored.green('Converted for {} {}'.format(name, per)))
         except Exception as err:

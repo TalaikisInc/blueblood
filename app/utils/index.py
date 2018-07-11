@@ -1,6 +1,7 @@
 from os import listdir
 from os.path import isfile, join
 
+from numpy import log
 from pandas import DataFrame
 from peewee import Field
 
@@ -19,3 +20,10 @@ def periodize_returns(r, p=252):
 
 def filenames(path):
     return [f for f in listdir(path) if isfile(join(path, f))]
+
+def log_returns(x):
+    return log(x)
+
+def get_dividends_splits(close, adjusted):
+    '''Outputs should be classified into: dividend, split or white noise.'''
+    return adjusted - close

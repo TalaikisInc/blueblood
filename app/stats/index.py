@@ -266,12 +266,12 @@ def run_stats():
             excess_var=excess_var(returns=returns, rf=RF, alpha=ALPHA),
             conditional_sharpe=conditional_sharpe(returns=returns, rf=RF, alpha=ALPHA),
             omega_ratio=omega_ratio(returns=returns, rf=RF, target=TARGET),
-            sortino=sortino(returns=returns, RF, target=TARGET),
+            sortino=sortino(returns=returns, rf=RF, target=TARGET),
             kappa_three=kappa_three(returns=returns, rf=RF, target=TARGET),
             gain_loss=gain_loss(returns=returns, target=TARGET),
             upside_potential=upside_potential(returns=returns, target=TARGET),
             calmar=calmar(returns=returns, rf=RF),
-            average_dd=average_dd(cumulative=cumulative=cumulative),
+            average_dd=average_dd(cumulative=cumulative),
             average_dd_squared=average_dd_squared(cumulative=cumulative),
             sterling_ration=sterling_ration(retruns=retruns, cumulative=cumulative, rf=RF),
             burke_ratio=burke_ratio(returns=returns, cumulative=cumulative, rf=RF),
@@ -287,9 +287,9 @@ def run_stats():
             total_wins=total_wins(returns=returns),
             total_losses=total_losses(returns=returns),
             win_rate=win_rate(returns=returns),
-            # thos two should show only on trade days:
-            average_mae=average_mae(high=data['High'], lowdata['Low'], closedata['Close'], pos=pos)
-            average_mfe=average_mfe(high=data['High'], low=data['Low'], close=data['Close'], pos=pos)
+            # @TODO thos two should show only on trade days:
+            average_mae=average_mae(high=data['High'], low=data['Low'], close=data['Close'], pos=pos),
+            average_mfe=average_mfe(high=data['High'], low=data['Low'], close=data['Close'], pos=pos),
             max_mae=max_mae(cumulative=cumulative, mae=ma),
             min_mfe=min_mfe(cumulative=cumulative, mfe=mf),
             ulcer_index=ulcer_index(cumulative=cumulative),
@@ -327,7 +327,9 @@ def run_stats():
             avg_up_month=stats['avg_up_month'],
             avg_down_month=stats['avg_down_month'],
             win_year_perc=stats['win_year_perc'],
-            twelve_month_win_perc=stats['twelve_month_win_perc'],
+            twelve_month_win_perc=stats['twelve_month_win_perc']
+        )
+"""
             capital_utilization=
             rolling_sharpe=
             returns_by_month=
@@ -335,7 +337,7 @@ def run_stats():
             percentiles=
             drawdown_probability=
             return_probability=
-        )
+"""
 
 STAT_MAP = {
     'beta': 'Measure of the risk arising from exposure to general market, a.k.a. systemic risk.',

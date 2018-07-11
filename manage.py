@@ -14,6 +14,7 @@ from app.data.local import convert_mt_pickle
 from app.backtest import basic_runs
 from app.db import create_tables
 from app.models.alpha import create_owners
+from app.models.clusters import make_clusters
 
 parser = ArgumentParser(description="BlueBlood management point.")
 
@@ -31,11 +32,12 @@ if __name__ == '__main__':
         #get_capitalization()
         if args.collect == 'one_time':
             #iex_symbols()
-            eod_symbols()
-            create_owners()
+            #eod_symbols()
+            #create_owners()
+            make_clusters()
         # run_iex()
         # get_spread()
-        run_eod()
+        #run_eod()
 
     if args.play:
         run_play(args.play)
