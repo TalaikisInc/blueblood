@@ -1,5 +1,6 @@
-from numpy import cov, std, array, matrix, abs, mean, empty, sort, empty, sum, sqrt, power, maximum, round, where, percentile
+from numpy import cov, std, array, matrix, abs, mean, empty, sort, empty, sum, sqrt, power, maximum, round, where, percentile, argmax, busday_count
 import scipy.stats as sc
+from pandas import to_datetime
 
 from utils import periodize_returns
 from db import Strategy, Stats
@@ -202,26 +203,15 @@ def average_mae(high, low, close, pos=0):
 def average_mfe(high, low, close, pos=0):
     return mfe(high, low, close, pos).mean()
 
-def best_month():
-    pass
-
-def worst_month():
-    pass
-
-def best_day():
-    pass
-
-def worst_day():
-    pass
-
-def best_year():
-    pass
-
-def worst_year():
-    pass
+def correlation(returns):
+    return returns.corr().as_format('.2f')
 
 def returns_by_month():
     pass
+
+def month_histogram(perf):
+    perf.plot_histogram()
+    plt.savefig()
 
 def returns_by_year():
     pass
@@ -232,32 +222,35 @@ def rolling_sharpe():
 def capital_utilization():
     pass
 
-def average_up_month(returns):
-    pass
-
-def average_down_month(returns):
-    pass
-
 def average_trades_month(signals, retruns):
     return trade_count(signals=signals) / len(returns) * 30.416
 
-def average_dd_duration():
-    pass
+def max_dd_duration(cumulative):
+    i = argmax(maximum.accumulate(cumulative) - cumulative)
+    j = argmax(cumulative[:i])
+    s = to_datetime(str(cumulative.index.values[j]))
+    start = s.strftime ('%Y-%m-%d')
+    e = to_datetime(str(cumulative.index.values[i]))
+    end = e.strftime ('%Y-%m-%d')
+    return busday_count(start, end)
 
 TARGET = 0.05
 RF = 0.05
+ALPHA = 0.05
 
 def run_stats():
     for strategy in Strategy.select():
         returns = DataFrame() # READ RETURNS HERE
-        data = DataFrame()
-        pos = 0 # get position type from strategy
+        data = DataFrame()  # READ OHLC HERE
+        benchmark = DataFrame()  # READ BENCHMARK
+        signals = DataFrame() # READ SIGNALS
+        pos = strategy.rule
         cumulative = returns.cumsum()
-        benchmark = DataFrame()
-        signals = DataFrame()
+        perf = data['Close'].calc_stats()
+        stats = perf.stats
+
         ma = mae(high=data['High'], low=data['Low'], close=data['Close'], pos=pos)
         mf = mae(high=data['High'], low=data['Low'], close=data['Close'], pos=pos)
-        alpha = 0.05
         b = beta(returns=returns, benchmark=benchmark)
         Stats.create(
             strategy=strategy,
@@ -268,10 +261,10 @@ def run_stats():
             sharpe_ratio=sharpe_ratio(returnsreturns, rf=RF),
             ir=ir(returns=returns, benchmark=benchmark),
             modigliani=modigliani(returns=returns, benchmark=benchmark, rf=RF),
-            var=var(returns=returns, alpha=alpha),
-            cvar=cvar(returns=returns, alpha=alpha),
-            excess_var=excess_var(returns=returns, rf=RF, alpha=alpha),
-            conditional_sharpe=conditional_sharpe(returns=returns, rf=RF, alpha=alpha),
+            var=var(returns=returns, alpha=ALPHA),
+            cvar=cvar(returns=returns, alpha=ALPHA),
+            excess_var=excess_var(returns=returns, rf=RF, alpha=ALPHA),
+            conditional_sharpe=conditional_sharpe(returns=returns, rf=RF, alpha=ALPHA),
             omega_ratio=omega_ratio(returns=returns, rf=RF, target=TARGET),
             sortino=sortino(returns=returns, RF, target=TARGET),
             kappa_three=kappa_three(returns=returns, rf=RF, target=TARGET),
@@ -284,7 +277,8 @@ def run_stats():
             burke_ratio=burke_ratio(returns=returns, cumulative=cumulative, rf=RF),
             average_month_return=average_month_return(returns=returns),
             average_trades_month=average_trades_month(signals=signals, retruns=retruns),
-            average_dd_duration=
+            average_dd_duration=average_dd_duration(cumulative=cumulative),
+            max_dd_duration=max_dd_duration(cumulative=cumulative),
             trade_count=trade_count(signals=signals),
             alpha=alpha(portfolio_return=returns, rf=rf, beta=b, market_return=benchmark),
             average_trade=average_trade(returns=returns),
@@ -300,14 +294,40 @@ def run_stats():
             min_mfe=min_mfe(cumulative=cumulative, mfe=mf),
             ulcer_index=ulcer_index(cumulative=cumulative),
             ulcer_performance_index=ulcer_performance_index(cumulative=cumulative, r=returns.mean(), rf=rf),
-            best_month=
-            worst_month=
-            best_day=
-            worst_day=
-            best_year=
-            worst_year=
-            average_up_month=
-            average_down_month=
+            start=stats['start'],
+            end=stats['end'],
+            total_return=stats['total_return'],
+            daily_sharpe=stats['daily_sharpe'],
+            cagr=stats['cagr'],
+            mtd=stats['mtd'],
+            three_month=stats['three_month'],
+            six_month=stats['six_month'],
+            ytd=stats['ytd'],
+            three_year=stats['three_year'],
+            daily_mean=stats['daily_mean'],
+            daily_vol=stats['daily_vol'],
+            daily_skew=stats['daily_skew'],
+            daily_kurt=stats['daily_kurt'],
+            best_day=stats['best_day'],
+            worst_day=stats['worst_day'],
+            monthly_sharpe=stats['monthly_sharpe'],
+            monthly_mean=stats['monthly_mean'],
+            monthly_vol=stats['monthly_vol'],
+            monthly_skew=stats['monthly_skew'],
+            monthly_kurt=stats['monthly_kurt'],
+            best_month=stats['best_month'],
+            worst_month=stats['worst_month'],
+            yearly_sharpe=stats['yearly_sharpe'],
+            yearly_mean=stats['yearly_mean'],
+            yearly_vol=stats['yearly_vol'],
+            yearly_skew=stats['yearly_skew'],
+            yearly_kurt=stats['yearly_kurt'],
+            worst_year=stats['worst_year'],
+            avg_drawdown_days=stats['avg_drawdown_days'],
+            avg_up_month=stats['avg_up_month'],
+            avg_down_month=stats['avg_down_month'],
+            win_year_perc=stats['win_year_perc'],
+            twelve_month_win_perc=stats['twelve_month_win_perc'],
             capital_utilization=
             rolling_sharpe=
             returns_by_month=
@@ -318,27 +338,27 @@ def run_stats():
         )
 
 STAT_MAP = {
-    beta: 'Measure of the risk arising from exposure to general market, a.k.a. systemic risk.',
-    vol: 'Variability.',
-    treynor: 'Relates excess return over the risk-free rate to the additional systematic() risk taken.',
-    sharpe_ratio: 'Reward-to-variability ratio is a way to examine the performance by adjusting for its risk (variability in this case).',
-    ir: 'The information ratio is often used to gauge the skill of managers of mutual funds, hedge funds, etc. In this case, it measures the active return of the manager\'s portfolio divided by the amount of risk that the manager takes relative to the benchmark.',
-    modigliani: 'It measures the returns of the portfolio, adjusted for the risk of the portfolio relative to that of some benchmark.',
-    var: 'Value at risk, probability of occurrence for the defined loss.',
-    cvar; 'Conditional VaR, also known as mean excess loss, mean shortfall, tail value at risk, average value at risk or expected shortfall.',
-    conditional_sharpe: 'The ratio of expected excess return to the expected shortfall.'
-    omega_ratio: 'Probability weighted ratio of gains versus losses for threshold return target ({}).'.format(TARGET),
-    sortino: 'It is a modification of the Sharpe ratio that penalizes only those returns falling below a target ({}) and required rate of return ({}).'.format(TARGET, RF),
-    kappa_three: 'Omega and the Sortino ratio are two among many potential variants of Kappa. In certaincircumstances, other Kappa variants may be more appropriate or provide more powerful insights.',
-    upside_potential: 'A measure of a return relative to the minimal acceptable return.',
-    calmar: 'The Calmar ratio changes gradually and serves to smooth out the overachievement and underachievement periods of performance more readily than either the Sterling or Sharpe ratios.',
-    sterling_ration: 'Measures return over average drawdown.',
-    burke_ratio: 'Similar to the Sterling ratio, the Burke ratio discounts the expected excess return of the security by the square root of the average of the worst expected maximum drawdowns squared for the portfolio.',
-    alpha: 'This is based on the concept that riskier assets should have higher expected returns than less risky assets. If an asset\'s return is higher than the risk adjusted return, that asset is said to have \'positive alpha\' or \'abnormal returns\'.',
-    average_mae: 'Average adverse excursion.',
-    average_mfe: 'Average favorable excursion.',
-    max_mae: 'Maximum adverse excursion.',
-    min_mfe: 'Minimum of favorable excursion.',
-    ulcer_index: 'Ulcer Index measures downside risk, in terms of both depth and duration of price declines.',
-    ulcer_performance_index: 'Ulcer Performance Index, a.k.a. Martin ratio is a Sharpe ratio with Ulcer Index instead of variability.'
+    'beta': 'Measure of the risk arising from exposure to general market, a.k.a. systemic risk.',
+    'vol': 'Variability.',
+    'treynor': 'Relates excess return over the risk-free rate to the additional systematic() risk taken.',
+    'sharpe_ratio': 'Reward-to-variability ratio is a way to examine the performance by adjusting for its risk (variability in this case).',
+    'ir': 'The information ratio is often used to gauge the skill of managers of mutual funds, hedge funds, etc. In this case, it measures the active return of the manager\'s portfolio divided by the amount of risk that the manager takes relative to the benchmark.',
+    'modigliani': 'It measures the returns of the portfolio, adjusted for the risk of the portfolio relative to that of some benchmark.',
+    'var': 'Value at risk, probability of occurrence for the defined loss.',
+    'cvar': 'Conditional VaR, also known as mean excess loss, mean shortfall, tail value at risk, average value at risk or expected shortfall.',
+    'conditional_sharpe': 'The ratio of expected excess return to the expected shortfall.',
+    'omega_ratio': 'Probability weighted ratio of gains versus losses for threshold return target ({}).'.format(TARGET),
+    'sortino': 'It is a modification of the Sharpe ratio that penalizes only those returns falling below a target ({}) and required rate of return ({}).'.format(TARGET, RF),
+    'kappa_three': 'Omega and the Sortino ratio are two among many potential variants of Kappa. In certaincircumstances, other Kappa variants may be more appropriate or provide more powerful insights.',
+    'upside_potential': 'A measure of a return relative to the minimal acceptable return.',
+    'calmar': 'The Calmar ratio changes gradually and serves to smooth out the overachievement and underachievement periods of performance more readily than either the Sterling or Sharpe ratios.',
+    'sterling_ration': 'Measures return over average drawdown.',
+    'burke_ratio': 'Similar to the Sterling ratio, the Burke ratio discounts the expected excess return of the security by the square root of the average of the worst expected maximum drawdowns squared for the portfolio.',
+    'alpha': 'This is based on the concept that riskier assets should have higher expected returns than less risky assets. If an asset\'s return is higher than the risk adjusted return, that asset is said to have \'positive alpha\' or \'abnormal returns\'.',
+    'average_mae': 'Average adverse excursion.',
+    'average_mfe': 'Average favorable excursion.',
+    'max_mae': 'Maximum adverse excursion.',
+    'min_mfe': 'Minimum of favorable excursion.',
+    'ulcer_index': 'Ulcer Index measures downside risk, in terms of both depth and duration of price declines.',
+    'ulcer_performance_index': 'Ulcer Performance Index, a.k.a. Martin ratio is a Sharpe ratio with Ulcer Index instead of variability.'
 }

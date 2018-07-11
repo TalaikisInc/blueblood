@@ -38,7 +38,7 @@ def eod_symbols(e='US'):
 def run_eod():
     for n in Market.select():
         try:
-            exchanges = ['NASDAQ', 'NYSE']
+            exchanges = ['US', 'NASDAQ', 'NYSE']
             e = Exchange.get(id=n.exchange)
             if any(e for e in exchanges):
                 path = join(STORAGE_PATH, 'eod', '{}.p'.format(n.symbol))
@@ -49,7 +49,11 @@ def run_eod():
         except Exception as err:
             print(colored.red(err))
 
-def run_dividends():
+def run_dividends(symbol, exchange):
     df = get_dividends(symbol, exchange)
-    get_currencies()
-    get_indexes()
+
+def run_currencies():
+    data = get_currencies()
+
+def run_indices():
+    data = get_indexes()
