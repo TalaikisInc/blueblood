@@ -15,3 +15,5 @@ __pycache__/
 *.sqlite
 *.bi5
 eeodhist
+*.json
+*.txt

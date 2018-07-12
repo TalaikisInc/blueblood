@@ -8,6 +8,10 @@
 
 Blue Blood Engine is a set of trading related tools and other software.
 
+## STATUS
+
+In active development, what emans not every module will or should work.
+
 ## Note
 
 This repo probably wouldn't be usable without models/ directory, which is proprietary and wouldn't be disclosed (at least currently).

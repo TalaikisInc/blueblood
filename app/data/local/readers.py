@@ -1,5 +1,6 @@
 from os.path import join
 
+from numpy import isinf, isnan
 from clint.textui import colored
 from pandas import read_pickle
 from fastparquet import ParquetFile
@@ -31,6 +32,11 @@ def clean(folder, data):
         data = data.drop(['realtime_start'], axis=1)
     if folder == 'eod':
         data = data.drop(['Open', 'High', 'Low', 'Volume', 'Adjusted_close'], axis=1)
+    if len(data.loc[data['Close'] == 0]) > 0:
+        return None
+    assert len(data.loc[data['Close'] == 0]) == 0, 'Data has zeros!'
+    assert len(data.index[isinf(data).any(1)]) == 0, 'Data has inf!'
+    assert len(data.index[isnan(data).any(1)]) == 0, 'Data has nan!'
     return data
 
 def join_data(primary, folder, symbols, clr=False):
@@ -38,8 +44,9 @@ def join_data(primary, folder, symbols, clr=False):
         data = get_pickle(folder, symbol).dropna()
         if clr:
             data = clean(folder=folder, data=data)
-        data = transform_multi_data(data=data, symbol=symbol)
-        primary = primary.join(data, how='left')
+        if data is not None:
+            data = transform_multi_data(data=data, symbol=symbol)
+            primary = primary.join(data, how='left')
     return fill_forward(data=primary)
 
 def convert_mt_pickle():
