@@ -15,7 +15,7 @@ def get(params):
     df['Date'] = to_datetime(df['Date'])
     df = df.sort_values('Date')
     df.index = df['Date']
-    del df['Date']
+    df = df.drop(['Date'], axis=1)
     df = df.rename(columns={"Open*": "Open", "Close**": "Close"})
     return df
 

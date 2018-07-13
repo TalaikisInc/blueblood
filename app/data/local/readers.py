@@ -24,7 +24,7 @@ def fill_forward(data):
 def transform_multi_data(data, symbol):
     for col in data.columns:
         data['{}_{}'.format(symbol, col)] = data[col]
-        del data[col]
+        data = data.drop([col], axis=1)
     return data
 
 def clean(folder, data):

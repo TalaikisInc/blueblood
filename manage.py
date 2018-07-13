@@ -12,6 +12,7 @@ from app.data.tiingo import run_tiingo, tii_symbols, tii_news
 from app.data.gf import run_gf
 from app.data.stooq import run_stooq
 from app.data.coinmarketcap import get_capitalization
+from app.data.fxcm import run_fxcm
 from app.models.playground import run_play
 from app.stats import run_analyze
 from app.data.local import convert_mt_pickle
@@ -47,7 +48,8 @@ if __name__ == '__main__':
         #run_morningstar()
         #run_stooq()
         # tii_news()
-        run_tiingo()
+        # run_tiingo()
+        run_fxcm()
 
     if args.play:
         run_play(args.play)

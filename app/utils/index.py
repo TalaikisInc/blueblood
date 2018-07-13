@@ -2,7 +2,7 @@ from os import listdir
 from os.path import isfile, join
 
 from numba import jit
-from numpy import log, cumsum
+from numpy import log, cumsum, log2, nonzero, sum
 from pandas import DataFrame
 from peewee import Field
 
@@ -32,3 +32,9 @@ def get_dividends_splits(close, adjusted):
 @jit
 def vwap(data):
     return cumsum(data['Volume'] * (data['High'] + data['Low']) / 2) / cumsum(data['Volume'])
+
+def shanon_entropy(c):
+    norm = c / float(sum(c))
+    norm = norm[nonzero(norm)]
+    H = -sum(norm * log2(norm))  
+    return H
