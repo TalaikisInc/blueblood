@@ -10,6 +10,7 @@ import requests_cache
 from requests.exceptions import HTTPError
 from peewee import IntegrityError
 from clint.textui import colored
+from tiingo.restclient import RestClientError
 
 from db import Market, DB, Source, News
 from utils import STORAGE_PATH
@@ -65,5 +66,7 @@ def run_tiingo():
                 data = client.get_dataframe(s.symbol, startDate='1980-01-01')
                 print(colored.green(s.symbol))
             except HTTPError as err:
+                print(colored.red(err))
+            except RestClientError as err:
                 print(colored.red(err))
         data.to_pickle(join(STORAGE_PATH, 'tiingo', '{}.p'.format(s.symbol)))
