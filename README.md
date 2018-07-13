@@ -10,7 +10,7 @@ Blue Blood Engine is a set of trading related tools and other software.
 
 ## STATUS
 
-In active development, what emans not every module will or should work.
+In active development, what means not every module will or should work.
 
 ## Note
 
