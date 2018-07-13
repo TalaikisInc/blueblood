@@ -7,8 +7,9 @@ from .blocks import Block
 from .contracts import Address, Contract
 from .crypto import CryptoExchange, CryptoMarket
 from .reddit import RedditComment, RedditCommentCount, RedditKeyword
-from .symbols import Exchange, Market, get_exchange, TypeChoices
+from .symbols import Exchange, Market, get_exchange, TypeChoices, Index
 from .alphas import AlphaOwner, Strategy, Stats, Alpha
+from .news import Source, News
 
 def create_tables():
     DB.connect()
@@ -25,7 +26,9 @@ def create_tables():
         AlphaOwner,
         Strategy,
         Stats,
-        Alpha
+        Alpha,
+        Source,
+        News
     ])
 
 __all__ = [
@@ -47,5 +50,7 @@ __all__ = [
     'Stats',
     'Alpha',
     'get_exchange',
-    'TypeChoices'
+    'TypeChoices',
+    'Source',
+    'News'
     ]

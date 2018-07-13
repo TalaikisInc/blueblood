@@ -29,6 +29,9 @@ class Market(BaseModel):
     edgar_cid = IntegerField(default=0)
     enabled = BooleanField(default=True)
 
+class Index(BaseModel):
+    symbol = CharField(primary_key=True)
+
 def get_exchange(title):
     e = Exchange.get_or_create(title=title)
     return e[0]

@@ -7,6 +7,10 @@ load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
 from app.data.fred import run as fred
 from app.data.iex import iex_symbols, run_iex #, get_spread
 from app.data.eod import eod_symbols, run_eod
+from app.data.morningstar import run_morningstar
+from app.data.tiingo import run_tiingo, tii_symbols, tii_news
+from app.data.gf import run_gf
+from app.data.stooq import run_stooq
 from app.data.coinmarketcap import get_capitalization
 from app.models.playground import run_play
 from app.stats import run_analyze
@@ -34,10 +38,16 @@ if __name__ == '__main__':
             #iex_symbols()
             #eod_symbols()
             #create_owners()
+            # tii_symbols()
             make_clusters()
         # run_iex()
         # get_spread()
         #run_eod()
+        #run_gf()
+        #run_morningstar()
+        #run_stooq()
+        # tii_news()
+        run_tiingo()
 
     if args.play:
         run_play(args.play)

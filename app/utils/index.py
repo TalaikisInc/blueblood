@@ -1,7 +1,8 @@
 from os import listdir
 from os.path import isfile, join
 
-from numpy import log
+from numba import jit
+from numpy import log, cumsum
 from pandas import DataFrame
 from peewee import Field
 
@@ -27,3 +28,7 @@ def log_returns(x):
 def get_dividends_splits(close, adjusted):
     '''Outputs should be classified into: dividend, split or white noise.'''
     return adjusted - close
+
+@jit
+def vwap(data):
+    return cumsum(data['Volume'] * (data['High'] + data['Low']) / 2) / cumsum(data['Volume'])
