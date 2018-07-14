@@ -18,7 +18,7 @@ def run_fxcm():
     for symbol in symbols:
         for year in range(2015, end.year):
             for w in range(1, 53):
-                if not (end.year == year) & not (w == end_week):
+                if not ((end.year == year) & (w == end_week)):
                     url = 'https://tickdata.fxcorporate.com/{}/{}/{}.csv.gz'.format(symbol, year, w)
                     data = get(url)
                     file_name = join(STORAGE_PATH, 'fxcm', '{}_{}_{}.gz'.format(symbol, year, w))
