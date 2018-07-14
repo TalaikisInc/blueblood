@@ -19,15 +19,18 @@ def get_parquet(name):
     return pf.to_pandas()
 
 def fill_forward(data):
+    ''' Fills forward empty data spots. '''
     return data.fillna(method='ffill')
 
 def transform_multi_data(data, symbol):
+    ''' Changes column names into differentiable ones. '''
     for col in data.columns:
         data['{}_{}'.format(symbol, col)] = data[col]
         data = data.drop([col], axis=1)
     return data
 
 def clean(folder, data):
+    ''' Clens not needed and data errors.'''
     if folder == 'fred':
         data = data.drop(['realtime_start'], axis=1)
     if folder == 'eod':
@@ -40,6 +43,7 @@ def clean(folder, data):
     return data
 
 def join_data(primary, folder, symbols, clr=False):
+    ''' Makes one DataFrame for many symbols. '''
     for symbol in symbols:
         data = get_pickle(folder, symbol).dropna()
         if clr:
@@ -50,6 +54,7 @@ def join_data(primary, folder, symbols, clr=False):
     return fill_forward(data=primary)
 
 def convert_mt_pickle():
+    ''' Converts MT4 exported CSV to lcoal format. '''
     fs = filenames(path=META_PATH)
     for f in fs:
         try:

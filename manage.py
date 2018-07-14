@@ -48,8 +48,8 @@ if __name__ == '__main__':
         #run_morningstar()
         #run_stooq()
         # tii_news()
-        # run_tiingo()
-        run_fxcm()
+        run_tiingo()
+        # run_fxcm()
 
     if args.play:
         run_play(args.play)

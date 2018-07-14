@@ -5,7 +5,7 @@ from numba import jit
 from numpy import log, cumsum, log2, nonzero, sum, histogram2d
 from pandas import DataFrame
 from peewee import Field
-from sklearn.metrics import mutual_info_score
+from sklearn.metrics import mutual_info_score, log_loss
 
 
 def peewee_to_df(table):
@@ -43,3 +43,13 @@ def shanon_entropy(c):
 def mutual_info(x, y, bins):
     c_xy = histogram2d(x, y, bins)[0]
     return mutual_info_score(None, None, contingency=c_xy)
+
+def logloss(prtedicted, y, name):
+    val = log_loss(y, predicted)
+    print('Log Loss for {}: {:.6f}.'.format(name, val))
+    return val
+
+def diff(data, symbols):
+    for s in symbols:
+        data['{}_Diff'.format(s)] = data['{}_Close'.format(s)].diff()
+    return data

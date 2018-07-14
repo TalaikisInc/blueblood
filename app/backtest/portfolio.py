@@ -1,8 +1,6 @@
 from matplotlib import pyplot as plt
 from numpy import where
 
-from data.local import get_pickle, join_data, transform_multi_data
-from utils import train_test_split
 from models.alpha import alpha, all_alphas
 from stats import commissions
 
@@ -23,11 +21,6 @@ def res(s, data):
     # @TODO add more stats
 """
 
-def diff(data, symbols):
-    for s in symbols:
-        data['{}_Diff'.format(s)] = data['{}_Close'.format(s)].diff()
-    return data
-
 def clean(data, symbols):
     for s in symbols:
         data.drop(['{}_Open'.format(s),
@@ -43,16 +36,10 @@ def basic_runs():
     SYMBOLS = ['SP500_1440', 'NASDAQ100_1440', 'RUSSELL2000_1440', 'DAX30_1440',
         'FTSE100_1440', 'DJ30_1440', '10YTNOTES_1440', 'GOLD_1440', 'OMX30_1440',
         'NIFTY50_1440', 'CAC40_1440']
-    initial = get_pickle('mt', SYMBOLS[0])
-    initial = transform_multi_data(data=initial, symbol='SP500_1440')
-    initial = join_data(primary=initial, folder='mt', symbols=SYMBOLS[1:])
-    data, test = train_test_split(data=initial.dropna(), part=0.6)
 
     for i in all_alphas():
         print(i)
-        a = alpha(model=i, data=data, symbols=SYMBOLS).fillna(0.0)
-        a = diff(data=a, symbols=SYMBOLS)
-        # a = clean_transform(data=a, symbols=SYMBOLS)
+        a = alpha(model=i, symbols=SYMBOLS, train=True).fillna(0.0)
         # should be moved into rebalancing, allocations, weights, etc.
         for s in SYMBOLS:
             q = quantity(capital=10000, price=a['{}_Open'.format(s)], alloc=1.0)

@@ -93,9 +93,9 @@ For alpha providers.
 Model:
 
 ```python
-def compute(data):
+def compute(data, symbols):
     def owner():
-        return 'Your Name <your@email.com>'
+        return Owner('My Name', 'my@email.com>')
     '''
     Description (optional)
     '''
