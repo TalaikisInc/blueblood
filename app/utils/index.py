@@ -2,9 +2,10 @@ from os import listdir
 from os.path import isfile, join
 
 from numba import jit
-from numpy import log, cumsum, log2, nonzero, sum
+from numpy import log, cumsum, log2, nonzero, sum, histogram2d
 from pandas import DataFrame
 from peewee import Field
+from sklearn.metrics import mutual_info_score
 
 
 def peewee_to_df(table):
@@ -38,3 +39,7 @@ def shanon_entropy(c):
     norm = norm[nonzero(norm)]
     H = -sum(norm * log2(norm))  
     return H
+
+def mutual_info(x, y, bins):
+    c_xy = histogram2d(x, y, bins)[0]
+    return mutual_info_score(None, None, contingency=c_xy)

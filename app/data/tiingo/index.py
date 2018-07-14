@@ -57,6 +57,7 @@ def tii_news():
             created_date=article['crawlDate'])
 
 def get_data(s):
+    data = None
     try:
         data = get_data_tiingo(s.symbol, api_key=getenv('TIINGO_API_KEY'), session=session)
     except NameError:
@@ -68,14 +69,19 @@ def get_data(s):
             print(colored.red(err))
         except RestClientError as err:
             print(colored.red(err))
+        except KeyError as err:
+            print(colored.red(err))
     return data
 
 def run_tiingo(i=0):
-    for s in Market.select()[i:]:
+    for s in Market.select()[i+38500:]:
         data = get_data(s=s)
         try:
-            data.to_pickle(join(STORAGE_PATH, 'tiingo', '{}.p'.format(s.symbol)))
+            if data is not None:
+                data.to_pickle(join(STORAGE_PATH, 'tiingo', '{}.p'.format(s.symbol)))
             i += 1
         except FileNotFoundError as err:
             print(colored.red('Retrying due to disk error: {}'.format(err)))
             run_tiingo(i=i)
+        except KeyError as err:
+            print(colored.red(err))
