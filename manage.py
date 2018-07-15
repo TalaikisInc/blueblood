@@ -4,6 +4,9 @@ from os.path import join, dirname, abspath
 from dotenv import load_dotenv
 load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
 
+# Db
+from app.db import create_tables
+# Data
 from app.data.fred import run as fred
 from app.data.iex import iex_symbols, run_iex #, get_spread
 from app.data.eod import eod_symbols, run_eod
@@ -13,13 +16,15 @@ from app.data.gf import run_gf
 from app.data.stooq import run_stooq
 from app.data.coinmarketcap import get_capitalization
 from app.data.fxcm import run_fxcm
+from app.data.local import convert_mt_pickle, cleaner
+# Models
 from app.models.playground import run_play
-from app.stats import run_analyze
-from app.data.local import convert_mt_pickle
-from app.backtest import basic_runs
-from app.db import create_tables
 from app.models.alpha import create_owners
 from app.models.clusters import make_clusters
+# Stats
+from app.stats import run_analyze
+# Testing
+from app.backtest import basic_runs
 
 parser = ArgumentParser(description="BlueBlood management point.")
 
@@ -48,8 +53,9 @@ if __name__ == '__main__':
         #run_morningstar()
         #run_stooq()
         # tii_news()
-        run_tiingo()
+        # run_tiingo()
         # run_fxcm()
+        # cleaner()
 
     if args.play:
         run_play(args.play)

@@ -25,3 +25,4 @@ ffn
 pandas_datareader
 tiingo
 statsmodels
+pyfinance

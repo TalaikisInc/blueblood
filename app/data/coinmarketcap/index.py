@@ -26,7 +26,7 @@ def _cap(date):
 
 # @TODO get last available and request only after that
 def get_capitalization():
-    fs = filenames(join(STORAGE_PATH, 'cmc'))
+    fs = filenames('cmc')
     dates = available_snaps()
     if len(fs) == 0:
         for i in range(len(dates)):
