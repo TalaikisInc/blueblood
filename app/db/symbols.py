@@ -1,6 +1,6 @@
 from enum import Enum
 
-from peewee import CharField, ForeignKeyField, IntegerField, BooleanField
+from peewee import CharField, ForeignKeyField, IntegerField, BooleanField, TextField
 from peewee_extra_fields import EnumField
 
 from . import BaseModel
@@ -24,6 +24,7 @@ class TypeChoices(Enum):
 class Market(BaseModel):
     symbol = CharField(primary_key=True)
     name = CharField()
+    description = TextField(default='')
     market_type = CharField(default='')
     exchange = ForeignKeyField(Exchange, backref='markets')
     edgar_cid = IntegerField(default=0)

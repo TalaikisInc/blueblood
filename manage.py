@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
 
 # Db
-from app.db import create_tables
+from app.db import migrate, create_migrations
 # Data
 from app.data.fred import run as fred
 from app.data.iex import iex_symbols, run_iex #, get_spread
@@ -44,8 +44,8 @@ if __name__ == '__main__':
             #iex_symbols()
             #eod_symbols()
             #create_owners()
-            # tii_symbols()
-            make_clusters()
+            tii_symbols()
+            #make_clusters()
         # run_iex()
         # get_spread()
         #run_eod()
@@ -70,5 +70,7 @@ if __name__ == '__main__':
         basic_runs()
 
     if args.db:
-        if args.db == 'one_time':
-            create_tables()
+        if args.db == 'create_migrations':
+            create_migrations()
+        if args.db == 'migrate':
+            migrate()

@@ -1,4 +1,4 @@
-from peewee import CharField, ForeignKeyField, SmallIntegerField, DecimalField, DateTimeField
+from peewee import CharField, ForeignKeyField, SmallIntegerField, DecimalField, DateTimeField, IntegerField
 from playhouse.postgres_ext import JSONField
 from peewee_extra_fields import EnumField
 
@@ -9,24 +9,14 @@ class AlphaOwner(BaseModel):
     name = CharField()
     email = CharField()
 
-    class Meta:
-        indexes = (
-            (('name', 'email'), True)
-        )
-
 class Alpha(BaseModel):
     name = CharField(unique=True)
-    owner = ForeignKeyField(AlphaOwner, backref='alphas')
+    owner = ForeignKeyField(AlphaOwner, backref='alpha_models')
 
 class Strategy(BaseModel):
-    alpha = ForeignKeyField(Alpha, backref='strategies')
     rule = SmallIntegerField()
     param = SmallIntegerField()
-
-    class Meta:
-        indexes = (
-            (('alpha', 'rule'), True)
-        )
+    alpha = ForeignKeyField(Alpha, backref='strategies')
 
 class Stats(BaseModel):
     strategy = ForeignKeyField(Strategy, backref='stats')

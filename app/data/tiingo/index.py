@@ -12,7 +12,7 @@ from peewee import IntegrityError
 from clint.textui import colored
 from tiingo.restclient import RestClientError
 
-from db import Market, DB, Source, News
+from db import Market, DB, Source, News, get_exchange
 from utils import STORAGE_PATH
 expire_after = timedelta(days=1)
 session = requests_cache.CachedSession(cache_name='stooq_cache', backend='sqlite', expire_after=expire_after)
@@ -24,11 +24,10 @@ def c():
 def tii_symbols():
     client = c()
     symbols = client.list_stock_tickers()
+    e = get_exchange('')
     for symbol in symbols:
         try:
             meta = client.get_ticker_metadata(symbol['ticker'])
-            # @TODO Add to db
-            # meta['description']
         except HTTPError as err:
             print(colored.red(err))
         if symbol['assetType'] == 'Stock':
@@ -36,7 +35,7 @@ def tii_symbols():
         else:
             print(symbol['assetType'])
         try:
-            Market.create(symbol=symbol['ticker'], name=meta['name'], exchange=0, market_type=market_type)
+            Market.create(symbol=symbol['ticker'], name=meta['name'], exchange=e, market_type=market_type, description=meta['description'])
             print(colored.green(symbol['ticker']))
         except IntegrityError:
             DB.rollback()
