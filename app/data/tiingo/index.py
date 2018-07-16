@@ -30,6 +30,8 @@ def tii_symbols():
             meta = client.get_ticker_metadata(symbol['ticker'])
         except HTTPError as err:
             print(colored.red(err))
+        except Exception as err:
+            print(colored.red(err))
         if symbol['assetType'] == 'Stock':
             market_type = 'cs'
         else:

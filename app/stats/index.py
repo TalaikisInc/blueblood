@@ -364,3 +364,28 @@ STAT_MAP = {
     'ulcer_index': 'Ulcer Index measures downside risk, in terms of both depth and duration of price declines.',
     'ulcer_performance_index': 'Ulcer Performance Index, a.k.a. Martin ratio is a Sharpe ratio with Ulcer Index instead of variability.'
 }
+
+def market_cap(pe, net_income):
+    return pe * net_income
+
+def revenue_per_employee(revenue, employees):
+    return revenue / employees
+
+def eps(net_income, shares_outstanding):
+    return net_income / shares_outstanding
+
+def working_capital_ratio(assets, liabilities):
+    return assets / liabilities
+
+def assets(cash, receivables, short_term_investments):
+    return cash + receivables + short_term_investments
+
+def acid_test(assets, inventory, liabilities):
+    ''' Shows how well liabilities are covered by cash. '''
+    return (assets - inventory) / liabilities
+
+def debt_equity_ratio(debt, book_value):
+    return debt / book_value
+
+def roe(net_income, book_value):
+    return net_income / book_value
