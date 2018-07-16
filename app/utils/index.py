@@ -2,7 +2,8 @@ from os import listdir, chdir
 from os.path import isfile, join, abspath
 
 from numba import jit
-from numpy import log, cumsum, log2, nonzero, sum, histogram2d
+from numpy import log, cumsum, log2, nonzero, sum, histogram2d, sqrt, polyfit, subtract, std
+from numpy.polynomial import Polynomial
 from pandas import DataFrame
 from peewee import Field
 from sklearn.metrics import mutual_info_score, log_loss
@@ -76,3 +77,30 @@ def slope(data0, data1):
 
 def roll_slope(data0, data1, per):
     return PandasRollingOLS(y=data1, x=data0, window=per).beta
+
+def compound_interest(principal, rate, years):
+    ''' Compound interest. '''
+    for _ in range(years):
+        principal *= rate
+    return round(principal, 2)
+
+def parkinson_vol(close, per):
+    ''' Parkinsons' volatility. '''
+    var = (close - close.rolling(window=per, min_periods=per).mean())
+    var2 = var * var
+    return sqrt(var2.rolling(window=(per-1), min_periods=(per-1)).sum() * 1/(4*log(2)) * 252/(per-1))
+
+def hurst(ts):
+    ''' Returns the Hurst Exponent. '''
+    lags = range(2, 20)
+    tau = [sqrt(std(subtract(ts[lag:], ts[:-lag]))) for lag in lags]
+    poly = polyfit(log(lags), log(tau), 1)
+    return poly[0] * 2.0
+
+def poly(x, y, plot=False):
+    p = Polynomial.fit(y, x, 3)
+    if plot:
+        plt.scatter(x, y)
+        plt.plot(*p.linspace(), lw=3, color='r')
+        plt.show()
+    return p

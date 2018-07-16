@@ -6,17 +6,17 @@ from datetime import datetime
 from pandas import DataFrame, read_csv
 from numpy import  nan
 
+from utils import STORAGE_PATH
+
 
 m_codes = ['F','G','H','J','K','M','N','Q','U','V','X','Z'] #month codes of the futures
 codes = dict(list(zip(m_codes,list(range(1,len(m_codes)+1)))))
-BASE_DIR = dirname(dirname(__file__))
-dataDir = join(BASE_DIR, "storage", "futures")
-   
+DIR = join(STORAGE_PATH, 'futures')
 
-def saveVixFutureData(year, month, path, forceDownload=False):
+def save_data(year, month, path, forceDownload=False):
     ''' Get future from CBOE and save to file '''
     fName = "CFE_{0}{1}_VX.csv".format(m_codes[month],str(year)[-2:])
-    if exists(join(dataDir, fName)) or forceDownload:
+    if exists(join(DIR, fName)) or forceDownload:
         print('File already downloaded, skipping')
         return
     
@@ -27,8 +27,8 @@ def saveVixFutureData(year, month, path, forceDownload=False):
     except Exception as e:
         print(e)
 
-def buildDataTable(dataDir):
-    """ create single data sheet """
+def build_table(dataDir):
+    ''' create single data sheet '''
     files = listdir(dataDir)
 
     data = {}
@@ -74,9 +74,9 @@ def buildDataTable(dataDir):
 if __name__ == '__main__':
     for year in range(2018, 2018):
         for month in range(12):
-            print('Getting data for {0}/{1}'.format(year, month+1))
-            saveVixFutureData(year, month, dataDir)
+            print('Getting data for {0}/{1}'.format(year, month + 1))
+            save_data(year, month, DIR)
 
-    print('Raw wata was saved to {0}'.format(dataDir))
+    print('Raw wata was saved to {0}'.format(DIR))
     
-    buildDataTable(dataDir)
+    build_table(DIR)

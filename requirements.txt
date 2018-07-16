@@ -26,3 +26,5 @@ pandas_datareader
 tiingo
 statsmodels
 pyfinance
+quandl
+logbook

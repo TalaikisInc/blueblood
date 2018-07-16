@@ -1,8 +1,5 @@
 #!/bin/bash
 
-go get github.com/Adyzng/go-duka
-go get github.com/adyzng/go-duka/...
-go build
 # Majors
 go-duka -format csv -start "2003-01-01" -symbol EURUSD -timeframe M1 -header -output "../../../storage/dukas"
 go-duka -format csv -start "2003-01-01" -symbol GBPUSD -timeframe M1 -header -output "../../../storage/dukas"

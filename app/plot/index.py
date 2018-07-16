@@ -1,7 +1,7 @@
 from os.path import dirname, join
 
 from matplotlib import pyplot as plt
-from numpy import array
+from numpy import array, sort
 from statsmodels.api import qqplot
 from scipy.sttats import t
 
@@ -54,4 +54,9 @@ def drawdown_to_percentile(cumulative, title, save=False):
 
 def qq(res):
     fig = qqplot(res, stats.t, fit=True, line='45')
+    plt.show()
+
+def hist(data):
+    sorted = sort(data)
+    plt.hist(sorted, bins=100)
     plt.show()
