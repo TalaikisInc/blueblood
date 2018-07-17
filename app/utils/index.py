@@ -1,10 +1,11 @@
 from os import listdir, chdir
 from os.path import isfile, join, abspath
+from collections import namedtuple
 
 from numba import jit
 from numpy import log, cumsum, log2, nonzero, sum, histogram2d, sqrt, polyfit, subtract, std
 from numpy.polynomial import Polynomial
-from pandas import DataFrame
+from pandas import DataFrame, Series
 from peewee import Field
 from sklearn.metrics import mutual_info_score, log_loss
 from statsmodels.api import OLS
@@ -104,3 +105,13 @@ def poly(x, y, plot=False):
         plt.plot(*p.linspace(), lw=3, color='r')
         plt.show()
     return p
+
+def rank(array):
+    s = Series(array)
+    return s.rank(ascending=False)[len(s)-1]
+
+Pair = namedtuple('Pair', 'symbol_a symbol_b')
+
+Owner = namedtuple('Owner', 'name email')
+
+Fixed = namedtuple('Fixed', 'symbol')
