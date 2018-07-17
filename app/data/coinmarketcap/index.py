@@ -1,10 +1,10 @@
 import datetime
-from os.path import join
 
 from pandas import read_html, to_datetime, DataFrame
 
 from .coinmarketcappy import total_market_cap, dominance, historical_snapshots, available_snaps
-from utils import filenames, STORAGE_PATH
+from utils import filenames
+from data.local import to_pickle
 
 
 def get(params):
@@ -22,7 +22,7 @@ def get(params):
 def _cap(date):
     snaps = historical_snapshots(date)
     df = DataFrame(snaps[date], columns=['id', 'symbol', 'name', 'cap', 'price', 'supply', 'volume'])
-    df.to_pickle(join(STORAGE_PATH, 'cmc', '{}.p'.format(date)))
+    to_pickle(df, 'cmc', date)
 
 # @TODO get last available and request only after that
 def get_capitalization():

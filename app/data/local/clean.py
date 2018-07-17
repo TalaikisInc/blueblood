@@ -1,10 +1,8 @@
-from os.path import join
-
 from clint.textui import colored
 from pandas import DataFrame
 
-from data.local import get_pickle
-from utils import filenames, STORAGE_PATH
+from data.local import get_pickle, to_pickle
+from utils import filenames
 
 
 def cleaner():
@@ -41,7 +39,7 @@ def cleaner():
                         data['Split'] = d3['splitFactor']
                         data['Volume'] = d3['volume']
                         if len(data) > 1000:
-                            data.to_pickle(join(STORAGE_PATH, 'accepted', s))
+                            to_pickle(data, 'accepted', name)
                             print(colored.green(name))
         except Exception as err:
             print(colored.red(err))

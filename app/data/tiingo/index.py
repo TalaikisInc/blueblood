@@ -1,5 +1,4 @@
 from os import getenv
-from os.path import join
 from datetime import timedelta
 
 try:
@@ -13,7 +12,7 @@ from clint.textui import colored
 from tiingo.restclient import RestClientError
 
 from db import Market, DB, Source, News, get_exchange
-from utils import STORAGE_PATH
+from data.local import to_pickle
 expire_after = timedelta(days=1)
 session = requests_cache.CachedSession(cache_name='stooq_cache', backend='sqlite', expire_after=expire_after)
 
@@ -79,7 +78,7 @@ def run_tiingo(i=0):
         data = get_data(s=s)
         try:
             if data is not None:
-                data.to_pickle(join(STORAGE_PATH, 'tiingo', '{}.p'.format(s.symbol)))
+                to_pickle(data, 'tiingo', '{}'.format(s.symbol))
             i += 1
         except FileNotFoundError as err:
             print(colored.red('Retrying due to disk error: {}'.format(err)))

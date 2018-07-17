@@ -3,27 +3,26 @@ from os import getenv
 from pandas import DataFrame
 from coinapi_v1 import CoinAPIv1
 
-from utils import STORAGE_DIR
-from data.local import get_pickle
+from data.local import get_pickle, to_pickle
 
 
 def coinapi_exchanges(api):
     exchanges = DataFrame(api.metadata_list_exchanges())
-    exchanges.to_pickle(join(STORAGE_DIR, 'coinapi', 'exchanges.p'))
+    to_pickle(exchanges, 'coinapi', 'exchanges')
 
 def coinapi_coins(api):
     symbols = DataFrame(api.metadata_list_symbols())
-    symbols.to_pickle(join(STORAGE_DIR, 'coinapi', 'symbols.p'))
+    to_pickle(symbols, 'coinapi', 'symbols')
 
 def coinapi_periods(api):
     periods = DataFrame(api.ohlcv_list_all_periods())
-    periods.to_csv(join(STORAGE_DIR, 'coinapi', 'periods.p'))
+    to_pickle(periods, 'coinapi', 'periods')
 
 def conapi_data(api, symbol_id, period, start_data):
     data = DataFrame(
         api.ohlcv_historical_data('{}'.format(symbol_id), {'period_id': period, 'time_start': start_data})
     )
-    data.to_pickle(join(STORAGE_DIR, 'coinapi', '{}_{}.p'.format(symbol_id, period)))
+    to_pickle(data, 'coinapi', 'symbols', '{}_{}'.format(symbol_id, period))
 
 def coinapi_save_initial_data(api):
     coinapi_exchanges(api)

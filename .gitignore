@@ -14,7 +14,6 @@ __pycache__/
 *$py.class
 *.sqlite
 *.bi5
-eeodhist
 *.json
 *.txt
 out/
