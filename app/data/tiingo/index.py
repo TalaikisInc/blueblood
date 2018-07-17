@@ -74,7 +74,7 @@ def get_data(s):
     return data
 
 def run_tiingo(i=0):
-    for s in Market.select()[i+38500:]:
+    for s in Market.select()[i:]:
         data = get_data(s=s)
         try:
             if data is not None:

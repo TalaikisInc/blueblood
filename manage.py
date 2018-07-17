@@ -53,7 +53,7 @@ if __name__ == '__main__':
         #run_morningstar()
         #run_stooq()
         # tii_news()
-        # run_tiingo()
+        run_tiingo()
         # run_fxcm()
         # cleaner()
 

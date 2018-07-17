@@ -2,7 +2,7 @@ from .readers import get_pickle, get_parquet, convert_mt_pickle, join_data, tran
 from .writers import write_parq, to_pickle
 from .clean import cleaner
 
-__all__ = [
+__ALL__ = [
     'get_pickle',
     'get_parquet',
     'join_data',
@@ -10,4 +10,4 @@ __all__ = [
     'transform_multi_data',
     'cleaner',
     'to_pickle'
-    ]
+]

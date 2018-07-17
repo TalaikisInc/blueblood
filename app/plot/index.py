@@ -1,9 +1,10 @@
 from os.path import dirname, join
 
 from matplotlib import pyplot as plt
-from numpy import array, sort
+from numpy import array, sort, unique
 from statsmodels.api import qqplot
 from scipy.sttats import t
+from sklearn.manifold import TSNE
 
 from stats import percentiles, drawdowns
 BASE_PATH = join(dirname(dirname(dirname(__file__))), 'storage', 'plots')
@@ -59,4 +60,18 @@ def qq(res):
 def hist(data):
     sorted = sort(data)
     plt.hist(sorted, bins=100)
+    plt.show()
+
+def tsne(X, y):
+    model = TSNE(n_components=2, random_state=0)
+    x_2d = model.fit_transform(X)
+    markers=('s', 'd', 'o', '^', 'v')
+    color_map = {0: 'red', 1: 'blue', 2: 'lightgreen', 3: 'purple', 4: 'cyan'}
+    plt.figure()
+    for idx, cl in enumerate(unique(y_test)):
+        plt.scatter(x=x_2d[y==cl, 0], y=x_2d[y==cl, 1], c=color_map[idx], marker=markers[idx], label=cl)
+    plt.xlabel('X in t-SNE')
+    plt.ylabel('Y in t-SNE')
+    plt.legend(loc='upper left')
+    plt.title('t-SNE visualization of test data')
     plt.show()

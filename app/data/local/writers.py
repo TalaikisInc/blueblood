@@ -1,6 +1,8 @@
+from os.path import join
+
 from fastparquet import write
 
-from data.local import to_pickle
+from utils import STORAGE_PATH
 
 
 def write_parq(df, name):
@@ -8,4 +10,4 @@ def write_parq(df, name):
     write(path, df, compression='GZIP', file_scheme='hive')
 
 def to_pickle(data, folder, name):
-    to_pickle(data, folder, name)
+    data.to_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
