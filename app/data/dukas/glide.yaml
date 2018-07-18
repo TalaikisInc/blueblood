@@ -1,0 +1,6 @@
+package: github.com/adyzng/go-duka
+import:
+- package: github.com/go-clog/clog
+  version: ^1.1.1
+- package: github.com/kjk/lzma
+- package: golang.org/x/sys/unix

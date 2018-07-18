@@ -41,70 +41,70 @@ bool bOTLibServerErrorType(int iErr) {
     //  so that we can take action based on classes of errors.
     switch(iErr) {
     case ERR_NO_ERROR: // 0
-	return(OFLIB_OTHER_ERROR);
+    return(OFLIB_OTHER_ERROR);
     case ERR_NO_RESULT: // 1
-	return(OFLIB_OTHER_ERROR);
+    return(OFLIB_OTHER_ERROR);
     case ERR_COMMON_ERROR: // 2
-	return(OFLIB_OTHER_ERROR);
+    return(OFLIB_OTHER_ERROR);
 
     case ERR_INVALID_TRADE_PARAMETERS: // 3
-	return(OFLIB_ORDER_ERROR);
+    return(OFLIB_ORDER_ERROR);
 
     case ERR_SERVER_BUSY: // 4
-	return(OFLIB_BUSY_ERROR);
+    return(OFLIB_BUSY_ERROR);
 
     case ERR_OLD_VERSION: // 5
-	return(OFLIB_FATAL_ERROR);
+    return(OFLIB_FATAL_ERROR);
 
     case ERR_NO_CONNECTION: // 6
-	return(OFLIB_NETWORK_ERROR);
+    return(OFLIB_NETWORK_ERROR);
 
     case ERR_NOT_ENOUGH_RIGHTS: // 7
     case ERR_TOO_FREQUENT_REQUESTS: // 8
     case ERR_MALFUNCTIONAL_TRADE: // 9
-	return(OFLIB_ORDER_ERROR); //? or retry?
+    return(OFLIB_ORDER_ERROR); //? or retry?
 
     case ERR_ACCOUNT_DISABLED: // 64
     case ERR_INVALID_ACCOUNT: // 65
-	return(OFLIB_ACCOUNT_ERROR);
+    return(OFLIB_ACCOUNT_ERROR);
 
     case ERR_TRADE_TIMEOUT: // 128
-	return(OFLIB_NETWORK_ERROR);
+    return(OFLIB_NETWORK_ERROR);
 
     case ERR_INVALID_PRICE: // 129
     case ERR_INVALID_STOPS: // 130
-	return(OFLIB_BUSY_ERROR);
+    return(OFLIB_BUSY_ERROR);
 
     case ERR_INVALID_TRADE_VOLUME: // 131
     case ERR_MARKET_CLOSED: // 132
     case ERR_TRADE_DISABLED: // 133
     case ERR_NOT_ENOUGH_MONEY: // 134
-	return(OFLIB_ORDER_ERROR);
+    return(OFLIB_ORDER_ERROR);
 
     case ERR_PRICE_CHANGED: // 135
-	return(OFLIB_BUSY_ERROR);
+    return(OFLIB_BUSY_ERROR);
 
     case ERR_OFF_QUOTES: // 136
     case ERR_BROKER_BUSY: // 137
     case ERR_REQUOTE: // 138
-	return(OFLIB_BUSY_ERROR);
+    return(OFLIB_BUSY_ERROR);
 
     case ERR_ORDER_LOCKED: // 139
-	return(OFLIB_BUSY_ERROR);
+    return(OFLIB_BUSY_ERROR);
 
     case ERR_LONG_POSITIONS_ONLY_ALLOWED: // 140
     case ERR_TOO_MANY_REQUESTS: // 141
     case ERR_TRADE_MODIFY_DENIED: // 145
-	return(OFLIB_ORDER_ERROR);
+    return(OFLIB_ORDER_ERROR);
 
     case ERR_TRADE_CONTEXT_BUSY: // 146
-	return(OFLIB_BUSY_ERROR);
+    return(OFLIB_BUSY_ERROR);
 
     case ERR_TRADE_EXPIRATION_DENIED: // 147
     case ERR_TRADE_TOO_MANY_ORDERS: // 148
-	return(OFLIB_ORDER_ERROR);
+    return(OFLIB_ORDER_ERROR);
 
-	//---- mql4 run time errors
+    //---- mql4 run time errors
     case ERR_NO_MQLERROR: // 4000
     case ERR_WRONG_FUNCTION_POINTER: // 4001
     case ERR_ARRAY_INDEX_OUT_OF_RANGE: // 4002
@@ -145,10 +145,10 @@ bool bOTLibServerErrorType(int iErr) {
     case ERR_DOUBLE_PARAMETER_EXPECTED: // 4064
     case ERR_ARRAY_AS_PARAMETER_EXPECTED: // 4065
     case ERR_HISTORY_WILL_UPDATED: // 4066
-	return(OFLIB_RUNTIME_ERROR);
+    return(OFLIB_RUNTIME_ERROR);
 
     case ERR_TRADE_ERROR: // 4067
-	return(OFLIB_BUSY_ERROR);
+    return(OFLIB_BUSY_ERROR);
 
     case ERR_END_OF_FILE: // 4099
     case ERR_SOME_FILE_ERROR: // 4100
@@ -156,7 +156,7 @@ bool bOTLibServerErrorType(int iErr) {
     case ERR_TOO_MANY_OPENED_FILES: // 4102
     case ERR_CANNOT_OPEN_FILE: // 4103
     case ERR_INCOMPATIBLE_FILEACCESS: // 4104
-	return(OFLIB_FILE_ERROR);
+    return(OFLIB_FILE_ERROR);
 
     case ERR_NO_ORDER_SELECTED: // 4105
     case ERR_UNKNOWN_SYMBOL: // 4106
@@ -165,7 +165,7 @@ bool bOTLibServerErrorType(int iErr) {
     case ERR_TRADE_NOT_ALLOWED: // 4109
     case ERR_LONGS_NOT_ALLOWED: // 4110
     case ERR_SHORTS_NOT_ALLOWED: // 4111
-	return(OFLIB_ORDER_ERROR);
+    return(OFLIB_ORDER_ERROR);
 
     case ERR_OBJECT_ALREADY_EXISTS: // 4200
     case ERR_UNKNOWN_OBJECT_PROPERTY: // 4201
@@ -175,7 +175,7 @@ bool bOTLibServerErrorType(int iErr) {
     case ERR_OBJECT_COORDINATES_ERROR: // 4205
     case ERR_NO_SPECIFIED_SUBWINDOW: // 4206
     case ERR_SOME_OBJECT_ERROR: // 4207
-	return(OFLIB_WINDOW_ERROR);
+    return(OFLIB_WINDOW_ERROR);
     }
     return(OFLIB_OTHER_ERROR);
 }

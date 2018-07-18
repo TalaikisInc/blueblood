@@ -1,6 +1,6 @@
 from os.path import join
 
-from numpy import isinf, isnan
+from numpy import isinf, isnan, nan
 from clint.textui import colored
 from pandas import read_pickle
 from fastparquet import ParquetFile
@@ -11,7 +11,10 @@ from utils import filenames
 
 
 def get_pickle(folder, name):
-    return read_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
+    data = read_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
+    data[data.columns] = data[data.columns]..replace({ 0: nan })
+    data.fillna(method='ffill', inplace=True)
+    return data.dropna()
 
 def get_parquet(name):
     path = join(STORAGE_PATH, 'parq', '{}.parq'.format(name))

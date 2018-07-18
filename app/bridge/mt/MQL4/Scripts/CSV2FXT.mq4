@@ -158,14 +158,14 @@ extern datetime EndDate=0; // End date
 extern bool   UseRealSpread=false; // Use real (variable) spread
 extern double SpreadPadding = 0.0; // Spread padding
 extern double MinSpread = 0.0; // Minimum spread
-extern string CommissionInfo = "Only fill in the desired commission type."; // Commission info 
+extern string CommissionInfo = "Only fill in the desired commission type."; // Commission infoï¿½
 extern double PipsCommission = 0.0; // Commission in pips
 extern double MoneyCommission = 0.0; // Commission in account currency
 extern string Leverage = "automatic (current account leverage)";
 extern string GMTOffsetInfo2 = "These apply to the resulting FXT file."; // FXT GMT and DST info
 input  GMT    FXTGMTOffset = 0; // FXT GMT offset
 input  DST    FXTDST = 0; // FXT DST setting
-extern string GMTOffsetInfo3 = "These specify the configuration of the CSV data file."; // CSV GMT and DST info  
+extern string GMTOffsetInfo3 = "These specify the configuration of the CSV data file."; // CSV GMT and DST info ï¿½
 input  AGMT   CSVGMTOffset = -13; // CSV GMT offset
 input  ADST   CSVDST = -1; // CSV DST setting
 extern bool   RemoveDuplicateTicks = true; // Remove duplicate ticks
@@ -628,7 +628,7 @@ bool ReadNextTick(datetime& cur_time, double& tick_price, double& tick_volume)
 //----
    bool hadOlderTickError = false;
    while(!IsStopped())
-	{
+    {
       // read record
       datetime date_time = 0;
       double dblAsk = 0, dblBid = 0, dblAskVol = 0, dblBidVol = 0;
@@ -662,85 +662,85 @@ bool ReadNextTick(datetime& cur_time, double& tick_price, double& tick_volume)
                   break;
                }
             }
-	         else if (ExtVolumeAskField == i) {
-	            dblAskVol = SpecialStrToDouble(field);
-	         }
-	         else if (ExtVolumeBidField == i) {
-	            dblBidVol = SpecialStrToDouble(field);
-	         }
+             else if (ExtVolumeAskField == i) {
+                dblAskVol = SpecialStrToDouble(field);
+             }
+             else if (ExtVolumeBidField == i) {
+                dblBidVol = SpecialStrToDouble(field);
+             }
          }
          else {
             double value = CsvReadDouble(ExtCsvHandle);
-	         if (ExtAskField1 == i) {
+             if (ExtAskField1 == i) {
                if (value == 0) {
                   brokenRecord = true;
                   break;
                }
-	            dblAsk = value;
-	         }
-	         else if (ExtBidField1 == i) {
+                dblAsk = value;
+             }
+             else if (ExtBidField1 == i) {
                if (value == 0) {
                   brokenRecord = true;
                   break;
                }
-	            dblBid = value;
-	         }
-	         else if (ExtAskField2 == i) {
-	            dblAsk += MakeFractional(DoubleToStr(value, 0));
-	         }
-	         else if (ExtBidField2 == i) {
-	            dblBid += MakeFractional(DoubleToStr(value, 0));
-	         }
-	         else if (ExtVolumeAskField == i) {
-	            dblAskVol = value;
-	         }
-	         else if (ExtVolumeBidField == i) {
-	            dblBidVol = value;
-	         }
-	      }
-	   }
+                dblBid = value;
+             }
+             else if (ExtAskField2 == i) {
+                dblAsk += MakeFractional(DoubleToStr(value, 0));
+             }
+             else if (ExtBidField2 == i) {
+                dblBid += MakeFractional(DoubleToStr(value, 0));
+             }
+             else if (ExtVolumeAskField == i) {
+                dblAskVol = value;
+             }
+             else if (ExtVolumeBidField == i) {
+                dblBidVol = value;
+             }
+          }
+       }
 
-	   if (!CsvIsEnding(ExtCsvHandle) && !CsvIsLineEnding(ExtCsvHandle) && extraFieldsMsg < 20 &&
-	        ExtLastTime != 0) { // don't report this if it's the header row
-	      Print("Extra fields detected & discarded in the CSV file in record after " + TimeToStr(ExtLastTime, TIME_MINUTES|TIME_DATE|TIME_SECONDS));
-	      extraFieldsMsg++;
-	      if (extraFieldsMsg >= 20) {
-	        Print("The extra fields message repeated over 20 times so far. It is now suppressed to avoid cluttering your log files.");
-	      }
-	   }
+       if (!CsvIsEnding(ExtCsvHandle) && !CsvIsLineEnding(ExtCsvHandle) && extraFieldsMsg < 20 &&
+            ExtLastTime != 0) { // don't report this if it's the header row
+          Print("Extra fields detected & discarded in the CSV file in record after " + TimeToStr(ExtLastTime, TIME_MINUTES|TIME_DATE|TIME_SECONDS));
+          extraFieldsMsg++;
+          if (extraFieldsMsg >= 20) {
+            Print("The extra fields message repeated over 20 times so far. It is now suppressed to avoid cluttering your log files.");
+          }
+       }
 
-	   if (!SkipToNextLine(ExtCsvHandle)) { // in case there are extra fields (broken CSVs), skip to the next record
-	      // file is ending
-	      return (false);
-	   }
-	   
-	   if (brokenRecord) {
-	      if (ExtLastTime != 0) {  // don't report this if it's the header row
-	        Print("Broken record in the CSV file after " + TimeToStr(ExtLastTime, TIME_MINUTES|TIME_DATE|TIME_SECONDS));
-	      }
-	      continue;
-	   }
-	   
-	   dblAsk = NormalizeDouble(PriceFactor * dblAsk, Digits);
-	   dblBid = NormalizeDouble(PriceFactor * dblBid, Digits);
-	   
-	   if (wrongPricesMsg < 20 && ExtLastTime != 0) {
-	     if ( (lastTickAsk != 0 && MathAbs(dblAsk - lastTickAsk) > lastTickAsk * ExtTickMaxDifference) ||
-	          (lastTickBid != 0 && MathAbs(dblBid - lastTickBid) > lastTickBid * ExtTickMaxDifference) ||
-	          MathAbs(dblBid - dblAsk) > lastTickBid * ExtTickMaxDifference) {
+       if (!SkipToNextLine(ExtCsvHandle)) { // in case there are extra fields (broken CSVs), skip to the next record
+          // file is ending
+          return (false);
+       }
+       
+       if (brokenRecord) {
+          if (ExtLastTime != 0) {  // don't report this if it's the header row
+            Print("Broken record in the CSV file after " + TimeToStr(ExtLastTime, TIME_MINUTES|TIME_DATE|TIME_SECONDS));
+          }
+          continue;
+       }
+       
+       dblAsk = NormalizeDouble(PriceFactor * dblAsk, Digits);
+       dblBid = NormalizeDouble(PriceFactor * dblBid, Digits);
+       
+       if (wrongPricesMsg < 20 && ExtLastTime != 0) {
+         if ( (lastTickAsk != 0 && MathAbs(dblAsk - lastTickAsk) > lastTickAsk * ExtTickMaxDifference) ||
+              (lastTickBid != 0 && MathAbs(dblBid - lastTickBid) > lastTickBid * ExtTickMaxDifference) ||
+              MathAbs(dblBid - dblAsk) > lastTickBid * ExtTickMaxDifference) {
            Print("There seems to be something wrong with the prices for the tick at " + TimeToStr(date_time, TIME_MINUTES|TIME_DATE|TIME_SECONDS) + ". Skipping it. Skipped tick ask: " + DoubleToStr(dblAsk, Digits) + ", bid: " + DoubleToStr(dblBid, Digits) + "; previous tick ask: " + DoubleToStr(lastTickAsk, Digits) + ", bid: " + DoubleToStr(lastTickBid, Digits) + ".");
-	        wrongPricesMsg++;
-	        if (wrongPricesMsg >= 20) {
-	          Print("The wrong prices message repeated over 20 times so far. It is now suppressed to avoid cluttering your log files.");
+            wrongPricesMsg++;
+            if (wrongPricesMsg >= 20) {
+              Print("The wrong prices message repeated over 20 times so far. It is now suppressed to avoid cluttering your log files.");
              Alert("Your CSV file for " + Symbol() + " appears to have a lot of damaged prices. You should check the experts log for more information.");
-	        }
-	        continue;
-	     }
+            }
+            continue;
+         }
       }
       
       date_time -= ExtSrcGMT * 3600;
       date_time -= DSTOffset(cur_time, ExtSrcDST);
-	  
+      
       cur_time = date_time + FXTGMTOffset * 3600;
       cur_time += DSTOffset(cur_time, FXTDST);
       if (TimeShift) {
@@ -1179,20 +1179,20 @@ bool FigureOutCSVFormat(string csvFile) {
          }
          else {
             value = CsvReadDouble(csvHandle);
-	         if (price1field1 == i) {
-	            price1 = value;
-	         }
-	         else if (price2field1 == i) {
-	            price2 = value;
-	         }
-	         else if (price1field2 == i) {
-	            price1 += MakeFractional(DoubleToStr(value, 0));
-	         }
-	         else if (price2field2 == i) {
-	            price2 += MakeFractional(DoubleToStr(value, 0));
-	         }
-	      }
-	   }
+             if (price1field1 == i) {
+                price1 = value;
+             }
+             else if (price2field1 == i) {
+                price2 = value;
+             }
+             else if (price1field2 == i) {
+                price1 += MakeFractional(DoubleToStr(value, 0));
+             }
+             else if (price2field2 == i) {
+                price2 += MakeFractional(DoubleToStr(value, 0));
+             }
+          }
+       }
    }
    if (price1 > price2) {
       // the first price is the ask price

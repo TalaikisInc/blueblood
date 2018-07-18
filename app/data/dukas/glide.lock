@@ -1,0 +1,10 @@
+hash: 820d6ca15aebba71dc9038226ed070294933d5c9fe420a7822ffc65c4cdc94c7
+updated: 2018-01-13T00:20:33.1811392+08:00
+imports:
+- name: github.com/go-clog/clog
+  version: 8492a6faa632c31ba82f562b53b4a6e5eacf2732
+- name: github.com/kjk/lzma
+  version: 3fd93898850d5252457e48c1b3d5e1510597280b
+- name: golang.org/x/sys/unix
+  version: e24f485414aeafb646f6fca458b0bf869c0880a1
+testImports: []

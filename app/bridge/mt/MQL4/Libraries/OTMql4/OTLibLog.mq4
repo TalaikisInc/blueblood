@@ -42,10 +42,10 @@ int iGetLogLevel() {
 
     fDebugLevel = GlobalVariableGet("fDebugLevel");
     if (fDebugLevel < fEPSILON) {
-	iDebugLevel = iDefaultLoglevel;
-	GlobalVariableSet("fDebugLevel", iDebugLevel);
+    iDebugLevel = iDefaultLoglevel;
+    GlobalVariableSet("fDebugLevel", iDebugLevel);
     } else {
-	iDebugLevel = MathRound(fDebugLevel);
+    iDebugLevel = MathRound(fDebugLevel);
     }
     return(iDebugLevel);
 }

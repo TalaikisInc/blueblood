@@ -27,3 +27,4 @@ statsmodels
 pyfinance
 quandl
 logbook
+alpha_vantage

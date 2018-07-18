@@ -93,15 +93,15 @@ string eTestImport() {
     uArg = "import OTMql427";
     uRetval = ePySafeExec(uArg);
     if (StringCompare(uRetval, "") != 0) {
-	vAlert("Error in Python execing: " + uArg + " -> " + uRetval);
-	return(uRetval);
+    vAlert("Error in Python execing: " + uArg + " -> " + uRetval);
+    return(uRetval);
     }
 
     uArg = "str(dir(OTMql427))";
     uRetval = uPySafeEval(uArg);
     if (StringFind(uRetval, "ERROR:", 0) == 0) {
-	vAlert("Error in Python execing: " + uArg + " -> " + uRetval);
-	return(uRetval);
+    vAlert("Error in Python execing: " + uArg + " -> " + uRetval);
+    return(uRetval);
     }
     
     Print("INFO: " +uArg +" -> " +uRetval);
