@@ -130,9 +130,7 @@ def axes_style(style='darkgrid', rc=None):
     return sns.axes_style(style=style, rc=rc)
 
 
-def plot_returns_table(alpha_beta,
-                       mean_ret_quantile,
-                       mean_ret_spread_quantile):
+def plot_returns_table(alpha_beta, mean_ret_quantile, mean_ret_spread_quantile):
     returns_table = DataFrame()
     returns_table = returns_table.append(alpha_beta)
     returns_table.loc["Mean Period Wise Return Top Quantile (bps)"] = \
@@ -179,10 +177,8 @@ def plot_information_table(ic_data):
 
 
 def plot_quantile_statistics_table(factor_data):
-    quantile_stats = factor_data.groupby('factor_quantile') \
-        .agg(['min', 'max', 'mean', 'std', 'count'])['factor']
-    quantile_stats['count %'] = quantile_stats['count'] \
-        / quantile_stats['count'].sum() * 100.
+    quantile_stats = factor_data.groupby('factor_quantile').agg(['min', 'max', 'mean', 'std', 'count'])['factor']
+    quantile_stats['count %'] = quantile_stats['count'] / quantile_stats['count'].sum() * 100.
 
     print("Quantiles Statistics")
     utils.print_table(quantile_stats)
@@ -738,9 +734,7 @@ def plot_cumulative_returns(factor_returns, period, title=None, ax=None):
     return ax
 
 
-def plot_cumulative_returns_by_quantile(quantile_returns,
-                                        period,
-                                        ax=None):
+def plot_cumulative_returns_by_quantile(quantile_returns, period, ax=None):
     """
     Plots the cumulative returns of various factor quantiles.
 

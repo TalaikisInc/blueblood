@@ -24,9 +24,7 @@ from statsmodels.tools.tools import add_constant
 from . import utils
 
 
-def factor_information_coefficient(factor_data,
-                                   group_adjust=False,
-                                   by_group=False):
+def factor_information_coefficient(factor_data, group_adjust=False, by_group=False):
     """
     Computes the Spearman Rank Correlation based Information Coefficient (IC)
     between factor values and N period forward returns for each period in
@@ -861,13 +859,7 @@ def common_start_returns(factor, prices, before, after, cumulative=False, mean_b
     return concat(all_returns, axis=1)
 
 
-def average_cumulative_return_by_quantile(factor_data,
-                                          prices,
-                                          periods_before=10,
-                                          periods_after=15,
-                                          demeaned=True,
-                                          group_adjust=False,
-                                          by_group=False):
+def average_cumulative_return_by_quantile(factor_data, prices, periods_before=10, periods_after=15, demeaned=True, group_adjust=False, by_group=False):
     """
     Plots average cumulative returns by factor quantiles in the period range
     defined by -periods_before to periods_after
@@ -951,8 +943,7 @@ def average_cumulative_return_by_quantile(factor_data,
             # Align cumulative return from different dates to the same index
             # then compute mean and std
             #
-            avgcumret = g_fq.groupby(g_fq).apply(average_cumulative_return,
-                                                 demean_by)
+            avgcumret = g_fq.groupby(g_fq).apply(average_cumulative_return, demean_by)
             if len(avgcumret) == 0:
                 continue
 
@@ -987,13 +978,7 @@ def average_cumulative_return_by_quantile(factor_data,
             return fq.groupby(fq).apply(average_cumulative_return, None)
 
 
-def factor_cumulative_returns(factor_data,
-                              period,
-                              long_short=True,
-                              group_neutral=False,
-                              equal_weight=False,
-                              quantiles=None,
-                              groups=None):
+def factor_cumulative_returns(factor_data, period, long_short=True, group_neutral=False, equal_weight=False, quantiles=None, groups=None):
     """
     Simulate a portfolio using the factor in input and returns the cumulative
     returns of the simulated portfolio
@@ -1057,13 +1042,7 @@ def factor_cumulative_returns(factor_data,
     return cumulative_returns(returns[period], period)
 
 
-def factor_positions(factor_data,
-                     period,
-                     long_short=True,
-                     group_neutral=False,
-                     equal_weight=False,
-                     quantiles=None,
-                     groups=None):
+def factor_positions(factor_data, period, long_short=True, group_neutral=False, equal_weight=False, quantiles=None, groups=None):
     """
     Simulate a portfolio using the factor in input and returns the assets
     positions as percentage of the total portfolio.
@@ -1129,15 +1108,7 @@ def factor_positions(factor_data,
     return positions(weights, period)
 
 
-def create_pyfolio_input(factor_data,
-                         period,
-                         capital=None,
-                         long_short=True,
-                         group_neutral=False,
-                         equal_weight=False,
-                         quantiles=None,
-                         groups=None,
-                         benchmark_period='1D'):
+def create_pyfolio_input(factor_data, period, capital=None, long_short=True, group_neutral=False, equal_weight=False, quantiles=None, groups=None, benchmark_period='1D'):
     """
     Simulate a portfolio using the input factor and returns the portfolio
     performance data properly formatted for Pyfolio analysis.

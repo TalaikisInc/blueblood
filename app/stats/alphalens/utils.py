@@ -78,12 +78,7 @@ def non_unique_bin_edges_error(func):
     return dec
 
 @non_unique_bin_edges_error
-def quantize_factor(factor_data,
-                    quantiles=5,
-                    bins=None,
-                    by_group=False,
-                    no_raise=False,
-                    zero_aware=False):
+def quantize_factor(factor_data, quantiles=5, bins=None, by_group=False, no_raise=True, zero_aware=False):
     """
     Computes period wise factor quantiles.
 
@@ -137,10 +132,8 @@ def quantize_factor(factor_data,
             if _quantiles is not None and _bins is None and not _zero_aware:
                 return qcut(x, _quantiles, labels=False) + 1
             elif _quantiles is not None and _bins is None and _zero_aware:
-                pos_quantiles = qcut(x[x >= 0], _quantiles // 2,
-                                        labels=False) + _quantiles // 2 + 1
-                neg_quantiles = qcut(x[x < 0], _quantiles // 2,
-                                        labels=False) + 1
+                pos_quantiles = qcut(x[x >= 0], _quantiles // 2, labels=False) + _quantiles // 2 + 1
+                neg_quantiles = qcut(x[x < 0], _quantiles // 2, labels=False) + 1
                 return concat([pos_quantiles, neg_quantiles]).sort_index()
             elif _bins is not None and _quantiles is None and not _zero_aware:
                 return cut(x, _bins, labels=False) + 1
@@ -159,8 +152,7 @@ def quantize_factor(factor_data,
     if by_group:
         grouper.append('group')
 
-    factor_quantile = factor_data.groupby(grouper)['factor'] \
-        .apply(quantile_calc, quantiles, bins, zero_aware, no_raise)
+    factor_quantile = factor_data.groupby(grouper)['factor'].apply(quantile_calc, quantiles, bins, zero_aware, no_raise)
     factor_quantile.name = 'factor_quantile'
 
     return factor_quantile.dropna()
@@ -546,12 +538,7 @@ def get_clean_factor(factor, forward_returns, groupby=None, binning_by_group=Fal
     fwdret_amount = float(len(merged_data.index))
 
     no_raise = False if max_loss == 0 else True
-    merged_data['factor_quantile'] = quantize_factor(merged_data,
-                                                     quantiles,
-                                                     bins,
-                                                     binning_by_group,
-                                                     no_raise,
-                                                     zero_aware)
+    merged_data['factor_quantile'] = quantize_factor(merged_data, quantiles, bins, binning_by_group, no_raise, zero_aware)
 
     merged_data = merged_data.dropna()
 

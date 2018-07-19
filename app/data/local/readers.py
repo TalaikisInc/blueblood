@@ -11,10 +11,7 @@ from utils import filenames
 
 
 def get_pickle(folder, name):
-    data = read_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
-    data[data.columns] = data[data.columns]..replace({ 0: nan })
-    data.fillna(method='ffill', inplace=True)
-    return data.dropna()
+    return read_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
 
 def get_parquet(name):
     path = join(STORAGE_PATH, 'parq', '{}.parq'.format(name))

@@ -1,5 +1,5 @@
-from os import listdir, chdir
-from os.path import isfile, join, abspath
+from os import listdir, chdir, makedirs
+from os.path import isfile, join, abspath, exists
 from collections import namedtuple
 
 from numba import jit
@@ -14,6 +14,7 @@ from statsmodels.tsa.vector_ar.vecm import coint_johansen
 
 
 STORAGE_PATH = abspath(chdir('G:\\storage'))
+DATA_SOURCE = 'eod'
 
 def peewee_to_df(table):
     fields = [f for f in dir(table) if isinstance(getattr(table, f), Field)]
@@ -44,8 +45,8 @@ def get_dividends_splits(close, adjusted):
     return adjusted - close
 
 @jit
-def vwap(data):
-    return cumsum(data['Volume'] * (data['High'] + data['Low']) / 2) / cumsum(data['Volume'])
+def vwap(v, h, l):
+    return cumsum(v * (h + l) / 2) / cumsum(v)
 
 def shanon_entropy(c):
     norm = c / float(sum(c))
@@ -115,3 +116,15 @@ Pair = namedtuple('Pair', 'symbol_a symbol_b')
 Owner = namedtuple('Owner', 'name email')
 
 Fixed = namedtuple('Fixed', 'symbol')
+
+def makedir(f):
+    path = join(STORAGE_PATH, f)
+    if not exists(path):
+        makedirs(path)
+
+def common(fs1, fs2):
+    return set.intersection(*map(set, [fs1, fs2]))
+
+def corrwith(data, benchmark):
+    return data.drop(benchmark, 1).corrwith(data[benchmark])
+    

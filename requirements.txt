@@ -17,7 +17,7 @@ facebook-sdk
 seaborn
 pika
 bt
-arrow
+pyarrow
 peewee_extra_fields
 click
 ffn

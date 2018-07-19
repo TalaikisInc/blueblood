@@ -2,13 +2,13 @@ from clint.textui import colored
 from pandas import DataFrame
 
 from data.local import get_pickle, to_pickle
-from utils import filenames
+from utils import filenames, common
 
 
 def cleaner():
     fs1 = filenames('eod')
     fs3 = filenames('tiingo')
-    syms = set.intersection(*map(set, [fs1, fs3]))
+    syms = common(fs1, fs3)
     print('Found %s common symbols' % len(syms))
 
     for s in syms:
