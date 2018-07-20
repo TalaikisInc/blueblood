@@ -1,5 +1,6 @@
 from pandas import DataFrame, MultiIndex
 from clint.textui import colored
+from numpy import nan
 
 
 def symbol_remover(data, symbols):
@@ -23,6 +24,16 @@ def clean_alpha(data, symbols, d_type):
                 '{}_Split'.format(s),
                 '{}_Diff'.format(s),
                 '{}_AdjClose'.format(s)
+            ], axis=1)
+    elif d_type == 'eod_strategy':
+        for s in symbols:
+            data = data.drop([
+                '{}_Open'.format(s),
+                '{}_High'.format(s),
+                '{}_Low'.format(s),
+                '{}_Close'.format(s),
+                '{}_Volume'.format(s),
+                '{}_Adjusted_close'.format(s)
             ], axis=1)
     else:
         for s in symbols:
@@ -63,7 +74,8 @@ def clean_prices(data, symbols, d_type):
                 '{}_Adjusted_close'.format(s)
             ], axis=1)
             data.rename(columns={'{}_Close'.format(s): s}, inplace=True)
-    return data
+    data[data.columns] = data[data.columns].replace({0: nan})
+    return data.dropna()
 
 def transform_for_analysis(data):
     return DataFrame(data.dropna().stack(), index=MultiIndex.from_product([data.index, data.columns], names=['date', 'symbol']))

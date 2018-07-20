@@ -22,7 +22,7 @@ from app.models.playground import run_play
 from app.models.alpha import create_owners
 from app.models.clusters import make_clusters
 # Stats
-from app.stats import run_analyze
+from app.stats import run_analyze, run_strategy
 # Testing
 from app.backtest import basic_runs
 
@@ -31,6 +31,7 @@ parser = ArgumentParser(description="BlueBlood management point.")
 parser.add_argument('--collect')
 parser.add_argument('--play')
 parser.add_argument('--analyze')
+parser.add_argument('--strategy')
 parser.add_argument('--convert')
 parser.add_argument('--portfolio')
 parser.add_argument('--db')
@@ -62,6 +63,9 @@ if __name__ == '__main__':
 
     if args.analyze:
         run_analyze(args.analyze)
+
+    if args.strategy:
+        run_strategy(args.strategy)
 
     if args.convert:
         convert_mt_pickle()

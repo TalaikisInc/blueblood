@@ -63,9 +63,28 @@ def logloss(prtedicted, y, name):
     print('Log Loss for {}: {:.6f}.'.format(name, val))
     return val
 
-def diff(data, symbols):
-    for s in symbols:
-        data['{}_Diff'.format(s)] = data['{}_Close'.format(s)].diff()
+def diff(data, symbols, d_type='accepted'):
+    if d_type == 'accepted':
+        for s in symbols:
+            data['{}_Diff'.format(s)] = data['{}_AdjClose'.format(s)].diff()
+    elif d_type == 'eod':
+        for s in symbols:
+            data['{}_Diff'.format(s)] = data['{}_Adjusted_close'.format(s)].diff()
+    else:
+        for s in symbols:
+            data['{}_Diff'.format(s)] = None
+    return data
+
+def pct(data, symbols, d_type='accepted'):
+    if d_type == 'accepted':
+        for s in symbols:
+            data['{}_Pct'.format(s)] = data['{}_AdjClose'.format(s)].pct_change()
+    elif d_type == 'eod':
+        for s in symbols:
+            data['{}_Pct'.format(s)] = data['{}_Adjusted_close'.format(s)].pct_change()
+    else:
+        for s in symbols:
+            data['{}_Pct'.format(s)] = None
     return data
 
 def zscore(data, per):

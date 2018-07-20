@@ -34,6 +34,7 @@ def run_analyze(model):
     except:
         model = None
         pass
+    '''
     BASKET = ['BSX', 'AIG', 'INTU', 'INTC', 'HON', 'DUK', 'NTAP', 'COL', 'ABT', 'ADSK', 'NUE',
         'MU', 'TIF', 'ADBE', 'FDX', 'NKE', 'TAP', 'SCHW', 'STI', 'CIT', 'LNC', 'MAT', 'ARNC',
         'ADI', 'AFL', 'KEY', 'HD', 'OKE', 'LOW', 'RF', 'OI', 'AES', 'LUV', 'TXT', 'UNH', 'DVN',
@@ -49,6 +50,8 @@ def run_analyze(model):
         'JNJ', 'SRV', 'AON', 'VFC', 'MMC', 'FLR', 'ORCL', 'BBY', 'CBS', 'MAS', 'CAG', 'RAD',
         'GPC', 'HES', 'RHI', 'AZO', 'CNP', 'CTL', 'XLNX', 'MCD', 'LB', 'CSX', 'YUM', 'USB',
         'GPS', 'PX', 'CHA', 'MDT', 'WMB', 'JWN', 'CMI', 'IPG', 'DIS']
+    '''
+    BASKET = ['QQQ', 'SPY', 'IWM', 'EEM', 'TLT']
 
     initial = get_pickle(DATA_SOURCE, BASKET[0])
     initial = transform_multi_data(data=initial, symbol=BASKET[0])

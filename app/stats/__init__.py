@@ -6,6 +6,7 @@ from .index import (percentiles, drawdowns, commissions, max_dd, beta, vol, trey
     ulcer_index, ulcer_performance_index, drawdown_probability, return_probability, returns_by_month, returns_by_year,
     rolling_sharpe, capital_utilization, average_trades_month, max_dd_duration)
 from .lens import run_analyze
+from .strategy import run_strategy
 
 __ALL__ = [
     'percentiles',
@@ -56,5 +57,6 @@ __ALL__ = [
     'returns_by_year',
     'rolling_sharpe',
     'capital_utilization',
-    'max_dd_duration'
+    'max_dd_duration',
+    'run_strategy'
 ]
