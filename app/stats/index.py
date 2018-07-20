@@ -258,7 +258,7 @@ def run_stats():
             beta=b,
             vol=vol(returns=returns),
             treynor=treynor(returns=returns, benchmark=benchmark, rf=RF),
-            sharpe_ratio=sharpe_ratio(returnsreturns, rf=RF),
+            sharpe_ratio=sharpe_ratio(returns=returns, rf=RF),
             ir=ir(returns=returns, benchmark=benchmark),
             modigliani=modigliani(returns=returns, benchmark=benchmark, rf=RF),
             var=var(returns=returns, alpha=ALPHA),

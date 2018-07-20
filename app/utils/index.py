@@ -131,10 +131,10 @@ def rank(array):
     return s.rank(ascending=False)[len(s)-1]
 
 Pair = namedtuple('Pair', 'symbol_a symbol_b')
-
 Owner = namedtuple('Owner', 'name email')
-
 Fixed = namedtuple('Fixed', 'symbol')
+LongRule = namedtuple('LongRule', 'op value')
+ShortRule = namedtuple('ShortRule', 'op value')
 
 def makedir(f):
     path = join(STORAGE_PATH, f)

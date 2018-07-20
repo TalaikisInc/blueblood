@@ -90,20 +90,75 @@ python manage.py --<sommand>=<params>
 
 For alpha providers.
 
-Model:
+1. Multi-instrument model:
+
+This model runs on portfolio of instruments we provide.
 
 ```python
 def compute(data, symbols):
-    def owner():
-        return Owner('My Name', 'my@email.com>')
+    # Who is owner of this alpha:
+    owner = Owner('My Name', 'my@email.com>', '')
+
+    # Determine strategy rules, as an example - long above50 quantile, short below 50:
+    rule = Rule(('gt', 50), ('lt', 50))
+
     '''
     Description (optional)
     '''
-    # your code
-    # ...
-    # your code
+    for symbol in symbols:
+        # your code
+        # ...
+        # your code
+        data[symbol] = #... What you return as a factor for each symbol
     return data
 ```
+
+2. Pair model:
+
+Pair mdoels are symbol pairs specific alpha models.
+
+```python
+def compute(data):
+    owner = Owner('Your name', 'your@email.com')
+    symbols = [
+        Pair('INST1', 'INST2'),
+        Pair('INST3', 'INST4'),
+    ]
+
+    '''
+    Description.
+    '''
+
+    for i in range(len(symbols)):
+        # ...
+        data[symbols[i].symbol_a] = # ...
+
+    return data
+```
+
+3. Fixed model:
+
+```python
+def compute(data):
+    owner = Owner('My name', 'my@email.com')
+    inputs = Pair('INS1', 'INS2')
+    output = Fixed('TRADE_THIS')
+
+    '''
+    Description (optional).
+    '''
+
+    data[output.symbol] = # ... what you do for this symbol specific model
+
+    return data
+```
+
+### Rules
+
+1. Each factor should return column named symbol, intermediate calcualtions can be dropped.
+2. Available data columns are named in following way, example: 'SYMBOL_Close', same for Open, High, Low, Volume, AdjClose, Diff, Pct.
+3. Some functions if needed can be found in utils/ or stats/. Otherwise,request them.
+4. Each factor will be tested for its uniqueness.
 
 ## License
 

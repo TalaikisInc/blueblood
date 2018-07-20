@@ -4,7 +4,7 @@ sys.path.append(abspath(join(dirname(dirname(__file__)), '...')))
 
 from .split import train_test_split
 from .index import (periodize_returns, filenames, diff, STORAGE_PATH, vwap, zscore, minmaxscaler, slope,
-    roll_slope, rank, makedir, DATA_SOURCE, Owner, Fixed, Pair, common, pct)
+    roll_slope, rank, makedir, DATA_SOURCE, Owner, Fixed, Pair, common, pct, LongRule, ShortRule)
 
 __ALL__ = [
     'train_test_split',
@@ -24,5 +24,7 @@ __ALL__ = [
     'Fixed',
     'Pair',
     'common',
-    'pct'
+    'pct',
+    'LongRule',
+    'ShortRule'
   ]
