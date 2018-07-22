@@ -21,10 +21,12 @@ from app.data.local import convert_mt_pickle, cleaner
 from app.models.playground import run_play
 from app.models.alpha import create_owners
 from app.models.clusters import make_clusters
+from app.models.strategies import run_strategies
 # Stats
-from app.stats import run_analyze, run_strategy
+from app.stats import run_analyze, run_strategy, tick_tester
 # Testing
 from app.backtest import basic_runs
+from app.utils import easify_names, convert_to_parq
 
 parser = ArgumentParser(description="BlueBlood management point.")
 
@@ -35,6 +37,8 @@ parser.add_argument('--strategy')
 parser.add_argument('--convert')
 parser.add_argument('--portfolio')
 parser.add_argument('--db')
+parser.add_argument('--ticks')
+parser.add_argument('--strategies')
 args = parser.parse_args()
 
 if __name__ == '__main__':
@@ -54,7 +58,10 @@ if __name__ == '__main__':
         #run_morningstar()
         #run_stooq()
         # tii_news()
-        run_tiingo()
+        #run_tiingo()
+        # dukas before easify names
+        easify_names()
+        convert_to_parq()
         # run_fxcm()
         # cleaner()
 
@@ -67,11 +74,17 @@ if __name__ == '__main__':
     if args.strategy:
         run_strategy(args.strategy)
 
+    if args.ticks:
+        tick_tester()
+
     if args.convert:
         convert_mt_pickle()
 
     if args.portfolio:
         basic_runs()
+
+    if args.strategies:
+        run_strategies()
 
     if args.db:
         if args.db == 'create_migrations':

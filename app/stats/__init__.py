@@ -7,6 +7,7 @@ from .index import (percentiles, drawdowns, commissions, max_dd, beta, vol, trey
     rolling_sharpe, capital_utilization, average_trades_month, max_dd_duration)
 from .lens import run_analyze
 from .strategy import run_strategy
+from .ticks import tick_tester
 
 __ALL__ = [
     'percentiles',
@@ -58,5 +59,6 @@ __ALL__ = [
     'rolling_sharpe',
     'capital_utilization',
     'max_dd_duration',
-    'run_strategy'
+    'run_strategy',
+    'tick_tester'
 ]

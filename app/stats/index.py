@@ -20,7 +20,10 @@ def treynor(returns, benchmark, rf):
     return (returns.mean() - rf) / beta(returns, benchmark)
   
 def sharpe_ratio(returns, rf):
-    return (returns.mean() - rf) / vol(returns)
+    if vol(returns) != 0:
+        return (returns.mean() - rf) / vol(returns)
+    else:
+        return 0
 
 def ir(returns, benchmark):
     diff = returns - benchmark

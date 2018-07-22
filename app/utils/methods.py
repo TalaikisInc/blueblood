@@ -1,22 +1,52 @@
-from dask.distributed import Client, progress
-import dask.dataframe as dd
+from os.path import join
+
+# from dask.distributed import Client, progress
+from dask.dataframe import read_parquet, read_csv, to_parquet, from_pandas
+from dask.dataframe.multi import concat
 from raccoon.dataframe import DataFrame
-from panas import DataFrame as PandasDataFrame
+from pandas import DataFrame as PandasDataFrame
 
-client = Client(n_workers=2, threads_per_worker=2, memory_limit='1GB')
+# client = Client(n_workers=2, threads_per_worker=2, memory_limit='1GB')
+from .index import STORAGE_PATH
 
 
-def read(path):
-    return dd.read_parquet(path)
+def read_parq(folder, name):
+    return read_parquet(join(STORAGE_PATH, folder, '{}.parq'.format(name)))
+
+def write_parq(df, folder, name, pd=False):
+    if pd:
+        to_parquet(from_pandas(df), join(STORAGE_PATH, folder, '{}.parq'.format(name)))
+    else:
+        to_parquet(df, join(STORAGE_PATH, folder, '{}.parq'.format(name)))
+
+def resample_dd(df, per):
+    return df.resample(per)
+
+def resample(df, name, folder='dukas', per='10T'):
+    hl = (df['Ask'] + df['Bid']) / 2.0
+    open = resample_dd(df=hl, per=per).first().compute()
+    high = resample_dd(df=hl, per=per).max().compute()
+    low = resample_dd(df=hl, per=per).min().compute()
+    close = resample_dd(df=hl, per=per).last().compute()
+    out = concat([open, high, low, close], axis=1, interleave_partitions=True)
+    out.columns = ['Open', 'High', 'Low', 'Close']
+    write_parq(df=out, folder=folder, name='{}_{}'.format(name, per))
+
+def read(folder, name):
+    if folder == 'dukas':
+        data = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0])
+        data.columns = ['Time', 'Ask', 'Bid', 'Ask_volume', 'Bid_volume']
+        data = data.set_index('Time')
+    return data
 
 def rolling(df, window, method):
     return df.rolling(window=window).method()
 
-def resample(df, period, method, compute=False):
+def resample_df(df, period, method, compute=False):
     if compute:
         df.resample(period).method().compute()
     else:
-        d.resample(period).method()
+        df.resample(period).method()
     return df
 
 def loc(df, loc):

@@ -12,10 +12,17 @@ from .index import percentiles, sharpe_ratio
 def sharpe(df, s):
     return sharpe_ratio(returns=df['{}_ret'.format(s)], rf=0.00) * sqrt(252)
 
+def no_perc(df, symbols):
+    for s in symbols:
+        df['{}_ret'.format(s)] = where(df[s].shift() < 0, df['{}_Pct'.format(s)], 0)
+        plt.plot(df['{}_ret'.format(s)].cumsum())
+    plt.show()
+
 def run_factor(data, model, BASKET):
     df = alpha(model=int(model), symbols=BASKET, train=True)
     df = clean_alpha(data=df, symbols=BASKET, d_type='eod_strategy')
     df = df.dropna()
+    no_perc(df=df, symbols=BASKET)
     for t in range(2):
         for i in [50, 10, 90]:
             print(colored.green('Percentile %s' % i))
@@ -40,8 +47,6 @@ def run_strategy(model):
     except:
         model = None
         pass
-
-    BASKET = ['QQQ', 'SPY', 'IWM', 'EEM', 'TLT']
 
     initial = get_pickle(DATA_SOURCE, BASKET[0])
     initial = transform_multi_data(data=initial, symbol=BASKET[0])

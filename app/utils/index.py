@@ -1,7 +1,8 @@
-from os import listdir, chdir, makedirs
+from os import listdir, chdir, makedirs, rename, remove
 from os.path import isfile, join, abspath, exists
 from collections import namedtuple
 
+from clint.textui import colored
 from numba import jit
 from numpy import log, cumsum, log2, nonzero, sum, histogram2d, sqrt, polyfit, subtract, std
 from numpy.polynomial import Polynomial
@@ -11,10 +12,12 @@ from sklearn.metrics import mutual_info_score, log_loss
 from statsmodels.api import OLS
 from pyfinance.ols import PandasRollingOLS
 from statsmodels.tsa.vector_ar.vecm import coint_johansen
+from matplotlib import pyplot as plt
 
 
 STORAGE_PATH = abspath(chdir('G:\\storage'))
 DATA_SOURCE = 'eod'
+from .methods import read, write_parq
 
 def peewee_to_df(table):
     fields = [f for f in dir(table) if isinstance(getattr(table, f), Field)]
@@ -147,3 +150,35 @@ def common(fs1, fs2):
 def corrwith(data, benchmark):
     return data.drop(benchmark, 1).corrwith(data[benchmark])
     
+def count_zeros(df, col):
+    df[col] = df[col].loc[df[col] == 0]
+    z = len(df[col])
+    if z != 0:
+        return len(df[col]) / z
+    else:
+        return 0
+
+def avg_spread(df):
+    return (df['Ask'] - df['Bid']).mean()
+
+def easify_names(folder='dukas'):
+    fs = filenames(folder)
+    for f in fs:
+        try:
+            splt = f.split('-')
+            if len(splt) > 0:
+                name = splt[0]
+                oldPath = join(STORAGE_PATH, folder, f)
+                path = join(STORAGE_PATH, folder, '{}.csv'.format(name))
+                rename(oldPath, path)
+        except Exception as err:
+            print(err)
+
+def convert_to_parq(folder='dukas'):
+    fs = filenames(folder)
+    for f in fs:
+        name = f.split('.')[0]
+        data = read(folder, name)
+        write_parq(data, folder, '{}.parq'.format(name))
+        remove(join(STORAGE_PATH, folder, f))
+        print(colored.green(name))
