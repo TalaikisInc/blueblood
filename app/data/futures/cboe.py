@@ -4,7 +4,7 @@ from io import StringIO
 from pandas import read_csv, to_datetime
 from requests import get
 
-from utils import STORAGE_PATH
+from app.utils import STORAGE_PATH
 from variables import CBOE_DATA
 
 

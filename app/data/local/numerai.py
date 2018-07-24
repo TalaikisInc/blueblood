@@ -3,7 +3,7 @@ from os.path import join
 from pandas import read_csv, DataFrame
 from clint.textui import colored
 
-from utils import STORAGE_PATH
+from app.utils import STORAGE_PATH
 
 
 def download():

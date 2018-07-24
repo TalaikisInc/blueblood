@@ -1,7 +1,3 @@
-from os.path import abspath, join, dirname
-import sys
-sys.path.append(abspath(join(dirname(dirname(__file__)), "..")))
-
 import ccxt
 from clint.textui import colored as chalk
 from peewee import IntegrityError

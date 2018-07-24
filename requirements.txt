@@ -28,3 +28,6 @@ pyfinance
 quandl
 logbook
 alpha_vantage
+patsy
+cloudpickle
+ipython

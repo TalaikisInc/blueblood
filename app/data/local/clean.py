@@ -1,8 +1,8 @@
 from clint.textui import colored
 from pandas import DataFrame
 
-from data.local import get_pickle, to_pickle
-from utils import filenames, common
+from app.data.local import get_pickle, to_pickle
+from app.utils import filenames, common
 
 
 def cleaner():

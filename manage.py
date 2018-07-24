@@ -3,7 +3,6 @@ from os.path import join, dirname, abspath
 
 from dotenv import load_dotenv
 load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
-
 # Db
 from app.db import migrate, create_migrations
 # Data
@@ -26,10 +25,9 @@ from app.models.strategies import run_strategies
 from app.stats import run_analyze, run_strategy, tick_tester
 # Testing
 from app.backtest import basic_runs
-from app.utils import easify_names, convert_to_parq
+from app.utils import easify_names, convert_to_parq, resample_all
 
 parser = ArgumentParser(description="BlueBlood management point.")
-
 parser.add_argument('--collect')
 parser.add_argument('--play')
 parser.add_argument('--analyze')
@@ -59,9 +57,9 @@ if __name__ == '__main__':
         #run_stooq()
         # tii_news()
         #run_tiingo()
-        # dukas before easify names
         easify_names()
         convert_to_parq()
+        resample_all()
         # run_fxcm()
         # cleaner()
 

@@ -22,7 +22,7 @@ from pandas import concat, DataFrame
 from . import plotting
 from . import performance as perf
 from . import utils
-from utils import STORAGE_PATH
+from app.utils import STORAGE_PATH
 
 
 class GridFigure(object):

@@ -1,7 +1,4 @@
-from os.path import abspath, join, dirname
 from datetime import datetime
-import sys
-sys.path.append(abspath(join(dirname(dirname(__file__)), "..")))
 
 from clint.textui import colored as chalk
 from requests import get

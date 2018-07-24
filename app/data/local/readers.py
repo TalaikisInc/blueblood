@@ -2,12 +2,12 @@ from os.path import join
 
 from numpy import isinf, isnan, nan
 from clint.textui import colored
-from pandas import read_pickle
+from pandas import read_pickle, read_csv
 from fastparquet import ParquetFile
 
 from app.utils import STORAGE_PATH
 from .mt import get_mt, META_PATH
-from utils import filenames
+from app.utils import filenames
 
 
 def get_pickle(folder, name):
@@ -17,10 +17,6 @@ def get_parquet(name):
     path = join(STORAGE_PATH, 'parq', '{}.parq'.format(name))
     pf = ParquetFile(path)
     return pf.to_pandas()
-
-def fill_forward(data):
-    ''' Fills forward empty data spots. '''
-    return data.fillna(method='ffill')
 
 def transform_multi_data(data, symbol):
     ''' Changes column names into differentiable ones. '''
@@ -68,3 +64,8 @@ def convert_mt_pickle():
                 print(colored.green('Converted for {} {}'.format(name, per)))
         except Exception as err:
             print(colored.red(err))
+
+def get_csv(folder, name):
+    df = read_csv(join(STORAGE_PATH, '{}.csv'.format(symbol)), index_col='Date', parse_dates=[0])
+    df.sort_index(axis=0, ascending=True, inplace=True)
+    return df

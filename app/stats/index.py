@@ -1,9 +1,10 @@
-from numpy import cov, std, array, matrix, abs, mean, empty, sort, empty, sum, sqrt, power, maximum, round, where, percentile, argmax, busday_count
+from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, sqrt,
+    power, maximum, round, where, percentile, argmax, busday_count)
 import scipy.stats as sc
 from pandas import to_datetime
 
-from utils import periodize_returns
-from db import Strategy, Stats
+from app.utils import periodize_returns
+from app.db import Strategy, Stats
 
 
 def max_dd(drawdowns):

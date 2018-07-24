@@ -30,7 +30,19 @@ def resample(df, name, folder='dukas', per='10T'):
     close = resample_dd(df=hl, per=per).last().compute()
     out = concat([open, high, low, close], axis=1, interleave_partitions=True)
     out.columns = ['Open', 'High', 'Low', 'Close']
-    write_parq(df=out, folder=folder, name='{}_{}'.format(name, per))
+    write_parq(df=out.dropna(), folder=folder, name='{}_{}'.format(name, per))
+
+def resample_all(folder='dukas'):
+    pers = ['1T', '5T', '15T', '30T', '60T', '240T', '1440T', '10800T', '43200T']
+    symbols = [f.split('.')[0] for f in filenames('dukas') if '.parq' in f]
+    for s in symbols:
+        df = read_parq(folder, s)
+        for p in pers:
+            resample(df=df, name=s, folder=folder, per=p)
+
+def parq_to_csv(folder, name):
+    df = read_parq(folder=folder, name=name)
+    df.compute().to_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)))
 
 def read(folder, name):
     if folder == 'dukas':

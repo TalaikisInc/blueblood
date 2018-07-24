@@ -3,7 +3,7 @@ from os import getenv
 from pandas import DataFrame
 from coinapi_v1 import CoinAPIv1
 
-from data.local import get_pickle, to_pickle
+from app.data.local import get_pickle, to_pickle
 
 
 def coinapi_exchanges(api):

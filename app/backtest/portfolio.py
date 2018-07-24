@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 from numpy import where
 
-from models.alpha import alpha, pair_alpha, fixed_alpha, all_alphas, pair_alphas, fixed_alphas
+from app.models.alpha import alpha, pair_alpha, fixed_alpha, all_alphas, pair_alphas, fixed_alphas
 from stats import commissions
 
 def comm(q, p=0.01):
