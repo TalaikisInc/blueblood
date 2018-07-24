@@ -5,16 +5,13 @@ try:
     from pandas_datareader import get_data_tiingo
 except ImportError:
     from tiingo import TiingoClient
-import requests_cache
 from requests.exceptions import HTTPError
 from peewee import IntegrityError
 from clint.textui import colored
 from tiingo.restclient import RestClientError
 
-from db import Market, DB, Source, News, get_exchange
+from app.db import Market, DB, Source, News, get_exchange
 from app.data.local import to_pickle
-expire_after = timedelta(days=1)
-session = requests_cache.CachedSession(cache_name='stooq_cache', backend='sqlite', expire_after=expire_after)
 
 
 def c():
@@ -59,7 +56,7 @@ def tii_news():
 def get_data(s):
     data = None
     try:
-        data = get_data_tiingo(s.symbol, api_key=getenv('TIINGO_API_KEY'), session=session)
+        data = get_data_tiingo(s.symbol, api_key=getenv('TIINGO_API_KEY'))
     except NameError:
         client = c()
         try:

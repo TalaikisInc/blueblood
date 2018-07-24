@@ -21,7 +21,7 @@ pyarrow
 peewee_extra_fields
 click
 ffn
-pandas_datareader
+git+https://github.com/pydata/pandas-datareader
 tiingo
 statsmodels
 pyfinance

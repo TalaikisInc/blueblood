@@ -1,9 +1,6 @@
 from datetime import timedelta
 from os.path import join
 
-import requests_cache
-expire_after = timedelta(days=1)
-session = requests_cache.CachedSession(cache_name='cache', backend='sqlite', expire_after=expire_after)
 from peewee import IntegrityError
 from clint.textui import colored
 
@@ -16,7 +13,7 @@ def exchanges():
     return get_exchanges()
 
 def eod_symbols(e='US'):
-    df = get_exchange_symbols(exchange_code=e, session=session)
+    df = get_exchange_symbols(exchange_code=e)
     for i in range(len(df)):
         try:
             symbol = df.ix[i].name

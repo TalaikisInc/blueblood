@@ -1,9 +1,5 @@
 import pandas as pd
-from eod_historical_data import (get_api_key,
-                                 get_eod_data,
-                                 get_dividends,
-                                 get_exchange_symbols,
-                                 get_exchanges, get_currencies, get_indexes)
+from eod_historical_data import (get_api_key, get_eod_data, get_dividends, get_exchange_symbols, get_exchanges, get_currencies, get_indexes)
 import datetime
 import requests_cache
 
@@ -11,8 +7,7 @@ pd.set_option("max_rows", 10)
 
 # Cache session (to avoid too much data consumption)
 expire_after = datetime.timedelta(days=1)
-session = requests_cache.CachedSession(cache_name='cache', backend='sqlite',
-                                       expire_after=expire_after)
+session = requests_cache.CachedSession(cache_name='cache', backend='sqlite', expire_after=expire_after)
 
 # Get API key
 #  from environment variable

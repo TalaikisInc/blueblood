@@ -8,8 +8,6 @@ from iexfinance import (Stock, get_historical_data, get_available_symbols,
 import requests_cache
 from raccoon.dataframe import DataFrame
 
-expiry = timedelta(days=1)
-session = requests_cache.CachedSession(cache_name='iex_cache', backend='sqlite', expire_after=expiry)
 from app.db import get_exchange, Market, DB
 from app.utils import STORAGE_PATH
 
@@ -19,7 +17,7 @@ def quote(name):
     return stock.get_price()
 
 def iex_symbols():
-    markets = get_available_symbols(output_format='pandas', session=session)
+    markets = get_available_symbols(output_format='pandas')
     e = get_exchange('IEX')
     for m in markets:
         try:

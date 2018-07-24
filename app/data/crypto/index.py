@@ -3,7 +3,7 @@ from clint.textui import colored as chalk
 from peewee import IntegrityError
 
 from models import DB, CryptoExchange, CryptoMarket
-from variables.data import EXCHANGES
+from app.variables.data import EXCHANGES
 
 def put_exchanges():
     for e in ccxt.exchanges:
