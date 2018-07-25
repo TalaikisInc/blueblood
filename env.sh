@@ -33,7 +33,7 @@ sudo apt-get -qy autoremove
 
 conda create --name blueblood python
 source activate blueblood
-conda install numpy pandas numba cython lxml tensorflow pymc3 scikit-learn -y
+conda install numpy scipy pandas numba cython lxml tensorflow pymc3 scikit-learn -y
 conda install -c conda-forge fastparquet -y
 pip install -r requirements.txt
 cd app/models

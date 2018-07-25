@@ -118,6 +118,7 @@ def trade_count(signals):
 
 
 def commissions(signals, com):
+    signals = signals.astype(int)
     com = where((signals == 0) & (signals.shift() == 1), com, 0)
     com += where((signals == 1) & (signals.shift() == 0), com, 0)
     com += where((signals == 0) & (signals.shift() == -1), com, 0)

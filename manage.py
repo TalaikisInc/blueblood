@@ -10,14 +10,15 @@ from app.data.fred import run as fred
 from app.data.iex import iex_symbols, run_iex #, get_spread
 from app.data.eod import eod_symbols, run_eod
 from app.data.morningstar import run_morningstar
-from app.data.tiingo import run_tiingo, tii_symbols, tii_news
+from app.data.tiingo import run_tiingo, tii_symbols, tii_news, save_one
 from app.data.gf import run_gf
 from app.data.stooq import run_stooq
 from app.data.coinmarketcap import get_capitalization
 from app.data.fxcm import run_fxcm
 from app.data.local import convert_mt_pickle, cleaner
+# Playground
+from app.playground import run_play
 # Models
-from app.models.playground import run_play
 from app.models.alpha import create_owners
 from app.models.clusters import make_clusters
 from app.models.strategies import run_strategies
@@ -37,9 +38,13 @@ parser.add_argument('--portfolio')
 parser.add_argument('--db')
 parser.add_argument('--ticks')
 parser.add_argument('--strategies')
+parser.add_argument('--get')
 args = parser.parse_args()
 
 if __name__ == '__main__':
+    if args.get:
+        save_one(args.get)
+
     if args.collect:
         #fred()
         #get_capitalization()
@@ -55,11 +60,11 @@ if __name__ == '__main__':
         #run_gf()
         #run_morningstar()
         #run_stooq()
-        # tii_news()
-        #run_tiingo()
-        easify_names()
-        convert_to_parq()
-        resample_all()
+        run_tiingo()
+        #tii_news()
+        # sify_names()
+        # convert_to_parq()
+        # resample_all()
         # run_fxcm()
         # cleaner()
 

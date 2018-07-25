@@ -70,6 +70,14 @@ def get_data(s):
             print(colored.red(err))
     return data
 
+def save_one(symbol):
+    client = c()
+    data = client.get_dataframe(symbol, startDate='1980-01-01')
+    if data is not None:
+        to_pickle(data, 'tiingo', '{}'.format(symbol))
+    else:
+        print(colored.red('Nothing for this symbols.'))
+
 def run_tiingo(i=0):
     for s in Market.select()[i:]:
         data = get_data(s=s)

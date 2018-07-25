@@ -2,9 +2,9 @@
 api/
 app/models/
 app/variables/
+app/playground/
 .pyc
 logs_file
-app/data/dukas/go-duka/
 *.whl
 *.csv
 *.p

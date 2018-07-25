@@ -4,12 +4,6 @@ from numpy import where
 from app.models.alpha import alpha, pair_alpha, fixed_alpha, all_alphas, pair_alphas, fixed_alphas
 from stats import commissions
 
-def comm(q, p=0.01):
-    return abs(q) * p
-
-def quantity(capital, price, alloc):
-    return capital / price * alloc
-
 """
 def res(s, data):
     test = Backtest(s, data, commissions=commissions)

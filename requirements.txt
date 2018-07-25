@@ -22,6 +22,7 @@ peewee_extra_fields
 click
 ffn
 git+https://github.com/pydata/pandas-datareader
+git+https://github.com/Lasagne/Lasagne
 tiingo
 statsmodels
 pyfinance
@@ -31,3 +32,4 @@ alpha_vantage
 patsy
 cloudpickle
 ipython
+dbx-stopwatch

@@ -3,7 +3,7 @@ from os.path import dirname, join
 from matplotlib import pyplot as plt
 from numpy import array, sort, unique
 from statsmodels.api import qqplot
-from scipy.sttats import t
+from scipy.stats import t
 from sklearn.manifold import TSNE
 
 from stats import percentiles, drawdowns

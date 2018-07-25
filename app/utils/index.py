@@ -182,3 +182,9 @@ def convert_to_parq(folder='dukas'):
         write_parq(data, folder, '{}.parq'.format(name))
         remove(join(STORAGE_PATH, folder, f))
         print(colored.green(name))
+
+def comm(q, p=0.01):
+    return abs(q) * p
+
+def quantity(capital, price, alloc):
+    return capital / price * alloc
