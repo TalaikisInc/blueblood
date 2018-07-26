@@ -54,14 +54,14 @@ def lpm(returns, threshold, order):
     threshold_array = empty(len(returns))
     threshold_array.fill(threshold)
     diff = threshold_array - returns
-    diff = diff.clip(min=0)
+    diff = diff.clip()
     return sum(diff ** order) / len(returns)
  
 def hpm(returns, threshold, order):
     threshold_array = empty(len(returns))
     threshold_array.fill(threshold)
     diff = returns - threshold_array
-    diff = diff.clip(min=0)
+    diff = diff.clip()
     return sum(diff ** order) / len(returns)
 
 def excess_var(returns, rf, alpha):

@@ -1,8 +1,7 @@
-from os import listdir, chdir, makedirs, rename, remove
+from os import listdir, chdir, makedirs, rename
 from os.path import isfile, join, abspath, exists
 from collections import namedtuple
 
-from clint.textui import colored
 from numba import jit
 from numpy import log, cumsum, log2, nonzero, sum, histogram2d, sqrt, polyfit, subtract, std
 from numpy.polynomial import Polynomial
@@ -17,7 +16,6 @@ from matplotlib import pyplot as plt
 
 STORAGE_PATH = abspath(chdir('G:\\storage'))
 DATA_SOURCE = 'eod'
-from .methods import read, write_parq
 
 def peewee_to_df(table):
     fields = [f for f in dir(table) if isinstance(getattr(table, f), Field)]
@@ -144,6 +142,9 @@ def makedir(f):
     if not exists(path):
         makedirs(path)
 
+def if_exists(folder, name):
+    return exists(join(STORAGE_PATH, folder, '{}.p'.format(name)))
+
 def common(fs1, fs2):
     return set.intersection(*map(set, [fs1, fs2]))
 
@@ -160,28 +161,6 @@ def count_zeros(df, col):
 
 def avg_spread(df):
     return (df['Ask'] - df['Bid']).mean()
-
-def easify_names(folder='dukas'):
-    fs = filenames(folder)
-    for f in fs:
-        try:
-            splt = f.split('-')
-            if len(splt) > 0:
-                name = splt[0]
-                oldPath = join(STORAGE_PATH, folder, f)
-                path = join(STORAGE_PATH, folder, '{}.csv'.format(name))
-                rename(oldPath, path)
-        except Exception as err:
-            print(err)
-
-def convert_to_parq(folder='dukas'):
-    fs = filenames(folder)
-    for f in fs:
-        name = f.split('.')[0]
-        data = read(folder, name)
-        write_parq(data, folder, '{}.parq'.format(name))
-        remove(join(STORAGE_PATH, folder, f))
-        print(colored.green(name))
 
 def comm(q, p=0.01):
     return abs(q) * p

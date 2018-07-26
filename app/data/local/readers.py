@@ -2,7 +2,7 @@ from os.path import join
 
 from numpy import isinf, isnan, nan
 from clint.textui import colored
-from pandas import read_pickle, read_csv
+from pandas import read_pickle, read_csv, to_datetime
 from fastparquet import ParquetFile
 from stopwatch import StopWatch, format_report
 sw = StopWatch()
@@ -16,7 +16,9 @@ def fill_forward(data):
     return data.fillna(method='ffill')
 
 def get_pickle(folder, name):
-    return read_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
+    df = read_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
+    df.index = to_datetime(df.index)
+    return df
 
 def get_parquet(name):
     path = join(STORAGE_PATH, 'parq', '{}.parq'.format(name))

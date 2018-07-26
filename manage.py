@@ -15,18 +15,19 @@ from app.data.gf import run_gf
 from app.data.stooq import run_stooq
 from app.data.coinmarketcap import get_capitalization
 from app.data.fxcm import run_fxcm
-from app.data.local import convert_mt_pickle, cleaner
+from app.data.local import cleaner
 # Playground
 from app.playground import run_play
 # Models
 from app.models.alpha import create_owners
 from app.models.clusters import make_clusters
 from app.models.strategies import run_strategies
+#from app.models.risk import ideal_portfolio
 # Stats
 from app.stats import run_analyze, run_strategy, tick_tester
 # Testing
-from app.backtest import basic_runs
-from app.utils import easify_names, convert_to_parq, resample_all
+from app.backtest import basic_runs, see_portfolios
+from app.utils import easify_names, convert_to_parq, resample_all, convert_mt_pickle
 
 parser = ArgumentParser(description="BlueBlood management point.")
 parser.add_argument('--collect')
@@ -39,6 +40,8 @@ parser.add_argument('--db')
 parser.add_argument('--ticks')
 parser.add_argument('--strategies')
 parser.add_argument('--get')
+parser.add_argument('--portfolios')
+parser.add_argument('--risk')
 args = parser.parse_args()
 
 if __name__ == '__main__':
@@ -71,6 +74,9 @@ if __name__ == '__main__':
     if args.play:
         run_play(args.play)
 
+    #if args.risk:
+        #ideal_portfolio()
+
     if args.analyze:
         run_analyze(args.analyze)
 
@@ -85,6 +91,9 @@ if __name__ == '__main__':
 
     if args.portfolio:
         basic_runs()
+
+    if args.portfolios:
+        see_portfolios()
 
     if args.strategies:
         run_strategies()
