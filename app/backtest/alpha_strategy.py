@@ -4,9 +4,9 @@ from clint.textui import colored
 
 from app.data.local import get_pickle, transform_multi_data, join_data
 from app.models.alpha import all_alphas, alpha
-from .functions import clean_prices, clean_alpha
+from app.stats import clean_prices, clean_alpha, percentiles, sharpe_ratio
 from app.utils import DATA_SOURCE
-from .index import percentiles, sharpe_ratio
+from app.variables import BASKETS
 
 
 def sharpe(df, s):
@@ -41,12 +41,13 @@ def run_factor(data, model, BASKET):
                 plt.plot(df['{}_ret'.format(s)].cumsum())
             plt.show()
 
-def run_strategy(model):
+def run_alpha_strategy(model):
     try:
         model = int(model)
     except:
         model = None
         pass
+    BASKET = BASKETS[1].symbols
 
     initial = get_pickle(DATA_SOURCE, BASKET[0])
     initial = transform_multi_data(data=initial, symbol=BASKET[0])

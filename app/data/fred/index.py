@@ -12,6 +12,6 @@ def get(keyword):
     data.set_index('date', inplace=True)
     to_pickle(data, 'fred', keyword[0])
 
-def run():
+def run_fred():
     for keyword in FRED_KEYWORDS:
         get(keyword=keyword)

@@ -66,22 +66,6 @@ def join_data(primary, folder, symbols, clr=False):
     print(format_report(sw.get_last_aggregated_report()))
     return d
 
-def convert_mt_pickle():
-    ''' Converts MT4 exported CSV to lcoal format. '''
-    fs = filenames(META_PATH)
-    for f in fs:
-        try:
-            name = f.split('_')[3]
-            per = f.split('_')[4].split('.')[0]
-            dest_path = join(STORAGE_PATH, 'mt', '{}_{}.p'.format(name, per))
-            data = get_mt(name, per)
-            if len(data) > 500:
-                data.rename(columns={'OPEN': 'Open', 'HIGH': 'High', 'LOW': 'Low', 'CLOSE': 'Close', 'VOLUME': 'Volume'}, inplace=True)
-                data.to_pickle(dest_path)
-                print(colored.green('Converted for {} {}'.format(name, per)))
-        except Exception as err:
-            print(colored.red(err))
-
 def get_csv(folder, name):
     df = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0])
     df.sort_index(axis=0, ascending=True, inplace=True)

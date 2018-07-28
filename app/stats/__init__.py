@@ -6,8 +6,7 @@ from .index import (percentiles, drawdowns, commissions, max_dd, beta, vol, trey
     ulcer_index, ulcer_performance_index, drawdown_probability, return_probability, returns_by_month, returns_by_year,
     rolling_sharpe, capital_utilization, average_trades_month, max_dd_duration)
 from .lens import run_analyze
-from .strategy import run_strategy
-from .ticks import tick_tester
+from .functions import clean_prices, clean_alpha
 
 __ALL__ = [
     'percentiles',
@@ -59,6 +58,6 @@ __ALL__ = [
     'rolling_sharpe',
     'capital_utilization',
     'max_dd_duration',
-    'run_strategy',
-    'tick_tester'
+    'clean_prices',
+    'clean_alpha'
 ]

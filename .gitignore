@@ -3,6 +3,8 @@ api/
 app/models/
 app/variables/
 app/playground/
+app/strategies/
+app/indicators/
 .pyc
 logs_file
 *.whl

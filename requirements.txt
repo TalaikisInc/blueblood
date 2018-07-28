@@ -23,13 +23,17 @@ click
 ffn
 git+https://github.com/pydata/pandas-datareader
 git+https://github.com/Lasagne/Lasagne
+git+https://github.com/oanda/oandapy.git
 tiingo
 statsmodels
 pyfinance
 quandl
+pyfolio
 logbook
 alpha_vantage
 patsy
 cloudpickle
 ipython
 dbx-stopwatch
+backtrader
+pandas_market_calendars

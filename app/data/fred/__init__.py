@@ -1,5 +1,5 @@
-from .index import run
+from .index import run_fred
 
 __ALL__ = [
-    'run'
+    'run_fred'
 ]
