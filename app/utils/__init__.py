@@ -5,6 +5,7 @@ from .index import (periodize_returns, filenames, diff, STORAGE_PATH, vwap, zsco
 from .methods import read, write_parq, read_parq, parq_to_csv
 from .converters import easify_names, convert_to_parq, convert_mt_pickle
 from .resample import resample, resample_all, resample_df
+from .arrow import read_pa, write_pa
 
 __ALL__ = [
     'train_test_split',
@@ -41,5 +42,7 @@ __ALL__ = [
     'comm',
     'resample_df',
     'if_exists',
-    'convert_mt_pickle'
+    'convert_mt_pickle',
+    'read_pa',
+    'write_pa'
   ]

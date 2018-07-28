@@ -1,7 +1,10 @@
 from os import getenv
+from os.path import join
 
 from pyarrow import Table
 from pyarrow.parquet import write_table, read_table
+
+from app.utils import STORAGE_PATH
 
 
 def to_arrow(df):
@@ -10,8 +13,8 @@ def to_arrow(df):
 def to_pandas(table):
     return table.to_pandas()
 
-def read(path):
-    return read_table(path, nthreads=getenv('AVAILABLE_CORES'))
+def read_pa(folder, name):
+    return read_table(join(STORAGE_PATH, folder, '{}.paq'.format(name)), nthreads=getenv('AVAILABLE_CORES'))
 
-def write(table, path):
-    write_table(table, path)
+def write_pa(table, folder, name):
+    write_table(table, join(STORAGE_PATH, folder, '{}.paq'.format(name)))
