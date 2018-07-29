@@ -1,5 +1,4 @@
 from dask.dataframe.multi import concat
-from numpy import sum
 from clint.textui import colored
 
 from .methods import write_parq, read_parq
@@ -29,18 +28,21 @@ def resample_dukas_all(folder='dukas'):
             resample(df=df, name=s, folder=folder, per=p)
             print(colored.green('Resampled {} {}'.format(s, p)))
 
-def resample_df(df, period, method, compute=False):
-    if compute:
-        df.resample(period)[method].compute()
-    else:
-        df.resample(period)[method]
-    return df
+def resample_df(df, period):
+    return df.resample(period).sum()
+
+def write_resampled_df(df, folder, s, p):
+    to_pickle(data=df, folder=folder, name='{}_{}.p'.format(s, p))
+    print(colored.green('Resampled {} {}'.format(s, p)))
 
 def resample_all(folder='tiingo'):
-    pers = ['5B', '1W', '1M']
-    symbols = [f.split('.')[0] for f in filenames(folder) if '.p' in f]
+    pers = ['1W', '1M']
+    symbols = [f.split('.')[0] for f in filenames(folder) if (('.p' in f) & ('_' not in f))]
     for s in symbols:
         df = get_pickle(folder, s)
         for p in pers:
-            to_pickle(resample_df(df=df, period=p, method=sum()), folder, '{}_{}.p'.format(s, p))
-            print(colored.green('Resampled {} {}'.format(s, p)))
+            try:
+                df = resample_df(df=df.diff().dropna(), period=p)
+                write_resampled_df(df=df, folder=folder, s=s, p=p)
+            except Exception as err:
+                print(colored.red(err))
