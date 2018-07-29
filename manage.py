@@ -20,7 +20,7 @@ from app.stats import run_analyze
 from app.backtest import basic_runs, see_portfolios, run_alpha_strategy
 from app.strategies import run_old_strategies, run_bt_strategy
 # Utils
-from app.utils import easify_names, convert_to_parq, resample_all, convert_mt_pickle, parq_to_csv_all
+from app.utils import easify_names, convert_to_parq, resample_all, resample_dukas_all, convert_mt_pickle, parq_to_csv_all
 
 parser = ArgumentParser(description="BlueBlood management point.")
 parser.add_argument('--collect')
@@ -94,7 +94,11 @@ if __name__ == '__main__':
             pass
 
     if args.resample:
-        resample_all()
+        if args.resample == 'dukas':
+            resample_dukas_all()
+
+        if args.resample == 'tiingo':
+            resample_all()
 
     if args.convert:
         if args.convert == 'mt_pickle':
@@ -112,8 +116,12 @@ if __name__ == '__main__':
         if args.portfolio == 'cluster':
             make_clusters()
 
-        basic_runs()
-        see_portfolios()
+        if args.portfolio == 'examine':
+            ''' Examine created portfolios (in sampel only). '''
+            see_portfolios()
+
+        ''' deprecated. '''
+        #basic_runs()
 
     if args.db:
         if args.db == 'create_migrations':

@@ -4,7 +4,7 @@ from .index import (periodize_returns, filenames, diff, STORAGE_PATH, vwap, zsco
     avg_spread, quantity, comm, if_exists)
 from .methods import read, write_parq, read_parq, parq_to_csv
 from .converters import easify_names, convert_to_parq, convert_mt_pickle, parq_to_csv_all
-from .resample import resample, resample_all, resample_df
+from .resample import resample, resample_dukas_all, resample_df, resample_all
 from .arrow import read_pa, write_pa
 
 __ALL__ = [
@@ -37,7 +37,7 @@ __ALL__ = [
     'avg_spread',
     'resample',
     'parq_to_csv',
-    'resample_all',
+    'resample_dukas_all',
     'quantity',
     'comm',
     'resample_df',
@@ -45,5 +45,6 @@ __ALL__ = [
     'convert_mt_pickle',
     'read_pa',
     'write_pa',
-    'parq_to_csv_all'
+    'parq_to_csv_all',
+    'resample_all'
   ]

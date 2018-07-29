@@ -1,12 +1,13 @@
 from .index import PandasData, PandasTickData, BidAskCSV
-from .local import *
-from .fred import *
-from .tiingo import *
-from .eod import *
-from .coinmarketcap import *
-from .iex import *
-from .social import *
-from .crypto import *
+from app.data.local import *
+from app.data.fred import *
+from app.data.tiingo import *
+from app.data.eod import *
+from app.data.coinmarketcap import *
+from app.data.iex import *
+from app.data.social import *
+from app.data.crypto import *
+from app.data.fxcm import run_fxcm
 
 __ALL__ = [
     'PandasData',
@@ -20,6 +21,7 @@ __ALL__ = [
     'to_pickle',
     'get_csv',
     'normalize',
+    'get_mt',
     'run_fred',
     'eod_symbols',
     'run_eod',
@@ -39,5 +41,6 @@ __ALL__ = [
     'put_markets',
     'get_markets',
     'put_exchanges',
-    'get_exchanges'
+    'get_exchanges',
+    'run_fxcm'
 ]

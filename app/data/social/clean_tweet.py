@@ -1,11 +1,14 @@
-import re
-import htmlentitydefs
-import string
+from re import compile, VERBOSE, I, UNICODE, sub
+from string import punctuation
 
 import nltk
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
 from nltk.stem.porter import PorterStemmer
+from .twitter import Api
+from random import shuffle
+
+from .htmlentitydefs import *
 
 
 emoticon_string = r"""
@@ -66,14 +69,14 @@ regex_strings = (
     )
 
 # This is the core tokenizing regex:
-word_re = re.compile(r"""(%s)""" % "|".join(regex_strings), re.VERBOSE | re.I | re.UNICODE)
+word_re = compile(r"""(%s)""" % "|".join(regex_strings), VERBOSE | I | UNICODE)
 
 # The emoticon string gets its own regex so that we can preserve case for them as needed:
-emoticon_re = re.compile(regex_strings[1], re.VERBOSE | re.I | re.UNICODE)
+emoticon_re = compile(regex_strings[1], VERBOSE | I | UNICODE)
 
 # These are for regularizing HTML entities to Unicode:
-html_entity_digit_re = re.compile(r"&#\d+;")
-html_entity_alpha_re = re.compile(r"&\w+;")
+html_entity_digit_re = compile(r"&#\d+;")
+html_entity_alpha_re = compile(r"&\w+;")
 amp = "&amp;"
 
 class Tokenizer:
@@ -87,18 +90,18 @@ class Tokenizer:
         """        
         # Try to ensure unicode:
         try:
-            s = unicode(s)
+            s = str(s)
         except UnicodeDecodeError:
             s = str(s).encode('string_escape')
-            s = unicode(s)
+            s = str(s)
         # Fix HTML character entitites:
         s = self.__html2unicode(s)
         # Tokenize:
-        s = re.sub(r"""(?:@[\w_]+)""", 'MENTIONSOMEONE', s)
-        s = re.sub(r"""(.)\1{2,}""", r"""\1\1\1""", s)
-        s = re.sub(r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-f][0-9a-f]))+',"WEBSITE",s)
-        s = re.sub(r"""(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?""", "WEBSITE", s)
-        s = re.sub(r"""
+        s = sub(r"""(?:@[\w_]+)""", 'MENTIONSOMEONE', s)
+        s = sub(r"""(.)\1{2,}""", r"""\1\1\1""", s)
+        s = sub(r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-f][0-9a-f]))+',"WEBSITE",s)
+        s = sub(r"""(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?""", "WEBSITE", s)
+        s = sub(r"""
     (?:
       (?:            # (international)
         \+?[01]
@@ -113,13 +116,13 @@ class Tokenizer:
       [\-\s.]*   
       \d{4}          # base
     )""",'PHONENUM',s)        
-        s = re.sub(r"""[-+]?\d+(\.\d+)?""","NUMBER",s)
-        s = re.sub(r"\S*\\d+\S*"," ",s)
+        s = sub(r"""[-+]?\d+(\.\d+)?""","NUMBER",s)
+        s = sub(r"\S*\\d+\S*"," ",s)
         words = word_re.findall(s)
         # Possible alter the case, but avoid changing emoticons like :D into :d:
         if not self.preserve_case:            
-            words = map((lambda x : x if emoticon_re.search(x) else x.lower()), words)
-        words = map((lambda x : 'PUN' if x in list(string.punctuation) else x), words)
+            words = list(map((lambda x : x if emoticon_re.search(x) else x.lower()), words))
+        words = list(map((lambda x : 'PUN' if x in list(punctuation) else x), words))
         return words
 
     def tokenize_random_tweet(self):
@@ -127,12 +130,7 @@ class Tokenizer:
         If the twitter library is installed and a twitter connection
         can be established, then tokenize a random tweet.
         """
-        try:
-            import twitter
-        except ImportError:
-            print "Apologies. The random tweet functionality requires the Python twitter library: http://code.google.com/p/python-twitter/"
-        from random import shuffle
-        api = twitter.Api()
+        api = Api()
         tweets = api.GetPublicTimeline()
         if tweets:
             for tweet in tweets:
@@ -153,16 +151,16 @@ class Tokenizer:
                 entnum = ent[2:-1]
                 try:
                     entnum = int(entnum)
-                    s = s.replace(ent, unichr(entnum)) 
+                    s = s.replace(ent, chr(entnum)) 
                 except:
                     pass
         # Now the alpha versions:
         ents = set(html_entity_alpha_re.findall(s))
-        ents = filter((lambda x : x != amp), ents)
+        ents = list(filter((lambda x : x != amp), ents))
         for ent in ents:
             entname = ent[1:-1]
             try:            
-                s = s.replace(ent, unichr(htmlentitydefs.name2codepoint[entname]))
+                s = s.replace(ent, chr(htmlentitydefs.name2codepoint[entname]))
             except:
                 pass                    
             s = s.replace(amp, " and ")

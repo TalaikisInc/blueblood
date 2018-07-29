@@ -2,10 +2,11 @@ from os.path import join, dirname, abspath
 from os import getenv
 
 from clint.textui import colored
-import twitter
+from twitter import Api
+
 
 def connect():
-    api = twitter.Api(consumer_key=getenv('TWITTER_KEY'), consumer_secret=getenv('TWITTER_SECRET'),
+    api = Api(consumer_key=getenv('TWITTER_KEY'), consumer_secret=getenv('TWITTER_SECRET'),
         access_token_key=getenv('TWITTER_ACCESS_TOKEN_KEY'), access_token_secret=getenv('TWITTER_ACCESS_TOKEN_SECRET'))
     return api
 
@@ -29,4 +30,4 @@ def post_tweets(api, status, media):
     try:
         api.PostUpdate(status=status, media=media)
     except Exception as err:
-        print(colored.red(err)
+        print(colored.red(err))

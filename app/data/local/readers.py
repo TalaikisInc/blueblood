@@ -7,9 +7,9 @@ from fastparquet import ParquetFile
 from stopwatch import StopWatch, format_report
 sw = StopWatch()
 
-from app.utils import STORAGE_PATH
+from app.utils import STORAGE_PATH, filenames
 from .mt import get_mt, META_PATH
-from app.utils import filenames
+
 
 def fill_forward(data):
     ''' Fills forward empty data spots. '''
