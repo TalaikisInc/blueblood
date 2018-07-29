@@ -168,13 +168,7 @@ class Tokenizer:
             s = s.replace(amp, " and ")
         return s
 
-if __name__ == 'main':
+def clean_tweets(s):
     tok = Tokenizer(preserve_case=False)
-
-    def clean_tweet(s):
-        '''
-        :s : string; a tweet
-        :return : list; words that don't contain url, @somebody, and in utf-8 and lower case
-        '''
-        words = tok.tokenize(s)
-        return words
+    words = tok.tokenize(s)
+    return words

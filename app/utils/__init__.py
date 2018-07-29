@@ -3,7 +3,7 @@ from .index import (periodize_returns, filenames, diff, STORAGE_PATH, vwap, zsco
     roll_slope, rank, makedir, DATA_SOURCE, Owner, Fixed, Pair, common, pct, LongRule, ShortRule, count_zeros,
     avg_spread, quantity, comm, if_exists)
 from .methods import read, write_parq, read_parq, parq_to_csv
-from .converters import easify_names, convert_to_parq, convert_mt_pickle
+from .converters import easify_names, convert_to_parq, convert_mt_pickle, parq_to_csv_all
 from .resample import resample, resample_all, resample_df
 from .arrow import read_pa, write_pa
 
@@ -44,5 +44,6 @@ __ALL__ = [
     'if_exists',
     'convert_mt_pickle',
     'read_pa',
-    'write_pa'
+    'write_pa',
+    'parq_to_csv_all'
   ]

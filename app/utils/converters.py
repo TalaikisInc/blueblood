@@ -1,11 +1,11 @@
 from os.path import join
-from os import remove
+from os import remove, listdir
 
 from clint.textui import colored
 
 from .index import filenames, STORAGE_PATH
-from .methods import read, write_parq
-from app.data.local.mt import get_mt
+from .methods import read, write_parq, parq_to_csv
+from app.data.mt import get_mt
 
 
 def easify_names(folder='dukas'):
@@ -45,3 +45,11 @@ def convert_mt_pickle():
                 print(colored.green('Converted for {} {}'.format(name, per)))
         except Exception as err:
             print(colored.red(err))
+
+def parq_to_csv_all(folder='dukas'):
+    fs = listdir(join(STORAGE_PATH, folder))
+    for f in fs:
+        if '.parq' in f:
+            name = f.split('.')[0]
+            parq_to_csv(folder=folder, name=name)
+            print(colored.green('Converted {}'.format(name)))

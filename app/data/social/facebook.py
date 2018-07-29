@@ -9,7 +9,7 @@ def api():
     cfg = { 'page_id' : getenv('FACEBOOK_PAGE_ID'), 'access_token' : getenv('FACEBOOK_PAGE_ACCESS_TOKEN') }
     return facebook.GraphAPI(cfg['access_token'])
 
-def post(api, content, attachment):
+def post_fb(api, content, attachment):
     try:
         api.put_wall_post(message=content, attachment=attachment)
     except Exception as err:

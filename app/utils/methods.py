@@ -54,24 +54,3 @@ def pd_to_rc(df):
     index_name = df.index.name
     index_name = 'index' if not index_name else index_name
     return DataFrame(data=data, columns=columns, index=index, index_name=index_name)
-
-def sets(df):
-    pass
-
-def add():
-    pass
-
-def divide():
-    pass
-
-def multiply():
-    pass
-
-def get_cell():
-    pass
-
-def sort():
-    pass
-
-def iterrows():
-    pass

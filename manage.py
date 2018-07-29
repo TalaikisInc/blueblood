@@ -6,16 +6,8 @@ load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
 # Db
 from app.db import migrate, create_migrations
 # Data
-from app.data.fred import run_fred
-from app.data.iex import iex_symbols, run_iex #, get_spread
-from app.data.eod import eod_symbols, run_eod
-from app.data.morningstar import run_morningstar
-from app.data.tiingo import run_tiingo, tii_symbols, tii_news, save_one
-from app.data.gf import run_gf
-from app.data.stooq import run_stooq
-from app.data.coinmarketcap import get_capitalization
-from app.data.fxcm import run_fxcm
-from app.data.local import cleaner
+from app.data import (run_fred, eod_symbols, run_eod, run_tiingo, tii_symbols, tii_news,
+    save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, cleaner)
 # Playground
 from app.playground import run_play
 # Models
@@ -28,7 +20,7 @@ from app.stats import run_analyze
 from app.backtest import basic_runs, see_portfolios, run_alpha_strategy
 from app.strategies import run_old_strategies, run_bt_strategy
 # Utils
-from app.utils import easify_names, convert_to_parq, resample_all, convert_mt_pickle
+from app.utils import easify_names, convert_to_parq, resample_all, convert_mt_pickle, parq_to_csv_all
 
 parser = ArgumentParser(description="BlueBlood management point.")
 parser.add_argument('--collect')
@@ -36,6 +28,7 @@ parser.add_argument('--play')
 parser.add_argument('--analyze')
 parser.add_argument('--strategy')
 parser.add_argument('--convert')
+parser.add_argument('--resample')
 parser.add_argument('--portfolio')
 parser.add_argument('--db')
 parser.add_argument('--get')
@@ -64,13 +57,11 @@ if __name__ == '__main__':
         #run_stooq()
         run_tiingo()
         #tii_news()
-        # sify_names()
-        # convert_to_parq()
-        # resample_all()
         # run_fxcm()
         # cleaner()
 
     if args.play:
+        ''' Various experimental functions to pay before deployment. '''
         run_play(args.play)
 
     #if args.risk:
@@ -92,8 +83,20 @@ if __name__ == '__main__':
         except:
             pass
 
+    if args.resample:
+        resample_all()
+
     if args.convert:
-        convert_mt_pickle()
+        if args.convert == 'mt_pickle':
+            ''' Converts Metatrader 4 folder csv to pickle.'''
+            convert_mt_pickle()
+        if args.convert == 'parq_csv':
+            ''' Converts parquet to csv.'''
+            parq_to_csv_all()
+        if args.convert == 'csv_parq':
+            ''' Converts go-dukas generated CSV to parquet.'''
+            easify_names()
+            convert_to_parq()
 
     if args.portfolio:
         basic_runs()

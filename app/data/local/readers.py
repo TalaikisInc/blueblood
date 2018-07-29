@@ -66,7 +66,10 @@ def join_data(primary, folder, symbols, clr=False):
     print(format_report(sw.get_last_aggregated_report()))
     return d
 
-def get_csv(folder, name):
-    df = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0])
+def get_csv(folder, name, skip=False):
+    if skip:
+        df = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0], skiprows=1)
+    else:
+        df = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0])
     df.sort_index(axis=0, ascending=True, inplace=True)
     return df

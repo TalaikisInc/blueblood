@@ -1,7 +1,7 @@
 from clint.textui import colored
 from pandas import DataFrame
 
-from app.data.local import get_pickle, to_pickle
+from app.data import get_pickle, to_pickle
 from app.utils import filenames, common
 
 
