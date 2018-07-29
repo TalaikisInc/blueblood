@@ -1,9 +1,9 @@
 TFS = dict(
-    1440=('B', 'business day frequency'),
+    B='business day frequency',
     C='custom business day frequency (experimental)',
     D='calendar day frequency',
-    10080=( 'W', 'weekly frequency'),
-    43200=('M', 'month end frequency'),
+    W='weekly frequency',
+    M='month end frequency',
     SM='semi-month end frequency (15th and end of month)',
     BM='business month end frequency',
     CBM='custom business month end frequency',

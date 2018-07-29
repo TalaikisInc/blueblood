@@ -6,6 +6,7 @@ from .methods import read, write_parq, read_parq, parq_to_csv
 from .converters import easify_names, convert_to_parq, convert_mt_pickle, parq_to_csv_all
 from .resample import resample, resample_dukas_all, resample_df, resample_all
 from .arrow import read_pa, write_pa
+from .pandas_tfs import TFS
 
 __ALL__ = [
     'train_test_split',
@@ -46,5 +47,6 @@ __ALL__ = [
     'read_pa',
     'write_pa',
     'parq_to_csv_all',
-    'resample_all'
+    'resample_all',
+    'TFS'
   ]
