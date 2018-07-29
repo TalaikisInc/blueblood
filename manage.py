@@ -32,7 +32,7 @@ parser.add_argument('--resample')
 parser.add_argument('--portfolio')
 parser.add_argument('--db')
 parser.add_argument('--get')
-parser.add_argument('--portfolios')
+parser.add_argument('--clean')
 parser.add_argument('--risk')
 args = parser.parse_args()
 
@@ -41,24 +41,34 @@ if __name__ == '__main__':
         save_one(args.get)
 
     if args.collect:
-        #run_fred()
-        #get_capitalization()
+        if args.collect == 'fred':
+            run_fred()
+
+        if args.collect == 'crypto':
+            get_capitalization()
         if args.collect == 'one_time':
             #iex_symbols()
             #eod_symbols()
             #create_owners()
             tii_symbols()
-            #make_clusters()
-        # run_iex()
-        # get_spread()
-        #run_eod()
-        #run_gf()
-        #run_morningstar()
-        #run_stooq()
-        run_tiingo()
-        #tii_news()
-        # run_fxcm()
-        # cleaner()
+
+        if args.collect == 'iex':
+            run_iex()
+
+        if args.collect == 'eod':
+            run_eod()
+
+        if args.collect == 'tiingo':
+            run_tiingo()
+
+        if args.collect == 'tiingo_news':
+            tii_news()
+
+        if args.collect == 'fxcm':
+            run_fxcm()
+
+    if args.clean:
+        cleaner()
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''
@@ -99,9 +109,10 @@ if __name__ == '__main__':
             convert_to_parq()
 
     if args.portfolio:
-        basic_runs()
+        if args.portfolio == 'cluster':
+            make_clusters()
 
-    if args.portfolios:
+        basic_runs()
         see_portfolios()
 
     if args.db:
