@@ -18,7 +18,7 @@ from app.models.clusters import make_clusters
 from app.stats import run_analyze
 # Testing
 from app.backtest import basic_runs, see_portfolios, run_alpha_strategy
-from app.strategies import run_old_strategies, run_bt_fx_strategy, run_bt_pair_strategy
+from app.strategies import run_old_strategies, run_bt_fx_ticks, run_bt_pair_strategy
 # Utils
 from app.utils import (easify_names, convert_to_parq, resample_all, resample_dukas_all, convert_mt_pickle,
     parq_to_csv_all, pickle_to_csv_all)
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     if args.strategy:
         if args.strategy == 'bt':
             # run_bt_pair_strategy()
-            run_bt_fx_strategy()
+            run_bt_fx_ticks()
         if args.strategy == 'old':
             run_old_strategies()
         #if args.strategy == 'ticks':

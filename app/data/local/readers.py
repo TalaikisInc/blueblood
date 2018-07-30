@@ -106,3 +106,8 @@ def read_bt_csv(folder, symbol, ticks=True):
             openinterest=-1,
             timeframe=TimeFrame.Days)
     return data
+
+def split_ticks(folder, symbol):
+    ''' Splits big file into chunks. '''
+    for i, chunk in enumerate(get_csv(folder=folder, name=symbol, skip=True)):
+        chunk.to_csv(join(STORAGE_PATH, folder, '_split', '{}_{}.csv'.format(name, i)))

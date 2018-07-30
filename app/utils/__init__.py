@@ -1,4 +1,4 @@
-from .split import train_test_split, split_ticks, count_splits, clean_splits
+from .split import train_test_split, count_splits, clean_splits
 from .index import (periodize_returns, filenames, diff, STORAGE_PATH, vwap, zscore, minmaxscaler, slope,
     roll_slope, rank, makedir, DATA_SOURCE, Owner, Fixed, Pair, common, pct, LongRule, ShortRule, count_zeros,
     avg_spread, quantity, comm, if_exists)
@@ -50,7 +50,6 @@ __ALL__ = [
     'resample_all',
     'TFS',
     'pickle_to_csv_all',
-    'split_ticks',
     'count_splits',
     'clean_splits'
   ]

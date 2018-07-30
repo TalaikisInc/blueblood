@@ -2,7 +2,7 @@ from os.path import join
 
 from fastparquet import write
 
-from app.utils import STORAGE_PATH
+from app.utils.index import STORAGE_PATH
 
 
 def write_parq(df, name):
