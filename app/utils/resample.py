@@ -33,7 +33,7 @@ def resample_dukas_all(folder='dukas'):
 @jit
 def resample_df(folder, df, period):
     df = normalize(folder, df)
-    open = df.Open.resample(period).last()
+    open = df.Open.resample(period).first()
     high = df.High.resample(period).max()
     low = df.Low.resample(period).min()
     close = df.Close.resample(period).last()
@@ -42,7 +42,7 @@ def resample_df(folder, df, period):
     return concat([open, high, low, close, adj_close, vol], axis=1)
 
 def write_resampled_df(df, folder, s, p):
-    to_pickle(data=df, folder=folder, name='{}_{}.p'.format(s, p))
+    to_pickle(data=df, folder=folder, name='{}_{}'.format(s, p))
     print(colored.green('Resampled {} {}'.format(s, p)))
 
 def resample_all(folder='tiingo'):

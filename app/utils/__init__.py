@@ -1,9 +1,9 @@
-from .split import train_test_split
+from .split import train_test_split, split_ticks, count_splits, clean_splits
 from .index import (periodize_returns, filenames, diff, STORAGE_PATH, vwap, zscore, minmaxscaler, slope,
     roll_slope, rank, makedir, DATA_SOURCE, Owner, Fixed, Pair, common, pct, LongRule, ShortRule, count_zeros,
     avg_spread, quantity, comm, if_exists)
 from .methods import read, write_parq, read_parq, parq_to_csv
-from .converters import easify_names, convert_to_parq, convert_mt_pickle, parq_to_csv_all
+from .converters import easify_names, convert_to_parq, convert_mt_pickle, parq_to_csv_all, pickle_to_csv_all
 from .resample import resample, resample_dukas_all, resample_df, resample_all
 from .arrow import read_pa, write_pa
 from .pandas_tfs import TFS
@@ -48,5 +48,9 @@ __ALL__ = [
     'write_pa',
     'parq_to_csv_all',
     'resample_all',
-    'TFS'
+    'TFS',
+    'pickle_to_csv_all',
+    'split_ticks',
+    'count_splits',
+    'clean_splits'
   ]

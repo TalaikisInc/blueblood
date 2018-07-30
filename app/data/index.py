@@ -1,9 +1,9 @@
-from app.backtest.backtrader.feeds import DataBase, GenericCSVData
+from backtrader.feeds import DataBase, GenericCSVData
 
 
 class PandasData(DataBase):
     params = (
-        ('datetime', None),
+        ('datetime', 0),
         ('open', 0),
         ('high', 1),
         ('low', 2),
@@ -14,20 +14,20 @@ class PandasData(DataBase):
 
 class PandasTickData(DataBase):
     params = (
-        ('datetime', None),
+        ('datetime', 0),
         ('open', 1),
         ('high', 1),
         ('low', 1),
         ('close', 1),
-        ('volume', 1),
-        ('openinterest', None)
+        ('volume', 3),
+        ('openinterest', -1)
     )
 
 class BidAskCSV(GenericCSVData):
     linesoverride = True
-    lines = ('datetime', 'ask', 'bid' )
+    lines = ('bid', 'ask', 'datetime')
     params = (
-        # (datetime, 0), # inherited from parent class
-        ('ask', 1),  # default field pos 1
-        ('bid', 2),  # default field pos 2
+        ('datetime', 0),
+        ('bid', 1),
+        ('ask', 2)
     )

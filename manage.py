@@ -20,7 +20,8 @@ from app.stats import run_analyze
 from app.backtest import basic_runs, see_portfolios, run_alpha_strategy
 from app.strategies import run_old_strategies, run_bt_fx_strategy, run_bt_pair_strategy
 # Utils
-from app.utils import easify_names, convert_to_parq, resample_all, resample_dukas_all, convert_mt_pickle, parq_to_csv_all
+from app.utils import (easify_names, convert_to_parq, resample_all, resample_dukas_all, convert_mt_pickle,
+    parq_to_csv_all, pickle_to_csv_all)
 
 parser = ArgumentParser(description="BlueBlood management point.")
 parser.add_argument('--collect')
@@ -112,6 +113,8 @@ if __name__ == '__main__':
             ''' Converts go-dukas generated CSV to parquet.'''
             easify_names()
             convert_to_parq()
+        if args.convert == 'pickle_csv':
+            pickle_to_csv_all()
 
     if args.portfolio:
         if args.portfolio == 'cluster':

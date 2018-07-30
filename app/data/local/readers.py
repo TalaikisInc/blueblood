@@ -7,9 +7,10 @@ from fastparquet import ParquetFile
 from stopwatch import StopWatch, format_report
 sw = StopWatch()
 
+from backtrader import TimeFrame
 from app.utils import STORAGE_PATH, filenames
 from .mt import get_mt, META_PATH
-from app.backtest.backtrader.feeds import GenericCSVData
+from backtrader.feeds import GenericCSVData
 
 
 def fill_forward(data):
@@ -69,7 +70,7 @@ def join_data(primary, folder, symbols, clr=False):
 
 def get_csv(folder, name, skip=False):
     if skip:
-        df = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0], skiprows=1)
+        df = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0], skiprows=1, chunksize=1000000)
     else:
         df = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0])
     df.sort_index(axis=0, ascending=True, inplace=True)
@@ -78,6 +79,7 @@ def get_csv(folder, name, skip=False):
 def read_bt_csv(folder, symbol, ticks=True):
     if ticks:
         data = GenericCSVData(dataname=join(STORAGE_PATH, folder, '{}.csv'.format(symbol)),
+            nullvalue=0.0,
             dtformat='%Y-%m-%d %H:%M:%S.%f',
             tmformat='%H:%M:%S.%f',
             datetime=0,
@@ -88,5 +90,19 @@ def read_bt_csv(folder, symbol, ticks=True):
             close=1,
             volume=3,
             openinterest=-1,
-            timeframe=TIMEFRAMES['ticks'])
+            timeframe=TimeFrame.Ticks)
+    else:
+        data = GenericCSVData(dataname=join(STORAGE_PATH, folder, '{}.csv'.format(symbol)),
+            nullvalue=0.0,
+            dtformat='%Y-%m-%d',
+            # tmformat='%H:%M:%S.%f',
+            datetime=0,
+            time=-1,
+            open=1,
+            high=2,
+            low=3,
+            close=4,
+            volume=5,
+            openinterest=-1,
+            timeframe=TimeFrame.Days)
     return data

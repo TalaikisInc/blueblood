@@ -5,7 +5,7 @@ from clint.textui import colored
 
 from .index import filenames, STORAGE_PATH
 from .methods import read, write_parq, parq_to_csv
-from app.data.local import get_mt
+from app.data.local import get_mt, get_pickle
 
 
 def easify_names(folder='dukas'):
@@ -53,3 +53,15 @@ def parq_to_csv_all(folder='dukas'):
             name = f.split('.')[0]
             parq_to_csv(folder=folder, name=name)
             print(colored.green('Converted {}'.format(name)))
+
+def pickle_to_csv_all(folder='tiingo'):
+    fs = filenames(folder)
+    for f in fs:
+        if '.p' in f:
+            try:
+                name = f.split('.')[0]
+                df = get_pickle(folder, name)
+                df.to_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)))
+                print(colored.green('Converted {}'.format(name)))
+            except Exception as err:
+                print(colored.red(err))
