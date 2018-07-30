@@ -1,7 +1,7 @@
-from backtrader import Cerebro, Strategy, Order
-from backtrader.analyzers import Returns
+from app.backtest.backtrader import Cerebro, Strategy, Order
+from app.backtest.backtrader.analyzers import Returns
 
-from app.data import get_pickle
+from app.data.local import get_pickle
 from app.utils import read_parq
 from app.data import PandasData
 

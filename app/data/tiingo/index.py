@@ -11,7 +11,7 @@ from clint.textui import colored
 from tiingo.restclient import RestClientError
 
 from app.db import Market, DB, Source, News, get_exchange
-from app.data import to_pickle
+from app.data.local import to_pickle
 
 
 def c():

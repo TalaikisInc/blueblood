@@ -193,7 +193,7 @@ func (t *FxtTick) String() string {
     bt := time.Unix(int64(t.BarTimestamp), 0).UTC()
     tt := time.Unix(int64(t.TickTimestamp), 0).UTC()
     return fmt.Sprintf("%s %s %f %f %f %f %v",
-        bt.Format("2006-01-02 15:04:05"),
+        Format("2006-01-02 15:04:05"),
         tt.Format("2006-01-02 15:04:05"),
         t.Open,
         t.High,

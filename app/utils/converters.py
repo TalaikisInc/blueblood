@@ -5,7 +5,7 @@ from clint.textui import colored
 
 from .index import filenames, STORAGE_PATH
 from .methods import read, write_parq, parq_to_csv
-from app.data import get_mt
+from app.data.local import get_mt
 
 
 def easify_names(folder='dukas'):

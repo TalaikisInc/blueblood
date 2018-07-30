@@ -2,7 +2,7 @@ from pandas import concat
 from matplotlib import pyplot as plt
 
 from app.variables import PORTFOLIOS
-from app.data import get_pickle, normalize
+from app.data.local import get_pickle, normalize
 
 
 def see_portfolios():

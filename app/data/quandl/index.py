@@ -1,7 +1,7 @@
 from os import getenv
 from quandl import ApiConfig, get
 
-from app.data import to_pickle
+from app.data.local import to_pickle
 from variables import QUANDL_SYMBOLS
 ApiConfig.api_key = getenv('QUANDL_KEY')
 

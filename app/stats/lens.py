@@ -2,7 +2,7 @@ from os.path import join
 
 from .alphalens.tears import create_full_tear_sheet, create_event_study_tear_sheet
 from .alphalens.utils import get_clean_factor_and_forward_returns
-from app.data import get_pickle, transform_multi_data, join_data
+from app.data.local import get_pickle, transform_multi_data, join_data
 from app.models.alpha import all_alphas, alpha
 from app.utils import makedir, DATA_SOURCE, filenames
 from .functions import clean_prices, clean_alpha, transform_for_analysis

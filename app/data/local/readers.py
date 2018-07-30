@@ -9,6 +9,7 @@ sw = StopWatch()
 
 from app.utils import STORAGE_PATH, filenames
 from .mt import get_mt, META_PATH
+from app.backtest.backtrader.feeds import GenericCSVData
 
 
 def fill_forward(data):
@@ -73,3 +74,19 @@ def get_csv(folder, name, skip=False):
         df = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0])
     df.sort_index(axis=0, ascending=True, inplace=True)
     return df
+
+def read_bt_csv(folder, symbol, ticks=True):
+    if ticks:
+        data = GenericCSVData(dataname=join(STORAGE_PATH, folder, '{}.csv'.format(symbol)),
+            dtformat='%Y-%m-%d %H:%M:%S.%f',
+            tmformat='%H:%M:%S.%f',
+            datetime=0,
+            time=-1,
+            open=1,
+            high=1,
+            low=1,
+            close=1,
+            volume=3,
+            openinterest=-1,
+            timeframe=TIMEFRAMES['ticks'])
+    return data

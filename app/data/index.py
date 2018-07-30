@@ -1,4 +1,4 @@
-from backtrader.feeds import DataBase, GenericCSVData
+from app.backtest.backtrader.feeds import DataBase, GenericCSVData
 
 
 class PandasData(DataBase):
