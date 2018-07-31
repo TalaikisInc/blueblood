@@ -41,3 +41,4 @@ ipython
 dbx-stopwatch
 backtrader
 pandas_market_calendars
+psutil
