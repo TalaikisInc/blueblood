@@ -32,7 +32,7 @@ def periodize_returns(r, p=252):
 def filenames(folder):
     try:
         path = join(STORAGE_PATH, folder)
-        fs = [f for f in listdir(path) if isfile(join(path, f))]
+        fs = [f for f in listdir(path) if isfile(join(path, f)) & ('.gitkeep' not in f)]
     except:
         path = folder
         fs = [f for f in listdir(path) if isfile(join(path, f))]

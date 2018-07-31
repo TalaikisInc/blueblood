@@ -2,7 +2,7 @@ from os.path import join
 
 from numpy import isinf, isnan, nan
 from clint.textui import colored
-from pandas import read_pickle, read_csv, to_datetime
+from pandas import read_pickle, read_csv, to_datetime, TimeGrouper
 from fastparquet import ParquetFile
 from stopwatch import StopWatch, format_report
 sw = StopWatch()
@@ -70,11 +70,21 @@ def join_data(primary, folder, symbols, clr=False):
 
 def get_csv(folder, name, skip=False):
     if skip:
-        df = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0], skiprows=1, chunksize=1000000)
+        df = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0], skiprows=1)
     else:
         df = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0])
     df.sort_index(axis=0, ascending=True, inplace=True)
     return df
+
+def chunkize_df_years(df, freq='Y'):
+    ''' Slice DataFrame into years. '''
+    df = df.set_index('Time')
+    return df.groupby(TimeGrouper(freq=freq))
+
+def chunkize_df(df):
+    ''' Slice DataFrame into smaller chunks. '''
+    n = 1000000
+    return [df[i:i+n] for i in range(0, df.shape[0], n)]
 
 def read_bt_csv(folder, symbol, ticks=True):
     if ticks:
@@ -107,7 +117,13 @@ def read_bt_csv(folder, symbol, ticks=True):
             timeframe=TimeFrame.Days)
     return data
 
-def split_ticks(folder, symbol):
-    ''' Splits big file into chunks. '''
-    for i, chunk in enumerate(get_csv(folder=folder, name=symbol, skip=True)):
-        chunk.to_csv(join(STORAGE_PATH, folder, '_split', '{}_{}.csv'.format(name, i)))
+def split_ticks(folder, symbol, years=False):
+    ''' Splits big DataFrame into chunks and saves to disk. '''
+    df = get_csv(folder=folder, name=symbol)
+    if years:
+        dfs = chunkize_df_years(df=df)
+    else:
+        dfs = chunkize_df(df=df)
+    for i, chunk in enumerate(dfs):
+        chunk = chunk.set_index('Time')
+        chunk.to_csv(join(STORAGE_PATH, folder, '_split', '{}_{}.csv'.format(symbol, i)))

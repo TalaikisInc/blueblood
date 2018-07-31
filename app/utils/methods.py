@@ -22,7 +22,7 @@ def parq_to_csv(folder, name):
     df = read_parq(folder=folder, name=name)
     df.compute().to_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)))
 
-def read(folder, name):
+def read_csv_dask(folder, name):
     if folder == 'dukas':
         data = read_csv(join(STORAGE_PATH, folder, '{}.csv'.format(name)), parse_dates=[0])
         data.columns = ['Time', 'Ask', 'Bid', 'Ask_volume', 'Bid_volume']

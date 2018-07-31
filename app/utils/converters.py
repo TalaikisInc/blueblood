@@ -4,7 +4,7 @@ from os import remove, listdir
 from clint.textui import colored
 
 from .index import filenames, STORAGE_PATH
-from .methods import read, write_parq, parq_to_csv
+from .methods import read_csv_dask, write_parq, parq_to_csv
 from app.data.local import get_mt, get_pickle
 
 
@@ -25,7 +25,7 @@ def convert_to_parq(folder='dukas'):
     fs = filenames(folder)
     for f in fs:
         name = f.split('.')[0]
-        data = read(folder, name)
+        data = read_csv_dask(folder, name)
         write_parq(data, folder, '{}.parq'.format(name))
         remove(join(STORAGE_PATH, folder, f))
         print(colored.green(name))
