@@ -43,5 +43,6 @@ __ALL__ = [
     'put_exchanges',
     'get_exchanges',
     'run_fxcm',
-    'read_bt_csv'
+    'read_bt_csv',
+    'get_crypto_balances'
 ]

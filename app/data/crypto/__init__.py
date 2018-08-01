@@ -1,9 +1,10 @@
-from .index import get_quote, put_markets, get_markets, put_exchanges, get_exchanges
+from .index import get_quote, put_markets, get_markets, put_exchanges, get_exchanges, get_crypto_balances
 
 __ALL__ = [
     'get_quote',
     'put_markets',
     'get_markets',
     'put_exchanges',
-    'get_exchanges'
+    'get_exchanges',
+    'get_crypto_balances'
 ]

@@ -7,7 +7,7 @@ load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
 from app.db import migrate, create_migrations
 # Data
 from app.data import (run_fred, eod_symbols, run_eod, run_tiingo, tii_symbols, tii_news,
-    save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, cleaner)
+    save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, cleaner, get_crypto_balances)
 # Playground
 from app.playground import run_play
 # Models
@@ -35,6 +35,7 @@ parser.add_argument('--db')
 parser.add_argument('--get')
 parser.add_argument('--clean')
 parser.add_argument('--risk')
+parser.add_argument('--trade')
 args = parser.parse_args()
 
 if __name__ == '__main__':
@@ -77,6 +78,10 @@ if __name__ == '__main__':
 
     #if args.risk:
         #ideal_portfolio()
+
+    if args.trade:
+        if args.trade == 'balance':
+            get_crypto_balances()
 
     if args.analyze:
         run_analyze(args.analyze)
