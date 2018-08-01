@@ -1,7 +1,7 @@
 from .split import train_test_split, count_splits, clean_splits
 from .index import (periodize_returns, filenames, diff, STORAGE_PATH, vwap, zscore, minmaxscaler, slope,
     roll_slope, rank, makedir, DATA_SOURCE, Owner, Fixed, Pair, common, pct, LongRule, ShortRule, count_zeros,
-    avg_spread, quantity, comm, if_exists)
+    avg_spread, quantity, comm, if_exists, log_returns)
 from .methods import read_csv_dask, write_parq, read_parq, parq_to_csv
 from .converters import easify_names, convert_to_parq, convert_mt_pickle, parq_to_csv_all, pickle_to_csv_all
 from .resample import resample, resample_dukas_all, resample_df, resample_all
@@ -51,5 +51,6 @@ __ALL__ = [
     'TFS',
     'pickle_to_csv_all',
     'count_splits',
-    'clean_splits'
+    'clean_splits',
+    'log_returns'
   ]
