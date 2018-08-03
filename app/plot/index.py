@@ -26,7 +26,7 @@ def plot(data, title, comparison=[], save=False):
     else:
         plt.show()
 
-def drawdown(cumulative, title, save=False):
+def drawdown(cumulative, title='', save=False):
     dd = drawdowns(cumulative=cumulative)
     plt.plot(dd, label='Drawdown', lw=3)
     plt.xlabel('Time, t')
@@ -38,7 +38,7 @@ def drawdown(cumulative, title, save=False):
     else:
         plt.show()
 
-def drawdown_to_percentile(cumulative, title, save=False):
+def drawdown_to_percentile(cumulative, title='', save=False):
     d = drawdowns(cumulative=cumulative).dropna()
     dd = d.loc[d != 0]
     if len(dd) > 100:

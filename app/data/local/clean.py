@@ -3,7 +3,7 @@ from pandas import DataFrame
 
 from .readers import get_pickle
 from .writers import to_pickle
-from app.utils.index import filenames, common
+from app.utils import filenames, common
 
 
 def cleaner():
