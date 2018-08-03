@@ -1,5 +1,5 @@
 from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, sqrt,
-    power, maximum, round, where, percentile, argmax, busday_count)
+    power, maximum, round, where, percentile, busday_count)
 import scipy.stats as sc
 from pandas import to_datetime
 
@@ -11,8 +11,11 @@ def max_dd(drawdowns):
     return abs(drawdowns.min())
 
 def beta(returns, benchmark):
-    m = matrix([returns, benchmark])
-    return cov(m)[0][1] / std(benchmark)
+    m = benchmark.values
+    s = returns.values
+    covariance = cov(s, m)
+    beta = covariance[0, 1] / covariance[1, 1]
+    return beta
 
 def vol(returns):
     return std(returns)
@@ -72,13 +75,13 @@ def conditional_sharpe(returns, rf, alpha):
 
 def omega_ratio(returns, rf, target=0):
     return (returns.mean() - rf) / lpm(returns, target, 1)
- 
+
 def sortino(returns, rf, target=0):
     return (returns.mean() - rf) / sqrt(lpm(returns, target, 2))
 
 def kappa_three(returns, rf, target=0):
-    return (returns.mean() - rf) / power(lpm(returns, target, 3), float(1/3))
- 
+    return (returns.mean() - rf) / power(lpm(returns=returns, threshold=target, order=3), 1/3.0)
+
 def gain_loss(returns, target=0):
     return hpm(returns, target, 1) / lpm(returns, target, 1)
 
@@ -98,8 +101,8 @@ def average_dd(cumulative):
 def average_dd_squared(cumulative):
     return power(average_dd(cumulative), 2.0)
 
-def sterling_ration(retruns, cumulative, rf):
-    return (returns.mean() - rf) / average_dd(cumulative)
+def sterling_ration(returns, rf):
+    return (returns.mean() - rf) / average_dd(returns.cumsum())
 
 def burke_ratio(returns, cumulative, rf):
     return (returns.mean() - rf) / sqrt(average_dd_squared(cumulative))
@@ -150,15 +153,10 @@ def total_wins(returns):
     return sum(where(returns > 0, 1, 0))
 
 def total_losses(returns):
-    return sum(where(returns <= 0, 1, 0))
+    return sum(where(returns < 0, 1, 0))
 
 def win_rate(returns):
-    w = total_wins(returns)
-    l = sum(where(returns <= 0, 1, 0))
-    if l > 0:
-        return w / l
-    else:
-        return 0
+    return total_wins(returns) / len(returns)
 
 def mae(high, low, close, pos=0):
     if pos == 1:
@@ -196,11 +194,11 @@ def ulcer_performance_index(cumulative, r, rf):
 def drawdown_probability(cumulative):
     dd = drawdowns(cumulative=cumulative)
     dd = dd.loc[dd != 0]
-    return mean(percentiles(returns=dd)) / 100
+    return abs(mean(percentiles(returns=dd)))
 
 def return_probability(returns):
     returns = returns.loc[returns != 0]
-    return mean(percentiles(returns=returns)) / 100
+    return abs(mean(percentiles(returns=returns)))
 
 def average_mae(high, low, close, pos=0):
     return mae(high, low, close, pos).mean()
@@ -209,7 +207,7 @@ def average_mfe(high, low, close, pos=0):
     return mfe(high, low, close, pos).mean()
 
 def correlation(returns):
-    return returns.corr().as_format('.2f')
+    return returns.corr(returns.shift())
 
 def returns_by_month():
     pass
@@ -231,13 +229,11 @@ def average_trades_month(signals, retruns):
     return trade_count(signals=signals) / len(returns) * 30.416
 
 def max_dd_duration(cumulative):
-    i = argmax(maximum.accumulate(cumulative) - cumulative)
-    j = argmax(cumulative[:i])
-    s = to_datetime(str(cumulative.index.values[j]))
-    start = s.strftime ('%Y-%m-%d')
-    e = to_datetime(str(cumulative.index.values[i]))
-    end = e.strftime ('%Y-%m-%d')
-    return busday_count(start, end)
+    i = (maximum.accumulate(cumulative) - cumulative).idxmax()
+    j = cumulative[:i].idxmax()
+    s = to_datetime(j).strftime ('%Y-%m-%d')
+    e = to_datetime(i).strftime ('%Y-%m-%d')
+    return busday_count(s, e)
 
 TARGET = 0.05
 RF = 0.05
@@ -278,7 +274,7 @@ def run_stats():
             calmar=calmar(returns=returns, rf=RF),
             average_dd=average_dd(cumulative=cumulative),
             average_dd_squared=average_dd_squared(cumulative=cumulative),
-            sterling_ration=sterling_ration(retruns=retruns, cumulative=cumulative, rf=RF),
+            sterling_ration=sterling_ration(returns=returns, rf=RF),
             burke_ratio=burke_ratio(returns=returns, cumulative=cumulative, rf=RF),
             average_month_return=average_month_return(returns=returns),
             average_trades_month=average_trades_month(signals=signals, retruns=retruns),
@@ -394,3 +390,95 @@ def debt_equity_ratio(debt, book_value):
 
 def roe(net_income, book_value):
     return net_income / book_value
+
+def stats_printout(returns, market):
+    c = returns.cumsum()
+
+    print('Basics -----------------------')
+    vv = vol(returns=returns)
+    print('Volatility %.3f%%' % (vv * 100.0))
+    amr = average_month_return(returns=returns) * 100.0
+    print('Average month return %.3f%%' % amr)
+    # trade_count(signals)
+    at = average_trade(returns=returns) * 100.0
+    print('Average trade %.2f%%' % at)
+    aw = average_win(returns=returns) * 100.0
+    print('Average win %.2f%%' % aw)
+    al = average_loss(returns=returns) * 100.0
+    print('Average loss %.2f%%' % al)
+    w = total_wins(returns=returns)
+    print('Wins %s' % w)
+    l = total_losses(returns=returns)
+    print('Losses %s' % l)
+    wr = win_rate(returns=returns) * 100.0
+    print('Win rate %.3f%%' % wr)
+    acor = correlation(returns=returns)
+    print('Autocorrelation %.3f' % acor)
+
+    print()
+    print('Ratios -----------------------')
+    print('Sharpe* %.3f' % (sharpe_ratio(returns, rf=0.0) * sqrt(252)))
+    b = beta(returns=returns, benchmark=market)
+    print('Beta %.3f' % b)
+    a = alpha(portfolio_return=returns.mean(), rf=0.0, beta=b, market_return=market.mean())
+    print('Alpha %.3f' % a)
+    tr = treynor(returns=returns, benchmark=market, rf=0.0)
+    print('Treynor %.3f' % tr)
+    infr = ir(returns=returns, benchmark=market)
+    print('Information ratio %.3f' % infr)
+    mod = modigliani(returns=returns, benchmark=market, rf=0.0)
+    print('Modigliani ratio %.3f' % mod)
+    ora = omega_ratio(returns=returns, rf=0.0, target=0.0)
+    print('Omega Ratio %.3f' % ora)
+    so = sortino(returns=returns, rf=0.0, target=0)
+    print('Sortino Ratio %.3f' % so)
+    kt = kappa_three(returns=returns, rf=0.0, target=0.05)
+    print('Kappa Three %.3f' % kt)
+    up = upside_potential(returns=returns, target=0.0)
+    print('Upside potential ratio %.3f' % up)
+    cal = calmar(returns=returns, rf=0.0)
+    print('Calmar Ratio %.3f' % cal)
+    ui = ulcer_index(cumulative=c)
+    print('Ulcer Index %.3f' % ui)
+    upi = ulcer_performance_index(cumulative=c, r=returns.mean(), rf=0.0)
+    print('Ulcer Performance Index %.3f' % upi)
+    stra = sterling_ration(returns=returns, rf=0.0)
+    print('Sterling Ratio %.3f' % stra)
+    br = burke_ratio(returns=returns, cumulative=c, rf=0.0)
+    print('Burke Ratio %.3f' % br)
+
+    print()
+    print('VaR --------------------------')
+    v = var(returns=returns, alpha=a)
+    print('VaR %.3f' % v)
+    cvv = cvar(returns=returns, alpha=a)
+    print('Conditional VaR %.3f' % cvv)
+    ev = excess_var(returns=returns, rf=0.0, alpha=a)
+    print('Excess VaR %.3f' % ev)
+    cs = conditional_sharpe(returns=returns, rf=0.0, alpha=a)
+    print('Conditional Sharpe* %.3f' % (cs * sqrt(252)))
+
+    print()
+    print('DD ---------------------------')
+    dd = drawdowns(cumulative=c)
+    mdd = max_dd(drawdowns=dd) * 100.0
+    print('Max DD %.3f%%' % mdd)
+    add = average_dd(cumulative=c) * 100.0
+    print('Average DD %.2f%%' % add)
+    adds = average_dd_squared(cumulative=c) * 100.0
+    print('Average DD Squared %.3f%%' % adds)
+    mdddur = max_dd_duration(cumulative=c)
+    print('Max DD duration %s' % mdddur)
+    dp = drawdown_probability(cumulative=c)
+    print('Drawdown probability %.3f' % dp)
+    rp = return_probability(returns=returns)
+    print('Return probability %.3f' % rp)
+
+    #mae(high, low, close, pos=0)
+    #mfe(high, low, close, pos=0)
+    #max_mae(cumulative, mae)
+    #min_mfe(cumulative, mfe)
+    #average_mae(high, low, close, pos=0)
+    #average_mfe(high, low, close, pos=0)
+
+    print('* Values are annualized.')

@@ -27,7 +27,7 @@ def peewee_to_df(table):
     return df
 
 def periodize_returns(r, p=252):
-    return ((1 + r) ^ p - 1)
+    return r * sqrt(p)
 
 def filenames(folder):
     try:
@@ -145,8 +145,8 @@ def makedir(f):
 def if_exists(folder, name):
     return exists(join(STORAGE_PATH, folder, '{}.p'.format(name)))
 
-def common(fs1, fs2):
-    return set.intersection(*map(set, [fs1, fs2]))
+def common(lst):
+    return set.intersection(*map(set, [i for i in lst]))
 
 def corrwith(data, benchmark):
     return data.drop(benchmark, 1).corrwith(data[benchmark])
