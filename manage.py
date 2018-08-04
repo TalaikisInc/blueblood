@@ -13,7 +13,7 @@ from app.playground import run_play
 # Models
 from app.models.alpha import create_owners
 from app.models.clusters import make_clusters
-#from app.models.risk import ideal_portfolio
+from app.models.portfolio import generate_implementations
 # Stats
 from app.stats import run_analyze
 # Testing
@@ -36,6 +36,7 @@ parser.add_argument('--get')
 parser.add_argument('--clean')
 parser.add_argument('--risk')
 parser.add_argument('--trade')
+parser.add_argument('--gen')
 args = parser.parse_args()
 
 if __name__ == '__main__':
@@ -74,13 +75,16 @@ if __name__ == '__main__':
 
     if args.clean:
         cleaner()
+    
+    if args.gen:
+        generate_implementations()
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''
         run_play(args.play)
 
     #if args.risk:
-        #ideal_portfolio()
+        #tbc
 
     if args.trade:
         if args.trade == 'balance':

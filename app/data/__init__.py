@@ -1,7 +1,7 @@
 from .index import PandasData, PandasTickData, BidAskCSV
-from .readers import get_pickle, get_parquet, join_data, transform_multi_data, get_csv, normalize, read_bt_csv, split_ticks
-from .writers import write_parq, to_pickle
-from .clean import cleaner
+from .readers import get_pickle, get_parquet, join_data, transform_multi_data, get_csv, normalize, read_bt_csv, split_ticks, clean
+from .writers import write_parq, to_pickle, save_port
+from ._clean import cleaner
 from .mt import get_mt
 from .fred import *
 from .tiingo import *
@@ -49,5 +49,7 @@ __ALL__ = [
     'run_fxcm',
     'read_bt_csv',
     'get_crypto_balances',
-    'run_quandl'
+    'run_quandl',
+    'save_port',
+    'clean'
 ]

@@ -46,17 +46,29 @@ def clean(folder, data, adj=False, both=True):
         data = data.drop(['realtime_start'], axis=1)
     if folder == 'eod':
         data = data.drop(['Open', 'High', 'Low', 'Volume', 'Adjusted_close'], axis=1)
+    if folder == 'mt':
+        data = data.drop(['Open', 'High', 'Low', 'Volume'], axis=1)
     if folder == 'tiingo':
         if both:
             data = data.drop(['Open', 'High', 'Low', 'Volume', 'splitFactor', 'adjOpen',
                 'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
         else:
             if adj:
-                data = data.drop(['Open', 'High', 'Low', 'Volume', 'Close', 'splitFactor', 'adjOpen',
-                    'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
+                try:
+                    data = data.drop(['Open', 'High', 'Low', 'Volume', 'Close', 'splitFactor', 'adjOpen',
+                        'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
+                except:
+                    data = data.drop(['open', 'high', 'low', 'volume', 'close', 'splitFactor', 'adjOpen', \
+                        'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
+                    data.rename(columns={'close': 'Close'}, inplace=True)
             else:
-                data = data.drop(['Open', 'High', 'Low', 'Volume', 'Adjusted_close', 'splitFactor', 'adjOpen', \
-                    'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
+                try:
+                    data = data.drop(['Open', 'High', 'Low', 'Volume', 'Adjusted_close', 'splitFactor', 'adjOpen', \
+                        'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
+                except:
+                    data = data.drop(['open', 'high', 'low', 'volume', 'adjClose', 'splitFactor', 'adjOpen', \
+                        'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
+                    data.rename(columns={'close': 'Close'}, inplace=True)
     assert len(data.loc[data['Close'] == 0]) == 0, 'Data has zeros!'
     assert len(data.index[isinf(data).any(1)]) == 0, 'Data has inf!'
     assert len(data.index[isnan(data).any(1)]) == 0, 'Data has nan!'
