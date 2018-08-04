@@ -1,9 +1,8 @@
-from os import listdir, getenv, chdir
-from os.path import dirname, join, abspath
+from os.path import join
 
 from pandas import read_csv
 
-META_PATH = join(abspath(chdir('C:\\')), 'Users', getenv('WIN_USER'), 'AppData', 'Roaming', 'MetaQuotes', 'Terminal', getenv('META_TERMINAL_ID'), 'MQL4', 'Files')
+from app.utils import META_PATH
 
 
 def get_all_mt():

@@ -47,6 +47,10 @@ try:
 except ImportError:
     pass  # The user may not have something installed
 
+try:
+    from .iqfeed import IQFeed
+except ImportError:
+    pass  # The user may not have something installed
 
 from .vchartfile import VChartFile
 

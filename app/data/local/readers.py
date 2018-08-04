@@ -35,32 +35,38 @@ def transform_multi_data(data, symbol):
     return data
 
 def normalize(folder, data):
-    ''' Make coilumn names same as other dfs.'''
+    ''' Make coilumn names same accross different data sources.'''
     if folder == 'tiingo':
         data.rename(columns={'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume', 'adjClose': 'Adjusted_close'}, inplace=True)
     return data
 
-def clean(folder, data):
+def clean(folder, data, adj=False):
     ''' Clens not needed and data errors.'''
     if folder == 'fred':
         data = data.drop(['realtime_start'], axis=1)
     if folder == 'eod':
         data = data.drop(['Open', 'High', 'Low', 'Volume', 'Adjusted_close'], axis=1)
-    if len(data.loc[data['Close'] == 0]) > 0:
-        return None
+    if folder == 'tiingo':
+        if adj:
+            data = data.drop(['Open', 'High', 'Low', 'Volume', 'Close', 'splitFactor', 'adjOpen',
+                'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
+        else:
+            data = data.drop(['Open', 'High', 'Low', 'Volume', 'Adjusted_close', 'splitFactor', 'adjOpen', \
+                'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
+            print(data)
     assert len(data.loc[data['Close'] == 0]) == 0, 'Data has zeros!'
     assert len(data.index[isinf(data).any(1)]) == 0, 'Data has inf!'
     assert len(data.index[isnan(data).any(1)]) == 0, 'Data has nan!'
     return data
 
-def join_data(primary, folder, symbols, clr=False):
+def join_data(primary, folder, symbols, clr=False, adj=False):
     ''' Makes one DataFrame for many symbols. '''
     with sw.timer('join_data'):
         for symbol in symbols:
             data = get_pickle(folder, symbol).dropna()
             data = normalize(folder, data)
             if clr:
-                data = clean(folder=folder, data=data)
+                data = clean(folder=folder, data=data, adj=adj)
             if data is not None:
                 data = transform_multi_data(data=data, symbol=symbol)
                 primary = primary.join(data, how='left')

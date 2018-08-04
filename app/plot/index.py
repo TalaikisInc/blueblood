@@ -6,9 +6,9 @@ from statsmodels.api import qqplot
 from scipy.stats import t
 from sklearn.manifold import TSNE
 
-from stats import percentiles, drawdowns
+from app.stats import percentiles, drawdowns
 BASE_PATH = join(dirname(dirname(dirname(__file__))), 'storage', 'plots')
-
+from app.models import min_variance
 
 def plot(data, title, comparison=[], save=False):
     plt.style.use(['bmh'])
@@ -74,4 +74,15 @@ def tsne(X, y):
     plt.ylabel('Y in t-SNE')
     plt.legend(loc='upper left')
     plt.title('t-SNE visualization of test data')
+    plt.show()
+
+def plot_portfolios(df):
+    best = min_variance(df=df)
+    df.plot.scatter(x='Volatility', y='Returns', c='Sharpe Ratio', cmap='RdYlGn', edgecolors='black', figsize=(10, 8), grid=True)
+    plt.scatter(x=best[0]['Volatility'], y=best[0]['Returns'], c='red', marker='D', s=200)
+    plt.scatter(x=best[1]['Volatility'], y=best[1]['Returns'], c='blue', marker='D', s=200 )
+
+    plt.xlabel('Volatility')
+    plt.ylabel('E')
+    plt.title('Efficient frontier')
     plt.show()

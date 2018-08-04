@@ -23,11 +23,6 @@ click
 ffn
 git+https://github.com/pydata/pandas-datareader
 git+https://github.com/Lasagne/Lasagne
-git+https://github.com/oanda/oandapy.git
-git+https://github.com/bartosh/backtrader.git@ccxt
-git+https://github.com/bartosh/backtrader.git@fix
-git+https://github.com/bartosh/backtrader.git@iqfeed-fix
-git+https://github.com/bartosh/backtrader.git@iqfeed
 tiingo
 statsmodels
 pyfinance
@@ -39,6 +34,5 @@ patsy
 cloudpickle
 ipython
 dbx-stopwatch
-backtrader
 pandas_market_calendars
 psutil

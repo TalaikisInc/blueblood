@@ -2,6 +2,7 @@ from .index import PandasData, PandasTickData, BidAskCSV
 from .local import *
 from .fred import *
 from .tiingo import *
+from .quandl import run_quandl
 from .eod import *
 from .coinmarketcap import *
 from .iex import *
@@ -44,5 +45,6 @@ __ALL__ = [
     'get_exchanges',
     'run_fxcm',
     'read_bt_csv',
-    'get_crypto_balances'
+    'get_crypto_balances',
+    'run_quandl'
 ]

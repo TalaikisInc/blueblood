@@ -6,7 +6,7 @@ load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
 # Db
 from app.db import migrate, create_migrations
 # Data
-from app.data import (run_fred, eod_symbols, run_eod, run_tiingo, tii_symbols, tii_news,
+from app.data import (run_fred, eod_symbols, run_eod, run_tiingo, tii_symbols, tii_news, run_quandl,
     save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, cleaner, get_crypto_balances)
 # Playground
 from app.playground import run_play
@@ -45,6 +45,9 @@ if __name__ == '__main__':
     if args.collect:
         if args.collect == 'fred':
             run_fred()
+
+        if args.collect == 'quandl':
+            run_quandl()
 
         if args.collect == 'crypto':
             get_capitalization()

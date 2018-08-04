@@ -1,4 +1,4 @@
-from os import listdir, chdir, makedirs, rename
+from os import listdir, chdir, makedirs, rename, getenv
 from os.path import isfile, join, abspath, exists
 from collections import namedtuple
 
@@ -14,6 +14,7 @@ from statsmodels.tsa.vector_ar.vecm import coint_johansen
 from matplotlib import pyplot as plt
 
 
+META_PATH = join(abspath(chdir('C:\\')), 'Users', getenv('WIN_USER'), 'AppData', 'Roaming', 'MetaQuotes', 'Terminal', getenv('META_TERMINAL_ID'), 'MQL4', 'Files')
 STORAGE_PATH = abspath(chdir('G:\\storage'))
 DATA_SOURCE = 'eod'
 

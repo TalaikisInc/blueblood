@@ -51,8 +51,9 @@ def clean_alpha(data, symbols, d_type):
         data = symbol_remover(data=data, symbols=symbols)
     return data
 
-def clean_prices(data, symbols, d_type, rename=True):
-    if d_type == 'accepted':
+def clean_prices(data, symbols, folder, rename=True, adj=False):
+    ''' Clean DF after joining data.'''
+    if folder == 'accepted':
         for s in symbols:
             data = data.drop([
                 '{}_Open'.format(s),
@@ -60,12 +61,15 @@ def clean_prices(data, symbols, d_type, rename=True):
                 '{}_Low'.format(s),
                 '{}_Volume'.format(s),
                 '{}_Div'.format(s),
-                '{}_Split'.format(s),
-                '{}_AdjClose'.format(s)
+                '{}_Split'.format(s)
             ], axis=1)
+            if adj:
+                data = data.drop(['{}_Close'.format(s)], axis=1)
+            else:
+                data = data.drop(['{}_AdjClose'.format(s)], axis=1)
             if rename:
                 data.rename(columns={ '{}_Close'.format(s): s}, inplace=True)
-    if d_type == 'tiingo':
+    if folder == 'tiingo':
         for s in symbols:
             data = data.drop([
                 '{}_Open'.format(s),
@@ -77,20 +81,26 @@ def clean_prices(data, symbols, d_type, rename=True):
                 '{}_adjOpen'.format(s),
                 '{}_adjVolume'.format(s),
                 '{}_splitFactor'.format(s),
-                '{}_divCash'.format(s),
-                '{}_Adjusted_close'.format(s)
+                '{}_divCash'.format(s)
             ], axis=1)
             if rename:
                 data.rename(columns={ '{}_Close'.format(s): s}, inplace=True)
+            if adj:
+                data = data.drop(['{}_Close'.format(s)], axis=1)
+            else:
+                data = data.drop(['{}_Adjusted_close'.format(s)], axis=1)
     else:
         for s in symbols:
             data = data.drop([
                 '{}_Open'.format(s),
                 '{}_High'.format(s),
                 '{}_Low'.format(s),
-                '{}_Volume'.format(s),
-                '{}_Adjusted_close'.format(s)
+                '{}_Volume'.format(s)
             ], axis=1)
+            if adj:
+                data = data.drop(['{}_Close'.format(s)], axis=1)
+            else:
+                data = data.drop(['{}_Adjusted_close'.format(s)], axis=1)
             if rename:
                 data.rename(columns={'{}_Close'.format(s): s}, inplace=True)
     data[data.columns] = data[data.columns].replace({0: nan})
