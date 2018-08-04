@@ -62,14 +62,14 @@ def clean(folder, data, adj=False, both=True):
     assert len(data.index[isnan(data).any(1)]) == 0, 'Data has nan!'
     return data
 
-def join_data(primary, folder, symbols, clr=False, adj=False):
+def join_data(primary, folder, symbols, clr=False, adj=False, both=True):
     ''' Makes one DataFrame for many symbols. '''
     with sw.timer('join_data'):
         for symbol in symbols:
             data = get_pickle(folder, symbol).dropna()
             data = normalize(folder, data)
             if clr:
-                data = clean(folder=folder, data=data, adj=adj)
+                data = clean(folder=folder, data=data, adj=adj, both=both)
             if data is not None:
                 data = transform_multi_data(data=data, symbol=symbol)
                 primary = primary.join(data, how='left')
