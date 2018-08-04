@@ -4,7 +4,7 @@ from pandas import read_html, to_datetime, DataFrame
 
 from .coinmarketcappy import total_market_cap, dominance, historical_snapshots, available_snaps
 from app.utils import filenames
-from app.data.local import to_pickle
+from app.data import to_pickle
 
 
 def get(params):

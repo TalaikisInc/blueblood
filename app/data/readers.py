@@ -40,20 +40,23 @@ def normalize(folder, data):
         data.rename(columns={'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume', 'adjClose': 'Adjusted_close'}, inplace=True)
     return data
 
-def clean(folder, data, adj=False):
+def clean(folder, data, adj=False, both=True):
     ''' Clens not needed and data errors.'''
     if folder == 'fred':
         data = data.drop(['realtime_start'], axis=1)
     if folder == 'eod':
         data = data.drop(['Open', 'High', 'Low', 'Volume', 'Adjusted_close'], axis=1)
     if folder == 'tiingo':
-        if adj:
-            data = data.drop(['Open', 'High', 'Low', 'Volume', 'Close', 'splitFactor', 'adjOpen',
+        if both:
+            data = data.drop(['Open', 'High', 'Low', 'Volume', 'splitFactor', 'adjOpen',
                 'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
         else:
-            data = data.drop(['Open', 'High', 'Low', 'Volume', 'Adjusted_close', 'splitFactor', 'adjOpen', \
-                'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
-            print(data)
+            if adj:
+                data = data.drop(['Open', 'High', 'Low', 'Volume', 'Close', 'splitFactor', 'adjOpen',
+                    'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
+            else:
+                data = data.drop(['Open', 'High', 'Low', 'Volume', 'Adjusted_close', 'splitFactor', 'adjOpen', \
+                    'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
     assert len(data.loc[data['Close'] == 0]) == 0, 'Data has zeros!'
     assert len(data.index[isinf(data).any(1)]) == 0, 'Data has inf!'
     assert len(data.index[isnan(data).any(1)]) == 0, 'Data has nan!'

@@ -5,7 +5,7 @@ from numba import jit
 
 from .methods import write_parq, read_parq
 from .index import filenames
-from app.data.local import to_pickle, get_pickle, normalize
+from app.data import to_pickle, get_pickle, normalize
 
 
 def resample_dd(df, per):

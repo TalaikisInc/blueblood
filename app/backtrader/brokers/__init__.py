@@ -46,4 +46,7 @@ try:
 except ImportError as e:
     pass  # The user may not have something installed
 
-from .fixbroker import FIXBroker
+try:
+    from .fixbroker import FIXBroker
+except ImportError as e:
+    pass
