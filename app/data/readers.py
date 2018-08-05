@@ -17,15 +17,13 @@ def fill_forward(data):
     ''' Fills forward empty data spots. '''
     return data.fillna(method='ffill')
 
-def get_pickle(folder, name):
-    df = read_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
-    df.index = to_datetime(df.index)
-    return df
-
-def get_parquet(name):
-    path = join(STORAGE_PATH, 'parq', '{}.parq'.format(name))
-    pf = ParquetFile(path)
-    return pf.to_pandas()
+def normalize(folder, data):
+    ''' Make coilumn names same accross different data sources.'''
+    if folder == 'eod':
+        data.rename(columns={'Adjusted_close': 'AdjClose'}, inplace=True)
+    if folder == 'tiingo':
+        data.rename(columns={'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume', 'adjClose': 'AdjClose'}, inplace=True)
+    return data
 
 def transform_multi_data(data, symbol):
     ''' Changes column names into differentiable ones. '''
@@ -34,60 +32,39 @@ def transform_multi_data(data, symbol):
         data = data.drop([col], axis=1)
     return data
 
-def normalize(folder, data):
-    ''' Make coilumn names same accross different data sources.'''
+def leave_basic(folder, data):
     if folder == 'tiingo':
-        data.rename(columns={'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume', 'adjClose': 'Adjusted_close'}, inplace=True)
+        data = data.drop(['splitFactor', 'adjOpen', 'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
     return data
 
-def clean(folder, data, adj=False, both=True):
-    ''' Clens not needed and data errors.'''
-    if folder == 'fred':
-        data = data.drop(['realtime_start'], axis=1)
-    if folder == 'eod':
-        data = data.drop(['Open', 'High', 'Low', 'Volume', 'Adjusted_close'], axis=1)
-    if folder == 'mt':
-        data = data.drop(['Open', 'High', 'Low', 'Volume'], axis=1)
-    if folder == 'tiingo':
-        if both:
-            data = data.drop(['Open', 'High', 'Low', 'Volume', 'splitFactor', 'adjOpen',
-                'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
-        else:
-            if adj:
-                try:
-                    data = data.drop(['Open', 'High', 'Low', 'Volume', 'Close', 'splitFactor', 'adjOpen',
-                        'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
-                except:
-                    data = data.drop(['open', 'high', 'low', 'volume', 'close', 'splitFactor', 'adjOpen', \
-                        'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
-                    data.rename(columns={'close': 'Close'}, inplace=True)
-            else:
-                try:
-                    data = data.drop(['Open', 'High', 'Low', 'Volume', 'Adjusted_close', 'splitFactor', 'adjOpen', \
-                        'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
-                except:
-                    data = data.drop(['open', 'high', 'low', 'volume', 'adjClose', 'splitFactor', 'adjOpen', \
-                        'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
-                    data.rename(columns={'close': 'Close'}, inplace=True)
-    assert len(data.loc[data['Close'] == 0]) == 0, 'Data has zeros!'
-    assert len(data.index[isinf(data).any(1)]) == 0, 'Data has inf!'
-    assert len(data.index[isnan(data).any(1)]) == 0, 'Data has nan!'
-    return data
+def get_pickle(folder, name, basic=True):
+    df = read_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
+    df.index = to_datetime(df.index)
+    df = normalize(folder=folder, data=df)
+    if basic:
+        df = leave_basic(folder=folder, data=df)
+    assert len(df.loc[df['Close'] == 0]) == 0, 'Data has zeros!'
+    assert len(df.index[isinf(df).any(1)]) == 0, 'Data has inf!'
+    assert len(df.index[isnan(df).any(1)]) == 0, 'Data has nan!'
+    df = transform_multi_data(data=df, symbol=name)
+    return df
 
-def join_data(primary, folder, symbols, clr=False, adj=False, both=True):
+def get_parquet(name):
+    path = join(STORAGE_PATH, 'parq', '{}.parq'.format(name))
+    pf = ParquetFile(path)
+    return pf.to_pandas()
+
+def join_data(folder, symbols):
     ''' Makes one DataFrame for many symbols. '''
     with sw.timer('join_data'):
-        for symbol in symbols:
-            data = get_pickle(folder, symbol).dropna()
-            data = normalize(folder, data)
-            if clr:
-                data = clean(folder=folder, data=data, adj=adj, both=both)
+        init = get_pickle(folder=folder, name=symbols[0])
+        for symbol in symbols[1:]:
+            data = get_pickle(folder=folder, name=symbol)
             if data is not None:
-                data = transform_multi_data(data=data, symbol=symbol)
-                primary = primary.join(data, how='left')
-        d = fill_forward(data=primary)
+                init = init.join(data, how='left')
+        df = fill_forward(data=init)
     print(format_report(sw.get_last_aggregated_report()))
-    return d
+    return df
 
 def get_csv(folder, name, skip=False):
     if skip:
