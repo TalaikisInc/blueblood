@@ -482,3 +482,86 @@ def stats_printout(returns, market):
     #average_mfe(high, low, close, pos=0)
 
     print('* Values are annualized.')
+
+def stats_values(returns, market):
+    c = returns.cumsum()
+    vv = vol(returns=returns) * 100.0
+    amr = average_month_return(returns=returns) * 100.0
+    # trade_count(signals)
+    at = average_trade(returns=returns) * 100.0
+    aw = average_win(returns=returns) * 100.0
+    al = average_loss(returns=returns) * 100.0
+    w = total_wins(returns=returns)
+    l = total_losses(returns=returns)
+    wr = win_rate(returns=returns) * 100.0
+    acor = correlation(returns=returns)
+    sr = sharpe_ratio(returns, rf=0.0) * sqrt(252)
+    b = beta(returns=returns, benchmark=market)
+    a = alpha(portfolio_return=returns.mean(), rf=0.0, beta=b, market_return=market.mean())
+    tr = treynor(returns=returns, benchmark=market, rf=0.0)
+    infr = ir(returns=returns, benchmark=market)
+    mod = modigliani(returns=returns, benchmark=market, rf=0.0)
+    ora = omega_ratio(returns=returns, rf=0.0, target=0.0)
+    so = sortino(returns=returns, rf=0.0, target=0)
+    kt = kappa_three(returns=returns, rf=0.0, target=0.05)
+    up = upside_potential(returns=returns, target=0.0)
+    cal = calmar(returns=returns, rf=0.0)
+    ui = ulcer_index(cumulative=c)
+    upi = ulcer_performance_index(cumulative=c, r=returns.mean(), rf=0.0)
+    stra = sterling_ration(returns=returns, rf=0.0)
+    br = burke_ratio(returns=returns, cumulative=c, rf=0.0)
+    v = var(returns=returns, alpha=a)
+    cvv = cvar(returns=returns, alpha=a)
+    ev = excess_var(returns=returns, rf=0.0, alpha=a)
+    cs = conditional_sharpe(returns=returns, rf=0.0, alpha=a)
+    dd = drawdowns(cumulative=c)
+    mdd = max_dd(drawdowns=dd) * 100.0
+    add = average_dd(cumulative=c) * 100.0
+    adds = average_dd_squared(cumulative=c) * 100.0
+    mdddur = max_dd_duration(cumulative=c)
+    dp = drawdown_probability(cumulative=c)
+    rp = return_probability(returns=returns)
+    #mae(high, low, close, pos=0)
+    #mfe(high, low, close, pos=0)
+    #max_mae(cumulative, mae)
+    #min_mfe(cumulative, mfe)
+    #average_mae(high, low, close, pos=0)
+    #average_mfe(high, low, close, pos=0)
+
+    return {
+        'volatility': vv,
+        'average_month': amr,
+        'average_trade': at,
+        'average_win': aw,
+        'average_loss': al,
+        'total_wins': w,
+        'total_losses': l,
+        'win_rate': wr,
+        'autocorrelation': acor,
+        'sharpe': sr,
+        'beta': b,
+        'alpha': a,
+        'treynor': tr,
+        'information': infr,
+        'win_rate': wr,
+        'modigliani': mod,
+        'omega': ora,
+        'sortino': so,
+        'kappa': kt,
+        'upside': up,
+        'calmar': cal,
+        'ulcer_index': ui,
+        'ulcer_performance_index': upi,
+        'sterling': stra,
+        'burke': br,
+        'VaR': v,
+        'cVaR': cvv,
+        'eVaR': ev,
+        'conditional_sharpe': cs,
+        'max_dd': mdd,
+        'average_dd': add,
+        'average_dd_squared': adds,
+        'max_dd_duration': mdddur,
+        'dd_prob': up,
+        'return_prob': rp,
+        }
