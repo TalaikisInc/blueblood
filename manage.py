@@ -7,7 +7,7 @@ load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
 from app.db import migrate, create_migrations
 # Data
 from app.data import (run_fred, eod_symbols, run_eod, run_tiingo, tii_symbols, tii_news, run_quandl,
-    save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, cleaner, get_crypto_balances)
+    save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, get_crypto_balances, download_dataset)
 # Playground
 from app.playground import run_play
 # Models
@@ -33,10 +33,11 @@ parser.add_argument('--resample')
 parser.add_argument('--portfolio')
 parser.add_argument('--db')
 parser.add_argument('--get')
-parser.add_argument('--clean')
 parser.add_argument('--risk')
 parser.add_argument('--trade')
 parser.add_argument('--gen')
+parser.add_argument('--numerai')
+
 args = parser.parse_args()
 
 if __name__ == '__main__':
@@ -72,9 +73,6 @@ if __name__ == '__main__':
 
         if args.collect == 'fxcm':
             run_fxcm()
-
-    if args.clean:
-        cleaner()
     
     if args.gen:
         generate_implementations()
@@ -138,6 +136,9 @@ if __name__ == '__main__':
 
         ''' deprecated. '''
         #basic_runs()
+
+    if args.numerai:
+        download_dataset()
 
     if args.db:
         if args.db == 'create_migrations':

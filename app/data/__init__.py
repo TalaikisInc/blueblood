@@ -1,7 +1,6 @@
 from .index import PandasData, PandasTickData, BidAskCSV
 from .readers import get_pickle, get_parquet, join_data, transform_multi_data, get_csv, normalize, read_bt_csv, split_ticks
 from .writers import write_parq, to_pickle, save_port
-from ._clean import cleaner
 from .mt import get_mt
 from .fred import *
 from .tiingo import *
@@ -12,6 +11,7 @@ from .iex import *
 from .social import *
 from .crypto import *
 from .fxcm import run_fxcm
+from .numerai import download_dataset
 
 __ALL__ = [
     'PandasData',
@@ -21,7 +21,6 @@ __ALL__ = [
     'get_parquet',
     'join_data',
     'transform_multi_data',
-    'cleaner',
     'to_pickle',
     'get_csv',
     'normalize',
@@ -50,5 +49,6 @@ __ALL__ = [
     'read_bt_csv',
     'get_crypto_balances',
     'run_quandl',
-    'save_port'
+    'save_port',
+    'download_dataset'
 ]
