@@ -1,10 +1,12 @@
 from os.path import dirname, join
+from collections import Counter
 
 from matplotlib import pyplot as plt
-from numpy import array, sort, unique
+from numpy import array, sort, unique, linspace
 from statsmodels.api import qqplot
 from scipy.stats import t
 from sklearn.manifold import TSNE
+from seaborn import heatmap
 
 from app.stats import percentiles, drawdowns
 BASE_PATH = join(dirname(dirname(dirname(__file__))), 'storage', 'plots')
@@ -85,4 +87,39 @@ def plot_portfolios(df):
     plt.xlabel('Volatility')
     plt.ylabel('E')
     plt.title('Efficient frontier')
+    plt.show()
+
+def plot_hdbscan(X, labels,  n_clusters):
+    unique_labels = set(labels)
+    colors = plt.cm.Spectral(linspace(0, 1, len(unique_labels)))
+    fig = plt.figure(figsize=plt.figaspect(1))
+    hdb_axis = fig.add_subplot('121')
+
+    for k, col in zip(unique_labels, colors):
+        if k == -1:
+            # Black used for noise.
+            col = 'k'
+
+        hdb_axis.plot(X[labels == k, 0], X[labels == k, 1], 'o', markerfacecolor=col, markeredgecolor='k', markersize=3)
+
+    hdb_axis.set_title('Estimated number of clusters: %d' % n_clusters)
+    plt.show()
+
+def corr_heatmap(returns):
+    ''' Helper for correlation heatmap.'''
+    ax = heatmap(returns.corr())
+    plt.show()
+
+def hdns_barplot(hdbs):
+    label_counts = Counter(hdbs.labels_)
+    xs, ys = [], []
+    for k, v in label_counts.items():
+        xs.append(k)
+        ys.append(v)
+
+    plt.bar(xs, ys)
+    plt.xticks(range(-1, len(label_counts)))
+    plt.ylabel('Counts')
+    plt.xlabel('Cluster label')
+    plt.title('Sizes ({} clusters found by hdbscan)'.format(len(label_counts) - 1))
     plt.show()
