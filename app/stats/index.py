@@ -102,7 +102,11 @@ def average_dd_squared(cumulative):
     return power(average_dd(cumulative), 2.0)
 
 def sterling_ration(returns, rf):
-    return (returns.mean() - rf) / average_dd(returns.cumsum())
+    add = average_dd(returns.cumsum())
+    if add > 0:
+        return (returns.mean() - rf) / add
+    else:
+        return None
 
 def burke_ratio(returns, cumulative, rf):
     return (returns.mean() - rf) / sqrt(average_dd_squared(cumulative))
