@@ -1,4 +1,4 @@
-from os.path import join
+from os.path import join, isfile
 from os import getenv
 from operator import itemgetter
 
@@ -25,13 +25,13 @@ def get_numerai_data():
     X_test = test[features]
     ids = test['id']
 
-    return X_train, Y_train, X_test, ids
+    return X_train, Y_train, X_test, ids, target_col
 
-def write_numerai_predictions(predicted, ids):
+def write_numerai_predictions(predicted, ids, target_col):
     api = getapi()
     last = _last_round(api)
     filename = '{}_predictions.csv'.format(last)
-    res = DataFrame({'id': ids, 'probability': list(predicted)})
+    res = DataFrame({'id': ids, target_col: list(predicted)})
     res.to_csv(join(STORAGE_PATH, 'numerai', filename), index=False)
     print(colored.green('Results saved'))
 
@@ -41,14 +41,15 @@ def _last_round(api):
 
 def download_dataset():
     api = getapi()
-    last = _last_round(api)
-    api.download_current_dataset(unzip=True, dest_path=join(STORAGE_PATH, 'numerai'), dest_filename='{}'.format(last))
-
     if api.check_new_round():
         print('New round has started, downloading data')
+        last = _last_round(api)
+        if not isfile(join(STORAGE_PATH, 'numerai',  '{}'.format(last), 'numerai_training_data.csv')):
+            api.download_current_dataset(unzip=True, dest_path=join(STORAGE_PATH, 'numerai'), dest_filename='{}'.format(last))
     
 def upload_precictions():
     api = getapi()
     last = _last_round(api)
     api.upload_predictions(join(STORAGE_PATH, 'numerai', '{}_predictions.csv'.format(last)))
     api.submission_status()
+    print(colored.green('Predictions uploaded'))

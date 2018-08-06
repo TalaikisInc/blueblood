@@ -3,7 +3,7 @@ from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, 
 import scipy.stats as sc
 from pandas import to_datetime
 
-from app.utils import periodize_returns
+from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM
 from app.db import Strategy, Stats
 
 
@@ -124,15 +124,19 @@ def trade_count(signals):
     return trades.sum()
 
 
-def commissions(signals, com):
-    signals = signals.astype(int)
-    com = where((signals == 0) & (signals.shift() == 1), com, 0)
-    com += where((signals == 1) & (signals.shift() == 0), com, 0)
-    com += where((signals == 0) & (signals.shift() == -1), com, 0)
-    com += where((signals == -1) & (signals.shift() == 0), com, 0)
-    com += where((signals == 1) & (signals.shift() == -1), com, 0)
-    com += where((signals == -1) & (signals.shift() == 1), com, 0)
-    return com
+def commissions(df, symbol, com=None):
+    if com is None:
+        com = PER_SAHRE_COM
+    df['quantities'] = quantity(capital=100000, price=df['{}_Close'.format(symbol)], alloc=1.0)
+    df['c'] = comm(q=df['quantities'], p=com)
+
+    df['com'] = where((df['sig'] == 0) & (df['sig'].shift() == 1), df['c'], 0)
+    df['com'] += where((df['sig'] == 1) & (df['sig'].shift() == 0), df['c'], 0)
+    df['com'] += where((df['sig'] == 0) & (df['sig'].shift() == -1), df['c'], 0)
+    df['com'] += where((df['sig'] == -1) & (df['sig'].shift() == 0), df['c'], 0)
+    df['com'] += where((df['sig'] == 1) & (df['sig'].shift() == -1), df['c'], 0)
+    df['com'] += where((df['sig'] == -1) & (df['sig'].shift() == 1), df['c'], 0)
+    return df['com'], df['quantities']
 
 def percentiles(returns):
     p_list = [p for p in range(100)]
@@ -238,6 +242,9 @@ def max_dd_duration(cumulative):
     s = to_datetime(j).strftime ('%Y-%m-%d')
     e = to_datetime(i).strftime ('%Y-%m-%d')
     return busday_count(s, e)
+
+def skew(returns):
+    return 3.0 * (returns.mean() - (returns.max() + returns.min()) / 2.0) / returns.std()
 
 TARGET = 0.05
 RF = 0.05

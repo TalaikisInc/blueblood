@@ -61,4 +61,4 @@ def ensure_correctness():
     m = get_pickle('tiingo', 'SPY_1M', basic=False)['SPY_1M_AdjClose']
     w = get_pickle('tiingo', 'SPY_1W', basic=False)['SPY_1W_AdjClose']
     assert d.tail(1).values == m.tail(1).values == w.tail(1).values, 'Ending resampled prices not match'
-    print(colord.green('Seems OK.'))
+    print(colored.green('Seems OK.'))

@@ -17,6 +17,7 @@ from matplotlib import pyplot as plt
 META_PATH = join(abspath(chdir('C:\\')), 'Users', getenv('WIN_USER'), 'AppData', 'Roaming', 'MetaQuotes', 'Terminal', getenv('META_TERMINAL_ID'), 'MQL4', 'Files')
 STORAGE_PATH = abspath(chdir('G:\\storage'))
 DATA_SOURCE = 'eod'
+PER_SAHRE_COM = 0.0035
 
 def peewee_to_df(table):
     fields = [f for f in dir(table) if isinstance(getattr(table, f), Field)]

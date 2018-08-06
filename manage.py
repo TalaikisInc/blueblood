@@ -7,7 +7,7 @@ load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
 from app.db import migrate, create_migrations
 # Data
 from app.data import (run_fred, eod_symbols, run_eod, run_tiingo, tii_symbols, tii_news, run_quandl,
-    save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, get_crypto_balances, download_dataset)
+    save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, get_crypto_balances, download_dataset, upload_precictions)
 # Playground
 from app.playground import run_play
 # Models
@@ -15,11 +15,13 @@ from app.models.alpha import create_owners
 from app.models.clusters import make_clusters
 from app.models.portfolio import generate_implementations
 from app.models.numerai import run_solutions
+from app.models.tests import mom_mr_test
+from app.models.preprocess import run_cze
 # Stats
 from app.stats import run_analyze
 # Testing
 from app.backtest import basic_runs, see_portfolios, run_alpha_strategy
-from app.strategies import run_old_strategies, run_bt_fx_ticks, run_bt_pair_strategy
+from app.strategies import run_old_strategies, run_bt_fx_ticks, run_bt_pair_strategy, generate_strategies
 # Utils
 from app.utils import (easify_names, convert_to_parq, resample_all, resample_dukas_all, convert_mt_pickle,
     parq_to_csv_all, pickle_to_csv_all, ensure_correctness)
@@ -51,9 +53,11 @@ if __name__ == '__main__':
 
         if args.collect == 'quandl':
             run_quandl()
+            run_cze()
 
         if args.collect == 'crypto':
             get_capitalization()
+
         if args.collect == 'one_time':
             #iex_symbols()
             #eod_symbols()
@@ -76,7 +80,8 @@ if __name__ == '__main__':
             run_fxcm()
     
     if args.gen:
-        generate_implementations()
+        #generate_implementations()
+        mom_mr_test()
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''
@@ -93,11 +98,14 @@ if __name__ == '__main__':
         run_analyze(args.analyze)
 
     if args.strategy:
+        generate_strategies()
         if args.strategy == 'bt':
             # run_bt_pair_strategy()
             run_bt_fx_ticks()
+
         if args.strategy == 'old':
             run_old_strategies()
+
         #if args.strategy == 'ticks':
             #tick_tester()
         try:
@@ -141,7 +149,8 @@ if __name__ == '__main__':
 
     if args.numerai:
         #download_dataset()
-        run_solutions()
+        #run_solutions()
+        upload_precictions()
 
     if args.db:
         if args.db == 'create_migrations':

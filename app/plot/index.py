@@ -9,8 +9,8 @@ from sklearn.manifold import TSNE
 from seaborn import heatmap
 
 from app.stats import percentiles, drawdowns
-BASE_PATH = join(dirname(dirname(dirname(__file__))), 'storage', 'plots')
-from app.models import min_variance
+from app.utils import STORAGE_PATH
+
 
 def plot(data, title, comparison=[], save=False):
     plt.style.use(['bmh'])
@@ -23,7 +23,7 @@ def plot(data, title, comparison=[], save=False):
         for p in comparison:
             ax.plot(p)
     if save:
-        path = join(BASE_PATH, '{}.png'.format(title))
+        path = join(STORAGE_PATH, '{}.png'.format(title))
         plt.savefig(path)
     else:
         plt.show()
@@ -35,7 +35,7 @@ def drawdown(cumulative, title='', save=False):
     plt.ylabel('Value')
     plt.legend()
     if save:
-        path = join(BASE_PATH, '{}.png'.format(title))
+        path = join(STORAGE_PATH, '{}.png'.format(title))
         plt.savefig(path)
     else:
         plt.show()
@@ -50,7 +50,7 @@ def drawdown_to_percentile(cumulative, title='', save=False):
         plt.xlabel('Drawdown')
         plt.ylabel('Probability')
         if save:
-            path = join(BASE_PATH, '{}.png'.format(title))
+            path = join(STORAGE_PATH, '{}.png'.format(title))
             plt.savefig(path)
         else:
             plt.show()
@@ -59,9 +59,12 @@ def qq(res):
     fig = qqplot(res, stats.t, fit=True, line='45')
     plt.show()
 
-def hist(data):
-    sorted = sort(data)
-    plt.hist(sorted, bins=100)
+def hist(data, other):
+    _sorted = sort(data)
+    plt.hist(_sorted, bins=100)
+    if other:
+        _sorted = sort(other)
+        plt.hist(_sorted, bins=100)
     plt.show()
 
 def tsne(X, y):
@@ -76,17 +79,6 @@ def tsne(X, y):
     plt.ylabel('Y in t-SNE')
     plt.legend(loc='upper left')
     plt.title('t-SNE visualization of test data')
-    plt.show()
-
-def plot_portfolios(df):
-    best = min_variance(df=df)
-    df.plot.scatter(x='Volatility', y='Returns', c='Sharpe Ratio', cmap='RdYlGn', edgecolors='black', figsize=(10, 8), grid=True)
-    plt.scatter(x=best[0]['Volatility'], y=best[0]['Returns'], c='red', marker='D', s=200)
-    plt.scatter(x=best[1]['Volatility'], y=best[1]['Returns'], c='blue', marker='D', s=200 )
-
-    plt.xlabel('Volatility')
-    plt.ylabel('E')
-    plt.title('Efficient frontier')
     plt.show()
 
 def plot_hdbscan(X, labels,  n_clusters):
