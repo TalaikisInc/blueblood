@@ -2,14 +2,17 @@ from os.path import join
 
 from pandas import read_csv
 
-from app.utils import META_PATH
+from app.utils import META_PATHS
 
 
 def get_all_mt():
-    return listdir(META_PATH)
+    lst = []
+    for m in META_PATHS:
+        lst.append(listdir(m))
+    return lst
 
-def get_mt(symbol, period):
-    df = read_csv(join(META_PATH, 'DATA_MODEL_Ava Trade EU Ltd._{}_{}.csv'.format(symbol, period)),
+def get_mt(symbol, period, which=0):
+    df = read_csv(join(META_PATHS[which], 'DATA_MODEL_Ava Trade EU Ltd._{}_{}.csv'.format(symbol, period)),
         skiprows=1, names=['DATE_TIME', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME'], index_col='DATE_TIME', parse_dates=[0])
     df.sort_index(axis=0, ascending=True, inplace=True)
     return df

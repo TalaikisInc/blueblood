@@ -9,7 +9,6 @@ sw = StopWatch()
 
 from backtrader import TimeFrame
 from app.utils import STORAGE_PATH, filenames
-from .mt import get_mt, META_PATH
 from backtrader.feeds import GenericCSVData
 
 

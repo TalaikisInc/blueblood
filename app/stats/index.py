@@ -3,7 +3,7 @@ from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, 
 import scipy.stats as sc
 from pandas import to_datetime
 
-from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM
+from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM, FINRA_FEE, SEC_FEE
 from app.db import Strategy, Stats
 
 
@@ -125,10 +125,11 @@ def trade_count(signals):
 
 
 def commissions(df, symbol, com=None):
+    capital = 100000
     if com is None:
-        com = PER_SAHRE_COM
-    df['quantities'] = quantity(capital=100000, price=df['{}_Close'.format(symbol)], alloc=1.0)
-    df['c'] = comm(q=df['quantities'], p=com)
+        com = PER_SAHRE_COM + FINRA_FEE
+    df['quantities'] = quantity(capital=capital, price=df['{}_Close'.format(symbol)], alloc=1.0)
+    df['c'] = comm(q=df['quantities'], p=com) + SEC_FEE / (1000000 / capital)
 
     df['com'] = where((df['sig'] == 0) & (df['sig'].shift() == 1), df['c'], 0)
     df['com'] += where((df['sig'] == 1) & (df['sig'].shift() == 0), df['c'], 0)

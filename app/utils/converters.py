@@ -3,7 +3,7 @@ from os import remove, listdir
 
 from clint.textui import colored
 
-from .index import filenames, STORAGE_PATH, META_PATH
+from .index import filenames, STORAGE_PATH, META_PATHS
 from .methods import read_csv_dask, write_parq, parq_to_csv
 from app.data import get_mt, get_pickle
 
@@ -32,19 +32,22 @@ def convert_to_parq(folder='dukas'):
 
 def convert_mt_pickle():
     ''' Converts MT4 exported CSV to lcoal format. '''
-    fs = filenames(META_PATH)
-    for f in fs:
-        try:
-            name = f.split('_')[3]
-            per = f.split('_')[4].split('.')[0]
-            dest_path = join(STORAGE_PATH, 'mt', '{}_{}.p'.format(name, per))
-            data = get_mt(name, per)
-            if len(data) > 500:
-                data.rename(columns={'OPEN': 'Open', 'HIGH': 'High', 'LOW': 'Low', 'CLOSE': 'Close', 'VOLUME': 'Volume'}, inplace=True)
-                data.to_pickle(dest_path)
-                print(colored.green('Converted for {} {}'.format(name, per)))
-        except Exception as err:
-            print(colored.red(err))
+    i = 0
+    for m in META_PATHS:
+        fs = filenames(m)
+        for f in fs:
+            try:
+                name = f.split('_')[3]
+                per = f.split('_')[4].split('.')[0]
+                dest_path = join(STORAGE_PATH, 'mt', '{}'.format(i), {}_{}.p'.format(name, per))
+                data = get_mt(name, per, which=i)
+                if len(data) > 500:
+                    data.rename(columns={'OPEN': 'Open', 'HIGH': 'High', 'LOW': 'Low', 'CLOSE': 'Close', 'VOLUME': 'Volume'}, inplace=True)
+                    data.to_pickle(dest_path)
+                    print(colored.green('Converted for {} {}'.format(name, per)))
+            except Exception as err:
+                print(colored.red(err))
+        i += 1
 
 def parq_to_csv_all(folder='dukas'):
     fs = listdir(join(STORAGE_PATH, folder))
