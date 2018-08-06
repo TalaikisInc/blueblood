@@ -12,24 +12,22 @@ from app.utils import STORAGE_PATH
 def getapi():
     return NumerAPI(getenv('NUMERAI_ID'), getenv('NUMERAI_SECRET'))
 
-def get_data():
+def get_numerai_data():
     api = getapi()
     last = _last_round(api)
-    train = read_csv(join(STORAGE_PATH, 'numerai',  last, 'numerai_training_data.csv'))
-    test = read_csv(join(STORAGE_PATH, 'numerai', last, 'numerai_tournament_data.csv'))
+    train = read_csv(join(STORAGE_PATH, 'numerai',  '{}'.format(last), 'numerai_training_data.csv'))
+    test = read_csv(join(STORAGE_PATH, 'numerai', '{}'.format(last), 'numerai_tournament_data.csv'))
 
     features = [f for f in list(train) if 'feature' in f]
     X_train = train[features]
-    Y_train = train.target
+    target_col = [t for t in list(train) if 'target' in t][0]
+    Y_train = train[target_col]
     X_test = test[features]
     ids = test['id']
 
-    X_valid = test.ix[test['data_type'] == 'validation', features]
-    Y_valid = test.ix[test['data_type'] == 'validation', 'target']
+    return X_train, Y_train, X_test, ids
 
-    return X_train, Y_train, X_valid, Y_valid, X_test, ids
-
-def write_predictions(predicted, ids):
+def write_numerai_predictions(predicted, ids):
     api = getapi()
     last = _last_round(api)
     filename = '{}_predictions.csv'.format(last)

@@ -11,7 +11,7 @@ from .iex import *
 from .social import *
 from .crypto import *
 from .fxcm import run_fxcm
-from .numerai import download_dataset
+from .numerai import download_dataset, get_numerai_data, write_numerai_predictions
 
 __ALL__ = [
     'PandasData',
@@ -50,5 +50,7 @@ __ALL__ = [
     'get_crypto_balances',
     'run_quandl',
     'save_port',
-    'download_dataset'
+    'download_dataset',
+    'get_numerai_data',
+    'write_numerai_predictions'
 ]

@@ -5,7 +5,7 @@ from numba import jit
 
 from .methods import write_parq, read_parq
 from .index import filenames
-from app.data import to_pickle, get_pickle, normalize
+from app.data import to_pickle, get_pickle
 
 
 def resample_dd(df, per):
@@ -32,14 +32,13 @@ def resample_dukas_all(folder='dukas'):
 
 @jit
 def resample_df(folder, df, period):
-    df = normalize(folder, df)
-    open = df.Open.resample(period).first()
-    high = df.High.resample(period).max()
-    low = df.Low.resample(period).min()
-    close = df.Close.resample(period).last()
-    adj_close = df.Adjusted_close.resample(period).last()
-    vol = df.Volume.resample(period).sum()
-    return concat([open, high, low, close, adj_close, vol], axis=1)
+    open = df['Open'].resample(period).first()
+    high = df['High'].resample(period).max()
+    low = df['Low'].resample(period).min()
+    close = df['Close'].resample(period).last()
+    AdjClose = df['AdjClose'].resample(period).last()
+    vol = df['Volume'].resample(period).sum()
+    return concat([open, high, low, close, AdjClose, vol], axis=1)
 
 def write_resampled_df(df, folder, s, p):
     to_pickle(data=df, folder=folder, name='{}_{}'.format(s, p))
@@ -50,9 +49,16 @@ def resample_all(folder='tiingo'):
     symbols = [f.split('.')[0] for f in filenames(folder) if (('.p' in f) & ('_' not in f))]
     for s in symbols:
         try:
-            df = get_pickle(folder, s)
+            df = get_pickle(folder=folder, name=s, resampler=True)
             for p in pers:
                 df = resample_df(folder=folder, df=df, period=p)
                 write_resampled_df(df=df, folder=folder, s=s, p=p)
         except Exception as err:
             print(colored.red(err))
+
+def ensure_correctness():
+    d = get_pickle('tiingo', 'SPY')['SPY_AdjClose']
+    m = get_pickle('tiingo', 'SPY_1M', basic=False)['SPY_1M_AdjClose']
+    w = get_pickle('tiingo', 'SPY_1W', basic=False)['SPY_1W_AdjClose']
+    assert d.tail(1).values == m.tail(1).values == w.tail(1).values, 'Ending resampled prices not match'
+    print(colord.green('Seems OK.'))

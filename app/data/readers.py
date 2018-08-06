@@ -37,7 +37,7 @@ def leave_basic(folder, data):
         data = data.drop(['splitFactor', 'adjOpen', 'adjLow', 'adjHigh', 'divCash', 'adjVolume'], axis=1)
     return data
 
-def get_pickle(folder, name, basic=True):
+def get_pickle(folder, name, basic=True, resampler=False):
     df = read_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
     df.index = to_datetime(df.index)
     df = normalize(folder=folder, data=df)
@@ -46,7 +46,8 @@ def get_pickle(folder, name, basic=True):
     assert len(df.loc[df['Close'] == 0]) == 0, 'Data has zeros!'
     assert len(df.index[isinf(df).any(1)]) == 0, 'Data has inf!'
     assert len(df.index[isnan(df).any(1)]) == 0, 'Data has nan!'
-    df = transform_multi_data(data=df, symbol=name)
+    if not resampler:
+        df = transform_multi_data(data=df, symbol=name)
     return df
 
 def get_parquet(name):
@@ -54,10 +55,10 @@ def get_parquet(name):
     pf = ParquetFile(path)
     return pf.to_pandas()
 
-def join_data(folder, symbols):
+def join_data(folder, symbols, clr=False):
     ''' Makes one DataFrame for many symbols. '''
     with sw.timer('join_data'):
-        init = get_pickle(folder=folder, name=symbols[0])
+        init = get_pickle(folder=folder, name=symbols[0], basic=clr)
         for symbol in symbols[1:]:
             data = get_pickle(folder=folder, name=symbol)
             if data is not None:

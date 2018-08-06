@@ -14,6 +14,7 @@ from app.playground import run_play
 from app.models.alpha import create_owners
 from app.models.clusters import make_clusters
 from app.models.portfolio import generate_implementations
+from app.models.numerai import run_solutions
 # Stats
 from app.stats import run_analyze
 # Testing
@@ -21,7 +22,7 @@ from app.backtest import basic_runs, see_portfolios, run_alpha_strategy
 from app.strategies import run_old_strategies, run_bt_fx_ticks, run_bt_pair_strategy
 # Utils
 from app.utils import (easify_names, convert_to_parq, resample_all, resample_dukas_all, convert_mt_pickle,
-    parq_to_csv_all, pickle_to_csv_all)
+    parq_to_csv_all, pickle_to_csv_all, ensure_correctness)
 
 parser = ArgumentParser(description="BlueBlood management point.")
 parser.add_argument('--collect')
@@ -111,6 +112,7 @@ if __name__ == '__main__':
 
         if args.resample == 'tiingo':
             resample_all()
+            ensure_correctness()
 
     if args.convert:
         if args.convert == 'mt_pickle':
@@ -138,7 +140,8 @@ if __name__ == '__main__':
         #basic_runs()
 
     if args.numerai:
-        download_dataset()
+        #download_dataset()
+        run_solutions()
 
     if args.db:
         if args.db == 'create_migrations':
