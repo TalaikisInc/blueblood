@@ -39,7 +39,7 @@ def convert_mt_pickle():
             try:
                 name = f.split('_')[3]
                 per = f.split('_')[4].split('.')[0]
-                dest_path = join(STORAGE_PATH, 'mt', '{}'.format(i), {}_{}.p'.format(name, per))
+                dest_path = join(STORAGE_PATH, 'mt', '{}'.format(i), '{}_{}.p'.format(name, per))
                 data = get_mt(name, per, which=i)
                 if len(data) > 500:
                     data.rename(columns={'OPEN': 'Open', 'HIGH': 'High', 'LOW': 'Low', 'CLOSE': 'Close', 'VOLUME': 'Volume'}, inplace=True)

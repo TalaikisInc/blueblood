@@ -7,6 +7,7 @@ from .converters import easify_names, convert_to_parq, convert_mt_pickle, parq_t
 from .resample import resample, resample_dukas_all, resample_df, resample_all, ensure_correctness
 from .arrow import read_pa, write_pa
 from .pandas_tfs import TFS
+from .calendars import us_holidays, thanksgiving, month_x
 
 __ALL__ = [
     'train_test_split',
@@ -57,5 +58,8 @@ __ALL__ = [
     'ensure_correctness',
     'PER_SAHRE_COM',
     'SEC_FEE',
-    'FINRA_FEE'
+    'FINRA_FEE',
+    'us_holidays',
+    'thanksgiving',
+    'month_x'
   ]

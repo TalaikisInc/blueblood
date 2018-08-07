@@ -1,6 +1,7 @@
 from os import getenv
 
 from fredapi import Fred
+from clint.textui import colored
 
 from app.variables.data import FRED_KEYWORDS
 from app.data import to_pickle
@@ -15,3 +16,4 @@ def get(keyword):
 def run_fred():
     for keyword in FRED_KEYWORDS:
         get(keyword=keyword)
+        print(colored.green(keyword))

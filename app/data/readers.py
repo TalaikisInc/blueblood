@@ -40,12 +40,13 @@ def get_pickle(folder, name, basic=True, resampler=False, as_is=False):
     df = read_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
     df.index = to_datetime(df.index)
     if not as_is:
+        df = df.dropna()
         df = normalize(folder=folder, data=df)
         if basic:
             df = leave_basic(folder=folder, data=df)
         assert len(df.loc[df['Close'] == 0]) == 0, 'Data has zeros!'
-        assert len(df.index[isinf(df).any(1)]) == 0, 'Data has inf!'
-        assert len(df.index[isnan(df).any(1)]) == 0, 'Data has nan!'
+        assert len(df.index[isinf(df).any(1)]) == 0, 'Data has inf(s)!'
+        assert len(df.index[isnan(df).any(1)]) == 0, 'Data has nan(s)!'
         if not resampler:
             df = transform_multi_data(data=df, symbol=name)
     return df

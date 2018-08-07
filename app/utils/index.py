@@ -36,13 +36,17 @@ def peewee_to_df(table):
 def periodize_returns(r, p=252):
     return r * sqrt(p)
 
-def filenames(folder):
+def filenames(folder, resampled=False):
     try:
         path = join(STORAGE_PATH, folder)
         fs = [f for f in listdir(path) if isfile(join(path, f)) & ('.gitkeep' not in f)]
     except:
         path = folder
         fs = [f for f in listdir(path) if isfile(join(path, f))]
+    if not resampled:
+        fs = [i for i in fs if '_' not in i]
+    else:
+        fs = [i for i in fs if '_' in i]
     return fs
 
 def log_returns(x):

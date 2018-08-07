@@ -137,7 +137,7 @@ def commissions(df, symbol, com=None):
     df['com'] += where((df['sig'] == -1) & (df['sig'].shift() == 0), df['c'], 0)
     df['com'] += where((df['sig'] == 1) & (df['sig'].shift() == -1), df['c'], 0)
     df['com'] += where((df['sig'] == -1) & (df['sig'].shift() == 1), df['c'], 0)
-    return df['com'], df['quantities']
+    return df['com'], (df['com'] / capital), df['quantities']
 
 def percentiles(returns):
     p_list = [p for p in range(100)]
@@ -455,7 +455,8 @@ def stats_printout(returns, market):
     upi = ulcer_performance_index(cumulative=c, r=returns.mean(), rf=0.0)
     print('Ulcer Performance Index %.3f' % upi)
     stra = sterling_ration(returns=returns, rf=0.0)
-    print('Sterling Ratio %.3f' % stra)
+    if stra is not None:
+        print('Sterling Ratio %.3f' % stra)
     br = burke_ratio(returns=returns, cumulative=c, rf=0.0)
     print('Burke Ratio %.3f' % br)
 
