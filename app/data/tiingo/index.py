@@ -80,8 +80,8 @@ def save_one(symbol):
 
 def run_tiingo(i=0):
     for s in Market.select()[i:]:
-        data = get_data(s=s)
         try:
+            data = get_data(s=s)
             if data is not None:
                 to_pickle(data, 'tiingo', '{}'.format(s.symbol))
             i += 1

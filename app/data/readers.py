@@ -56,12 +56,12 @@ def get_parquet(name):
     pf = ParquetFile(path)
     return pf.to_pandas()
 
-def join_data(folder, symbols, clr=False):
+def join_data(folder, symbols, clr=False, as_is=False):
     ''' Makes one DataFrame for many symbols. '''
     with sw.timer('join_data'):
-        init = get_pickle(folder=folder, name=symbols[0], basic=clr)
+        init = get_pickle(folder=folder, name=symbols[0], basic=clr, as_is=as_is)
         for symbol in symbols[1:]:
-            data = get_pickle(folder=folder, name=symbol)
+            data = get_pickle(folder=folder, name=symbol, basic=clr, as_is=as_is)
             if data is not None:
                 init = init.join(data, how='left')
         df = fill_forward(data=init)
