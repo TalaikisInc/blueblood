@@ -178,3 +178,6 @@ def comm(q, p=0.01):
 
 def quantity(capital, price, alloc):
     return capital / price * alloc
+
+def detrender(df, i=1):
+    return (df - df.shift(i)) / ((df + df.shift(i)) / 2.0)

@@ -165,7 +165,8 @@ def total_losses(returns):
     return sum(where(returns < 0, 1, 0))
 
 def win_rate(returns):
-    return total_wins(returns) / len(returns)
+    tw = total_wins(returns)
+    return tw / (tw + total_losses(returns=returns))
 
 def mae(high, low, close, pos=0):
     if pos == 1:

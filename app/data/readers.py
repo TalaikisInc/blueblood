@@ -1,6 +1,6 @@
 from os.path import join
 
-from numpy import isinf, isnan, nan
+from numpy import isinf, isnan
 from clint.textui import colored
 from pandas import read_pickle, read_csv, to_datetime, TimeGrouper
 from fastparquet import ParquetFile
@@ -39,8 +39,8 @@ def leave_basic(folder, data):
 def get_pickle(folder, name, basic=True, resampler=False, as_is=False):
     df = read_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
     df.index = to_datetime(df.index)
+    df = df.dropna()
     if not as_is:
-        df = df.dropna()
         df = normalize(folder=folder, data=df)
         if basic:
             df = leave_basic(folder=folder, data=df)
