@@ -62,3 +62,6 @@ def ensure_correctness():
     w = get_pickle('tiingo', 'SPY_1W', basic=False)['SPY_1W_AdjClose']
     assert d.tail(1).values == m.tail(1).values == w.tail(1).values, 'Ending resampled prices not match'
     print(colored.green('Seems OK.'))
+
+def downscale(df, per='D'):
+    return df.resample(per).mean()

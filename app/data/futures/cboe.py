@@ -1,19 +1,19 @@
-from os.path import join
 from io import StringIO
 
-from pandas import read_csv, to_datetime
+from pandas import to_datetime, read_csv
 from requests import get
+from clint.textui import colored
 
-from app.utils import STORAGE_PATH
-from variables import CBOE_DATA
+from app.variables import CBOE_DATA
+from app.data import to_pickle
 
 
 def cboe_download():
     for sym in CBOE_DATA:
         url = 'http://www.cboe.com/publish/scheduledtask/mktdata/datahouse/%s.csv' % sym[1]
-        path = join(STORAGE_PATH, sym[0])
         content = get(url).content
-        data = read_csv(StringIO(content.decode('utf-8')), skiprows=3, names=sym[2], parse_dates=True)
-        data.index = to_datetime(data['Date'])
+        data = read_csv(StringIO(content.decode('utf-8')), skiprows=4, names=sym[2], parse_dates=True)
+        data.index = to_datetime(data['Date'], errors='coerce')
         del data['Date']
-        data.to_pickle(path)
+        to_pickle(data, 'indicators', sym[0])
+        print(colored.green(sym[0]))

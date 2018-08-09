@@ -7,17 +7,19 @@ load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
 from app.db import migrate, create_migrations
 # Data
 from app.data import (run_fred, eod_symbols, run_eod, run_tiingo, tii_symbols, tii_news, run_quandl,
-    save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, get_crypto_balances, download_dataset, upload_precictions)
+    save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, get_crypto_balances, download_numerai_dataset,
+    upload_precictions, cboe_download)
 # Playground
 from app.playground import run_play
 # Models
 from app.models.alpha import create_owners
 from app.models.clusters import make_clusters
-from app.models.portfolio import generate_implementations
-from app.models.numerai import run_solutions
+from app.models.portfolio import generate_portfolios
+from app.models.numerai import run_numerai_solutions
 from app.models.tests import mom_mr_test
-from app.models.preprocess import run_cze
-# Stats
+# Indicators
+from app.indicators import generate_indicators
+# # Stats
 from app.stats import run_analyze
 # Testing
 from app.backtest import basic_runs, see_portfolios, run_alpha_strategy
@@ -48,12 +50,14 @@ if __name__ == '__main__':
         save_one(args.get)
 
     if args.collect:
+        if args.collect == 'cboe':
+            cboe_download()
+
         if args.collect == 'fred':
             run_fred()
 
         if args.collect == 'quandl':
             run_quandl()
-            run_cze()
 
         if args.collect == 'crypto':
             get_capitalization()
@@ -80,8 +84,9 @@ if __name__ == '__main__':
             run_fxcm()
     
     if args.gen:
-        #generate_implementations()
+        #generate_portfolios()
         mom_mr_test()
+        #generate_indicators()
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''
@@ -126,13 +131,16 @@ if __name__ == '__main__':
         if args.convert == 'mt_pickle':
             ''' Converts Metatrader 4 folder csv to pickle.'''
             convert_mt_pickle()
+
         if args.convert == 'parq_csv':
             ''' Converts parquet to csv.'''
             parq_to_csv_all()
+
         if args.convert == 'csv_parq':
             ''' Converts go-dukas generated CSV to parquet.'''
             easify_names()
             convert_to_parq()
+
         if args.convert == 'pickle_csv':
             pickle_to_csv_all()
 
@@ -148,8 +156,8 @@ if __name__ == '__main__':
         #basic_runs()
 
     if args.numerai:
-        #download_dataset()
-        #run_solutions()
+        #download_numerai_dataset()
+        #run_numerai_solutions()
         upload_precictions()
 
     if args.db:

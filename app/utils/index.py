@@ -7,11 +7,12 @@ from numpy import log, cumsum, log2, nonzero, sum, histogram2d, sqrt, polyfit, s
 from numpy.polynomial import Polynomial
 from pandas import DataFrame, Series
 from peewee import Field
-from sklearn.metrics import mutual_info_score, log_loss
+from sklearn.metrics import mutual_info_score, log_loss, mean_squared_error
 from statsmodels.api import OLS
 from pyfinance.ols import PandasRollingOLS
 from statsmodels.tsa.vector_ar.vecm import coint_johansen
 from matplotlib import pyplot as plt
+from statsmodels.tsa.api import Holt
 
 
 META_PATHS = [
@@ -70,7 +71,7 @@ def mutual_info(x, y, bins):
     c_xy = histogram2d(x, y, bins)[0]
     return mutual_info_score(None, None, contingency=c_xy)
 
-def logloss(prtedicted, y, name):
+def logloss(predicted, y, name):
     val = log_loss(y, predicted)
     print('Log Loss for {}: {:.6f}.'.format(name, val))
     return val
@@ -181,3 +182,25 @@ def quantity(capital, price, alloc):
 
 def detrender(df, i=1):
     return (df - df.shift(i)) / ((df + df.shift(i)) / 2.0)
+
+def exponential_smoothing(df, alpha):
+    return df.ewm(alpha=alpha).mean()
+
+def holt(df, chunk=100, smoothing=0.03, slope=0.1):
+    cnt = int(len(df.index)/chunk)
+    for i in range(cnt):
+        if i == cnt:
+            print('final')
+        else:
+            train = df.iloc[i*chunk:(i+1)*chunk]
+            test = df.iloc[(i+1)*chunk:(i+2)*chunk]
+            fit = Holt(asarray(train)).fit(smoothing_level=smoothing, smoothing_slope=slope)
+            forecast = fit.forecast(len(test))
+            try:
+                rms = sqrt(mean_squared_error(test, forecast))
+                print('RMS %s' % rms)
+            except:
+                pass
+            plt.plot(train, color='b')
+            plt.plot(test.index, forecast, lw=3, color='r')
+    plt.show()

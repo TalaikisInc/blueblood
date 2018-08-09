@@ -12,7 +12,7 @@ from app.utils import STORAGE_PATH
 def getapi():
     return NumerAPI(getenv('NUMERAI_ID'), getenv('NUMERAI_SECRET'))
 
-def get_numerai_data():
+def prepare_numerai_data():
     api = getapi()
     last = _last_round(api)
     train = read_csv(join(STORAGE_PATH, 'numerai',  '{}'.format(last), 'numerai_training_data.csv'))
@@ -39,7 +39,7 @@ def _last_round(api):
     rounds = api.get_competitions()
     return max([i['number'] for i in rounds])
 
-def download_dataset():
+def download_numerai_dataset():
     api = getapi()
     if api.check_new_round():
         print('New round has started, downloading data')
