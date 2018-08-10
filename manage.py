@@ -17,6 +17,7 @@ from app.models.clusters import make_clusters
 from app.models.portfolio import generate_portfolios
 from app.models.numerai import run_numerai_solutions
 from app.models.tests import mom_mr_test
+from app.models import run_derivatives
 # Indicators
 from app.indicators import generate_indicators
 # # Stats
@@ -57,7 +58,8 @@ if __name__ == '__main__':
             download_eurex()
 
         if args.collect == 'futures':
-            download_futures()
+            #download_futures()
+            run_derivatives()
 
         if args.collect == 'fred':
             run_fred()
