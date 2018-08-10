@@ -2,6 +2,7 @@ from os.path import dirname, join
 from collections import Counter
 
 from matplotlib import pyplot as plt
+from mpl_finance import candlestick_ohlc
 from numpy import array, sort, unique, linspace
 from statsmodels.api import qqplot
 from scipy.stats import t
@@ -114,4 +115,12 @@ def hdns_barplot(hdbs):
     plt.ylabel('Counts')
     plt.xlabel('Cluster label')
     plt.title('Sizes ({} clusters found by hdbscan)'.format(len(label_counts) - 1))
+    plt.show()
+ 
+def candles(data, symbol):
+    data = data.loc[:, ['{}_Open'.format(symbol), '{}_High'.format(symbol), '{}_Low'.format(symbol), '{}_Close'.format(symbol)]]
+
+    fig, ax = plt.subplots()
+    candlestick_ohlc(ax, zip(data.index.tolist(), (data['{}_Open'.format(symbol)].tolist(), data['{}_High'.format(symbol)].tolist(),
+        data['{}_Low'.format(symbol)].tolist(), data['{}_Close'.format(symbol)].tolist())), colorup='green', colordown='red', width=.4)
     plt.show()

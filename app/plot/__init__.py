@@ -1,4 +1,4 @@
-from .index import plot, drawdown, drawdown_to_percentile, qq, plot_hdbscan, corr_heatmap, hdns_barplot
+from .index import plot, drawdown, drawdown_to_percentile, qq, plot_hdbscan, corr_heatmap, hdns_barplot, candles
 
 __ALL__ = [
     'plot',
@@ -7,5 +7,6 @@ __ALL__ = [
     'qq',
     'plot_hdbscan',
     'corr_heatmap',
-    'hdns_barplot'
+    'hdns_barplot',
+    'candles'
 ]

@@ -79,7 +79,7 @@ def save_one(symbol):
         print(colored.red('Nothing for this symbols.'))
 
 def run_tiingo(i=0):
-    for s in Market.select()[i+19500:]:
+    for s in Market.select()[i:]:
         try:
             data = get_data(s=s)
             if data is not None:

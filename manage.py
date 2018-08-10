@@ -6,9 +6,9 @@ load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
 # Db
 from app.db import migrate, create_migrations
 # Data
-from app.data import (run_fred, eod_symbols, run_eod, run_tiingo, tii_symbols, tii_news, run_quandl,
+from app.data import (run_fred, eod_symbols, run_eod, run_tiingo, tii_symbols, tii_news, run_quandl, download_eurex,
     save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, get_crypto_balances, download_numerai_dataset,
-    upload_precictions, cboe_download)
+    upload_precictions, cboe_download, download_futures)
 # Playground
 from app.playground import run_play
 # Models
@@ -53,6 +53,12 @@ if __name__ == '__main__':
         if args.collect == 'cboe':
             cboe_download()
 
+        if args.collect == 'eurex':
+            download_eurex()
+
+        if args.collect == 'futures':
+            download_futures()
+
         if args.collect == 'fred':
             run_fred()
 
@@ -85,8 +91,8 @@ if __name__ == '__main__':
     
     if args.gen:
         #generate_portfolios()
-        mom_mr_test()
-        #generate_indicators()
+        #mom_mr_test()
+        generate_indicators()
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''

@@ -13,6 +13,7 @@ from .crypto import *
 from .fxcm import run_fxcm
 from .numerai import download_numerai_dataset, prepare_numerai_data, write_numerai_predictions, upload_precictions
 from .futures import *
+from .eurex import download_eurex
 
 __ALL__ = [
     'PandasData',
@@ -55,5 +56,7 @@ __ALL__ = [
     'prepare_numerai_data',
     'write_numerai_predictions',
     'upload_precictions',
-    'cboe_download'
+    'cboe_download',
+    'download_eurex',
+    'download_futures'
 ]

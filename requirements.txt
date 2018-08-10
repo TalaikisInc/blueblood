@@ -23,6 +23,7 @@ click
 ffn
 git+https://github.com/pydata/pandas-datareader
 git+https://github.com/Lasagne/Lasagne
+git+https://github.com/matplotlib/mpl_finance
 quickfix
 tiingo
 statsmodels

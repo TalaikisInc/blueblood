@@ -9,18 +9,19 @@ from numpy import  nan
 from app.utils import STORAGE_PATH
 
 
-m_codes = ['F','G','H','J','K','M','N','Q','U','V','X','Z'] #month codes of the futures
+m_codes = ['F','G','H','J','K','M','N','Q','U','V','X','Z']
 codes = dict(list(zip(m_codes,list(range(1,len(m_codes)+1)))))
-DIR = join(STORAGE_PATH, 'futures')
+SYMBOL = 'VX'
+DIR = join(STORAGE_PATH, 'futures', SYMBOL)
 
 def save_data(year, month, path, forceDownload=False):
     ''' Get future from CBOE and save to file '''
-    fName = "CFE_{0}{1}_VX.csv".format(m_codes[month],str(year)[-2:])
+    fName = 'CFE_{0}{1}_{2}.csv'.format(m_codes[month], str(year)[-2:], SYMBOL)
     if exists(join(DIR, fName)) or forceDownload:
         print('File already downloaded, skipping')
         return
     
-    urlStr = "http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/{0}".format(fName)
+    urlStr = 'http://cfe.cboe.com/Publish/ScheduledTask/MktData/datahouse/{0}'.format(fName)
     print('Getting: %s' % urlStr)
     try:
         urlretrieve(urlStr, path+'\\'+fName)
@@ -28,7 +29,7 @@ def save_data(year, month, path, forceDownload=False):
         print(e)
 
 def build_table(dataDir):
-    ''' create single data sheet '''
+    ''' Create single data sheet '''
     files = listdir(dataDir)
 
     data = {}
@@ -47,7 +48,7 @@ def build_table(dataDir):
         
         
     full = DataFrame()
-    for k,df in data.items():
+    for k, df in data.items():
         s = df['Settle']
         s.name = k
         s[s<5] = nan
@@ -60,23 +61,24 @@ def build_table(dataDir):
     full = full[sorted(full.columns)]
         
     # use only data after this date
-    startDate = datetime(2008,1,1)
+    #startDate = datetime(2008,1,1)
     
-    idx = full.index >= startDate
+    idx = full.index #>= startDate
     full = full.ix[idx,:]
     
-    #full.plot(ax=gca())
-    fName = join(dataDir, 'output', 'vix_futures.csv')
+    fName = join(dataDir, 'output', '{}.csv'.format(SYMBOL))
     print('Saving to ', fName)
     full.to_csv(fName)
 
 
-if __name__ == '__main__':
-    for year in range(2018, 2018):
+def download_futures():
+    '''
+    for year in range(2005, 2018):
         for month in range(12):
             print('Getting data for {0}/{1}'.format(year, month + 1))
             save_data(year, month, DIR)
 
     print('Raw wata was saved to {0}'.format(DIR))
+    '''
     
     build_table(DIR)
