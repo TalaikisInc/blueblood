@@ -34,13 +34,13 @@ def convert_mt_pickle():
     ''' Converts MT4 exported CSV to lcoal format. '''
     i = 0
     for m in META_PATHS:
-        fs = filenames(m)
+        fs = filenames(m, mt=True)
         for f in fs:
             try:
                 name = f.split('_')[3]
                 per = f.split('_')[4].split('.')[0]
                 dest_path = join(STORAGE_PATH, 'mt', '{}'.format(i), '{}_{}.p'.format(name, per))
-                data = get_mt(name, per, which=i)
+                data = get_mt(f, which=i)
                 if len(data) > 500:
                     data.rename(columns={'OPEN': 'Open', 'HIGH': 'High', 'LOW': 'Low', 'CLOSE': 'Close', 'VOLUME': 'Volume'}, inplace=True)
                     data.to_pickle(dest_path)

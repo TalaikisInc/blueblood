@@ -18,6 +18,7 @@ from statsmodels.tsa.api import Holt
 META_PATHS = [
     join(abspath(chdir('C:\\')), 'Users', getenv('WIN_USER'), 'AppData', 'Roaming', 'MetaQuotes', 'Terminal', getenv('META_AVA_TERMINAL_ID'), 'MQL4', 'Files'),
     join(abspath(chdir('C:\\')), 'Users', getenv('WIN_USER'), 'AppData', 'Roaming', 'MetaQuotes', 'Terminal', getenv('META_DARWIN_TERMINAL_ID'), 'MQL4', 'Files'),
+    join(abspath(chdir('C:\\')), 'Users', getenv('WIN_USER'), 'AppData', 'Roaming', 'MetaQuotes', 'Terminal', getenv('META_XTB_TERMINAL_ID'), 'MQL4', 'Files'),
 ]
 STORAGE_PATH = abspath(chdir('G:\\storage'))
 DATA_SOURCE = 'eod'
@@ -37,17 +38,20 @@ def peewee_to_df(table):
 def periodize_returns(r, p=252):
     return r * sqrt(p)
 
-def filenames(folder, resampled=False):
+def filenames(folder, resampled=False, mt=False):
     try:
-        path = join(STORAGE_PATH, folder)
-        fs = [f for f in listdir(path) if isfile(join(path, f)) & ('.gitkeep' not in f)]
+        if mt:
+            fs = [f for f in listdir(folder) if isfile(join(folder, f)) if 'DATA_MODEL' in f]
+        else:
+            path = join(STORAGE_PATH, folder)
+            fs = [f for f in listdir(path) if isfile(join(path, f)) & ('.gitkeep' not in f)]
+            if not resampled:
+                fs = [i for i in fs if '_' not in i]
+            else:
+                fs = [i for i in fs if '_' in i]
     except:
         path = folder
         fs = [f for f in listdir(path) if isfile(join(path, f))]
-    if not resampled:
-        fs = [i for i in fs if '_' not in i]
-    else:
-        fs = [i for i in fs if '_' in i]
     return fs
 
 def log_returns(x):

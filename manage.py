@@ -93,8 +93,8 @@ if __name__ == '__main__':
     
     if args.gen:
         #generate_portfolios()
-        #mom_mr_test()
-        generate_indicators()
+        mom_mr_test()
+        #generate_indicators()
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''
