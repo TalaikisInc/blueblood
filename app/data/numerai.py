@@ -47,7 +47,7 @@ def download_numerai_dataset():
         if not isfile(join(STORAGE_PATH, 'numerai',  '{}'.format(last), 'numerai_training_data.csv')):
             api.download_current_dataset(unzip=True, dest_path=join(STORAGE_PATH, 'numerai'), dest_filename='{}'.format(last))
     
-def upload_precictions():
+def upload_predictions():
     api = getapi()
     last = _last_round(api)
     api.upload_predictions(join(STORAGE_PATH, 'numerai', '{}_predictions.csv'.format(last)))

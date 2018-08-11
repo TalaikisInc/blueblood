@@ -8,7 +8,7 @@ from app.db import migrate, create_migrations
 # Data
 from app.data import (run_fred, eod_symbols, run_eod, run_tiingo, tii_symbols, tii_news, run_quandl, download_eurex,
     save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, get_crypto_balances, download_numerai_dataset,
-    upload_precictions, cboe_download, download_futures)
+    upload_predictions, cboe_download, download_futures)
 # Playground
 from app.playground import run_play
 # Models
@@ -16,11 +16,12 @@ from app.models.alpha import create_owners
 from app.models.clusters import make_clusters
 from app.models.portfolio import generate_portfolios
 from app.models.numerai import run_numerai_solutions
-from app.models.tests import mom_mr_test
 from app.models import run_derivatives
 # Indicators
 from app.indicators import generate_indicators
-# # Stats
+# Watchdogs
+from app.watchdogs import run_watchdogs
+# Stats
 from app.stats import run_analyze
 # Testing
 from app.backtest import basic_runs, see_portfolios, run_alpha_strategy
@@ -43,6 +44,7 @@ parser.add_argument('--risk')
 parser.add_argument('--trade')
 parser.add_argument('--gen')
 parser.add_argument('--numerai')
+parser.add_argument('--watch')
 
 args = parser.parse_args()
 
@@ -93,7 +95,6 @@ if __name__ == '__main__':
     
     if args.gen:
         #generate_portfolios()
-        mom_mr_test()
         #generate_indicators()
 
     if args.play:
@@ -102,6 +103,9 @@ if __name__ == '__main__':
 
     #if args.risk:
         #tbc
+
+    if args.watch:
+        run_watchdogs()
 
     if args.trade:
         if args.trade == 'balance':
@@ -164,9 +168,9 @@ if __name__ == '__main__':
         #basic_runs()
 
     if args.numerai:
-        #download_numerai_dataset()
-        #run_numerai_solutions()
-        upload_precictions()
+        download_numerai_dataset()
+        run_numerai_solutions()
+        upload_predictions()
 
     if args.db:
         if args.db == 'create_migrations':
