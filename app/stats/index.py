@@ -2,6 +2,7 @@ from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, 
     power, maximum, round, where, percentile, busday_count)
 import scipy.stats as sc
 from pandas import to_datetime
+from ffn import calc_stats
 
 from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM, FINRA_FEE, SEC_FEE
 from app.db import Strategy, Stats
@@ -260,8 +261,8 @@ def run_stats():
         signals = DataFrame() # READ SIGNALS
         pos = strategy.rule
         cumulative = returns.cumsum()
-        perf = data['Close'].calc_stats()
-        stats = perf.stats
+        #perf = calc_stats(data['Close'])
+        #stats = perf.stats
 
         ma = mae(high=data['High'], low=data['Low'], close=data['Close'], pos=pos)
         mf = mae(high=data['High'], low=data['Low'], close=data['Close'], pos=pos)
@@ -277,6 +278,7 @@ def run_stats():
             modigliani=modigliani(returns=returns, benchmark=benchmark, rf=RF),
             var=var(returns=returns, alpha=ALPHA),
             cvar=cvar(returns=returns, alpha=ALPHA),
+            pf=profit_factor(returns=returns),
             excess_var=excess_var(returns=returns, rf=RF, alpha=ALPHA),
             conditional_sharpe=conditional_sharpe(returns=returns, rf=RF, alpha=ALPHA),
             omega_ratio=omega_ratio(returns=returns, rf=RF, target=TARGET),
@@ -308,6 +310,8 @@ def run_stats():
             min_mfe=min_mfe(cumulative=cumulative, mfe=mf),
             ulcer_index=ulcer_index(cumulative=cumulative),
             ulcer_performance_index=ulcer_performance_index(cumulative=cumulative, r=returns.mean(), rf=rf),
+            )
+'''
             start=stats['start'],
             end=stats['end'],
             total_return=stats['total_return'],
@@ -342,8 +346,6 @@ def run_stats():
             avg_down_month=stats['avg_down_month'],
             win_year_perc=stats['win_year_perc'],
             twelve_month_win_perc=stats['twelve_month_win_perc']
-        )
-"""
             capital_utilization=
             rolling_sharpe=
             returns_by_month=
@@ -351,7 +353,7 @@ def run_stats():
             percentiles=
             drawdown_probability=
             return_probability=
-"""
+'''
 
 STAT_MAP = {
     'beta': 'Measure of the risk arising from exposure to general market, a.k.a. systemic risk.',
@@ -378,6 +380,9 @@ STAT_MAP = {
     'ulcer_index': 'Ulcer Index measures downside risk, in terms of both depth and duration of price declines.',
     'ulcer_performance_index': 'Ulcer Performance Index, a.k.a. Martin ratio is a Sharpe ratio with Ulcer Index instead of variability.'
 }
+
+def profit_factor(returns):
+    return (average_win(returns=returns) * total_wins(returns=returns)) / (average_loss(returns=returns) * total_losses(returns=returns))
 
 def market_cap(pe, net_income):
     return pe * net_income
@@ -406,13 +411,71 @@ def roe(net_income, book_value):
 
 def stats_printout(returns, market):
     c = returns.cumsum()
+    perf = calc_stats(returns)
+    stats = perf.stats
 
     print('Basics -----------------------')
+    start = stats['start']
+    print('Start: %s' % start)
+    end = stats['end']
+    print('End: %s' % end)
+    total_return = stats['total_return']
+    print('Tital return: %.2f' % total_return)
+    cagr = stats['cagr']
+    print('CAGR: %.2f' % cagr)
+    mtd = stats['mtd']
+    print('Month to date: %.2f' % mtd)
+    three_month = stats['three_month']
+    print('3 months: %.2f' % three_month)
+    six_month = stats['six_month']
+    print('6 months: %.2f' % six_month)
+    ytd = stats['ytd']
+    print('YTD: %.2f' % ytd)
+    three_year = stats['three_year']
+    print('3 years: %.2f' % three_year)
+    daily_skew = stats['daily_skew']
+    print('Daily skew: %.2f' % daily_skew)
+    daily_kurt = stats['daily_kurt']
+    print('Daily kurtosis: %.2f' % daily_kurt)
+    best_day = stats['best_day']
+    print('Best day: %.2f' % best_day)
+    worst_day = stats['worst_day']
+    print('Worst day: %.2f' % worst_day)
+    monthly_vol = stats['monthly_vol']
+    print('Monthly volatility: %.2f' % monthly_vol)
+    monthly_skew = stats['monthly_skew']
+    print('Monthly skew: %.2f' % monthly_skew)
+    monthly_kurt = stats['monthly_kurt']
+    print('Monthly kurtosis: %.2f' % monthly_kurt)
+    best_month = stats['best_month']
+    print('Best month: %.2f' % best_month)
+    avg_down_month = stats['avg_down_month']
+    print('Average down month %s' % avg_down_month)
+    worst_month = stats['worst_month']
+    print('Worst month: %.2f' % worst_month)
+    worst_year = stats['worst_year']
+    print('Worst year: %.2f' % worst_year)
+    yearly_mean = stats['yearly_mean']
+    print('Yearly average: %.2f' % yearly_mean)
+    yearly_vol = stats['yearly_vol']
+    print('Yearly volatility: %.2f' % yearly_vol)
+    yearly_skew = stats['yearly_skew']
+    print('Yearly skew: %.2f' % yearly_skew)
+    yearly_kurt = stats['yearly_kurt']
+    print('Yearly kurtosis: %.2f' % yearly_kurt)
+    avg_up_month = stats['avg_up_month']
+    print('Average up month: %.2f' % avg_up_month)
+    win_year_perc = stats['win_year_perc']
+    print('Win years: %.2f' % win_year_perc)
+    twelve_month_win_perc = stats['twelve_month_win_perc']
+    print('12-mo win: %.2f' % twelve_month_win_perc)
     vv = vol(returns=returns)
     print('Volatility %.3f%%' % (vv * 100.0))
     amr = average_month_return(returns=returns) * 100.0
     print('Average month return %.3f%%' % amr)
     # trade_count(signals)
+    pf = profit_factor(returns=returns)
+    print('Profit factor %.2f%%' % pt)
     at = average_trade(returns=returns) * 100.0
     print('Average trade %.2f%%' % at)
     aw = average_win(returns=returns) * 100.0
@@ -431,6 +494,10 @@ def stats_printout(returns, market):
     print()
     print('Ratios -----------------------')
     print('Sharpe* %.3f' % (sharpe_ratio(returns, rf=0.0) * sqrt(252)))
+    monthly_sharpe = stats['monthly_sharpe']
+    print('Monthly Sharpe: %.2f' % monthly_sharpe)
+    yearly_sharpe = stats['yearly_sharpe']
+    print('Yearly Sharpe: %.2f' % yearly_sharpe)
     b = beta(returns=returns, benchmark=market)
     print('Beta %.3f' % b)
     a = alpha(portfolio_return=returns.mean(), rf=0.0, beta=b, market_return=market.mean())
@@ -487,7 +554,8 @@ def stats_printout(returns, market):
     print('Drawdown probability %.3f' % dp)
     rp = return_probability(returns=returns)
     print('Return probability %.3f' % rp)
-
+    avg_drawdown_days = stats['avg_drawdown_days']
+    print('Average DD duration %s' % avg_drawdown_days)
     #mae(high, low, close, pos=0)
     #mfe(high, low, close, pos=0)
     #max_mae(cumulative, mae)
@@ -499,6 +567,9 @@ def stats_printout(returns, market):
 
 def stats_values(returns, market):
     c = returns.cumsum()
+    perf = calc_stats(returns)
+    stats = perf.stats
+
     vv = vol(returns=returns) * 100.0
     amr = average_month_return(returns=returns) * 100.0
     # trade_count(signals)
@@ -507,6 +578,7 @@ def stats_values(returns, market):
     al = average_loss(returns=returns) * 100.0
     w = total_wins(returns=returns)
     l = total_losses(returns=returns)
+    pf = profit_factor(returns=returns)
     wr = win_rate(returns=returns) * 100.0
     acor = correlation(returns=returns)
     sr = sharpe_ratio(returns, rf=0.0) * sqrt(252)
@@ -541,6 +613,36 @@ def stats_values(returns, market):
     #min_mfe(cumulative, mfe)
     #average_mae(high, low, close, pos=0)
     #average_mfe(high, low, close, pos=0)
+    start = stats['start']
+    end = stats['end']
+    total_return = stats['total_return']
+    cagr = stats['cagr']
+    mtd = stats['mtd']
+    three_month = stats['three_month'],
+    six_month = stats['six_month']
+    ytd = stats['ytd']
+    three_year = stats['three_year']
+    daily_skew = stats['daily_skew']
+    daily_kurt = stats['daily_kurt']
+    best_day = stats['best_day']
+    worst_day = stats['worst_day']
+    monthly_sharpe = stats['monthly_sharpe']
+    monthly_vol = stats['monthly_vol']
+    monthly_skew = stats['monthly_skew']
+    monthly_kurt = stats['monthly_kurt']
+    best_month = stats['best_month']
+    worst_month = stats['worst_month']
+    yearly_sharpe = stats['yearly_sharpe']
+    yearly_mean = stats['yearly_mean']
+    yearly_vol = stats['yearly_vol']
+    yearly_skew = stats['yearly_skew']
+    yearly_kurt = stats['yearly_kurt']
+    worst_year = stats['worst_year']
+    avg_drawdown_days = stats['avg_drawdown_days']
+    avg_up_month = stats['avg_up_month']
+    avg_down_month = stats['avg_down_month']
+    win_year_perc = stats['win_year_perc']
+    twelve_month_win_perc = stats['twelve_month_win_perc']
 
     return {
         'volatility': vv,
@@ -578,4 +680,35 @@ def stats_values(returns, market):
         'max_dd_duration': mdddur,
         'dd_prob': up,
         'return_prob': rp,
+        'profit_factor': pf,
+        'start': start,
+        'end': end,
+        'total_return': total_return,
+        'cagr': cagr,
+        'mtd': mtd,
+        'three_month': three_month,
+        'six_month': six_month,
+        'ytd': ytd,
+        'three_year': three_year,
+        'daily_skew': daily_skew,
+        'daily_kurt': daily_kurt,
+        'best_day':best_day,
+        'worst_day': worst_day,
+        'monthly_sharpe': monthly_sharpe,
+        'monthly_vol': monthly_vol,
+        'monthly_skew': monthly_skew,
+        'monthly_kurt': monthly_kurt,
+        'best_month': best_month,
+        'worst_month': worst_month,
+        'yearly_sharpe':yearly_sharpe,
+        'yearly_mean': yearly_mean,
+        'yearly_vol': yearly_vol,
+        'yearly_skew': yearly_skew,
+        'yearly_kurt': yearly_kurt,
+        'worst_year': worst_year,
+        'avg_drawdown_days': avg_drawdown_days,
+        'avg_up_month': avg_up_month,
+        'avg_down_month': avg_down_month,
+        'win_year_perc': win_year_perc,
+        'twelve_month_win_perc': twelve_month_win_perc
         }

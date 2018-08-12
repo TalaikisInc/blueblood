@@ -94,8 +94,8 @@ if __name__ == '__main__':
             run_fxcm()
     
     if args.gen:
-        #generate_portfolios()
-        #generate_indicators()
+        generate_portfolios()
+        generate_indicators()
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''
