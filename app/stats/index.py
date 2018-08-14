@@ -1,7 +1,7 @@
 from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, sqrt, log,
     power, maximum, round, where, percentile, busday_count)
 import scipy.stats as sc
-from pandas import to_datetime
+from pandas import to_datetime, DataFrame, Series
 from ffn import calc_stats
 
 from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM, FINRA_FEE, SEC_FEE
@@ -15,9 +15,7 @@ def beta(returns, benchmark):
     '''
     Measure of the risk arising from exposure to general market, a.k.a. systemic risk.
     '''
-    m = benchmark.values
-    s = returns.values
-    covariance = cov(s, m)
+    covariance = cov(returns, benchmark)
     beta = covariance[0, 1] / covariance[1, 1]
     return beta
 
@@ -203,7 +201,7 @@ def alpha(returns, rf, market_return):
     that asset is said to have 'positive alpha' or 'abnormal returns'.
     '''
     b = beta(returns=returns, benchmark=market_return)
-    return returns - rf - b * (market_return * rf)
+    return returns.mean() - rf - b * (market_return.mean() * rf)
 
 def average_trade(returns):
     return mean(returns)

@@ -177,3 +177,6 @@ def holt(df, chunk=100, smoothing=0.03, slope=0.1):
 
 def save_plot(plt, folder, name):
     plt.savefig(join(STORAGE_PATH, 'images', folder, '{}.png'.format(name)))
+
+def save_weights(df, name):
+    df.to_pickle(join(STORAGE_PATH, 'portfolios', 'weights', '{}.p'.format(name)))
