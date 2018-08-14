@@ -6,7 +6,7 @@ from raccoon.dataframe import DataFrame
 from pandas import DataFrame as PandasDataFrame
 
 # client = Client(n_workers=2, threads_per_worker=2, memory_limit='1GB')
-from .index import STORAGE_PATH
+from .vars import STORAGE_PATH
 
 
 def read_parq(folder, name):

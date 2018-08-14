@@ -36,6 +36,7 @@ source activate blueblood
 conda install numpy scipy pandas numba cython lxml tensorflow pymc3 scikit-learn -y
 conda install -c conda-forge fastparquet -y
 conda install -c conda-forge hdbscan
+conda install pytorch -c pytorch
 pip install -r requirements.txt
 cd app/models
 pip install -r requirements.txt

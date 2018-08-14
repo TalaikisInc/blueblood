@@ -1,8 +1,6 @@
-from os import listdir, chdir, makedirs, rename, getenv
-from os.path import isfile, join, abspath, exists
-from collections import namedtuple
+from os import listdir, makedirs, rename
+from os.path import isfile, join, exists
 
-from numba import jit
 from numpy import log, cumsum, log2, nonzero, sum, histogram2d, sqrt, polyfit, subtract, std
 from numpy.polynomial import Polynomial
 from pandas import DataFrame, Series
@@ -14,17 +12,8 @@ from statsmodels.tsa.vector_ar.vecm import coint_johansen
 from matplotlib import pyplot as plt
 from statsmodels.tsa.api import Holt
 
+from .vars import STORAGE_PATH
 
-META_PATHS = [
-    join(abspath(chdir('C:\\')), 'Users', getenv('WIN_USER'), 'AppData', 'Roaming', 'MetaQuotes', 'Terminal', getenv('META_AVA_TERMINAL_ID'), 'MQL4', 'Files'),
-    join(abspath(chdir('C:\\')), 'Users', getenv('WIN_USER'), 'AppData', 'Roaming', 'MetaQuotes', 'Terminal', getenv('META_DARWIN_TERMINAL_ID'), 'MQL4', 'Files'),
-    join(abspath(chdir('C:\\')), 'Users', getenv('WIN_USER'), 'AppData', 'Roaming', 'MetaQuotes', 'Terminal', getenv('META_XTB_TERMINAL_ID'), 'MQL4', 'Files'),
-]
-STORAGE_PATH = abspath(chdir('G:\\storage'))
-DATA_SOURCE = 'eod'
-PER_SAHRE_COM = 0.0035
-SEC_FEE = 23.1 # Per $1M
-FINRA_FEE = 0.000119 # Per share
 
 def peewee_to_df(table):
     fields = [f for f in dir(table) if isinstance(getattr(table, f), Field)]
@@ -61,19 +50,8 @@ def get_dividends_splits(close, adjusted):
     '''Outputs should be classified into: dividend, split or white noise.'''
     return adjusted - close
 
-@jit
 def vwap(v, h, l):
     return cumsum(v * (h + l) / 2) / cumsum(v)
-
-def shanon_entropy(c):
-    norm = c / float(sum(c))
-    norm = norm[nonzero(norm)]
-    H = -sum(norm * log2(norm))  
-    return H
-
-def mutual_info(x, y, bins):
-    c_xy = histogram2d(x, y, bins)[0]
-    return mutual_info_score(None, None, contingency=c_xy)
 
 def logloss(predicted, y, name):
     val = log_loss(y, predicted)
@@ -122,12 +100,6 @@ def compound_interest(principal, rate, years):
         principal *= rate
     return round(principal, 2)
 
-def parkinson_vol(close, per):
-    ''' Parkinsons' volatility. '''
-    var = (close - close.rolling(window=per, min_periods=per).mean())
-    var2 = var * var
-    return sqrt(var2.rolling(window=(per-1), min_periods=(per-1)).sum() * 1/(4*log(2)) * 252/(per-1))
-
 def hurst(ts):
     ''' Returns the Hurst Exponent. '''
     lags = range(2, 20)
@@ -146,12 +118,6 @@ def poly(x, y, plot=False):
 def rank(array):
     s = Series(array)
     return s.rank(ascending=False)[len(s)-1]
-
-Pair = namedtuple('Pair', 'symbol_a symbol_b')
-Owner = namedtuple('Owner', 'name email')
-Fixed = namedtuple('Fixed', 'symbol')
-LongRule = namedtuple('LongRule', 'op value')
-ShortRule = namedtuple('ShortRule', 'op value')
 
 def makedir(f):
     path = join(STORAGE_PATH, f)
@@ -208,3 +174,6 @@ def holt(df, chunk=100, smoothing=0.03, slope=0.1):
             plt.plot(train, color='b')
             plt.plot(test.index, forecast, lw=3, color='r')
     plt.show()
+
+def save_plot(plt, folder, name):
+    plt.savefig(join(STORAGE_PATH, 'images', folder, '{}.png'.format(name)))

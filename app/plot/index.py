@@ -8,9 +8,14 @@ from statsmodels.api import qqplot
 from scipy.stats import t
 from sklearn.manifold import TSNE
 from seaborn import heatmap
+import seaborn as sns
+sns.set_style('darkgrid')
+sns.set_palette(sns.color_palette('RdBu', n_colors=5))
+BLUE1, = sns.color_palette('muted', 1)
 
 from app.stats import percentiles, drawdowns
-from app.utils import STORAGE_PATH
+from app.utils.vars import STORAGE_PATH
+from app.data import get_pickle
 
 
 def plot(data, title, comparison=[], save=False):
@@ -124,3 +129,22 @@ def candles(data, symbol):
     candlestick_ohlc(ax, zip(data.index.tolist(), (data['{}_Open'.format(symbol)].tolist(), data['{}_High'.format(symbol)].tolist(),
         data['{}_Low'.format(symbol)].tolist(), data['{}_Close'.format(symbol)].tolist())), colorup='green', colordown='red', width=.4)
     plt.show()
+
+def compare(val, title, lim=None):
+    df = get_pickle('tiingo', 'SPY')
+    market = df['SPY_AdjClose'].pct_change().cumsum()
+    if lim is not None:
+        market = market.loc[lim:]
+
+    fig = plt.figure(figsize=(16,10))
+    ax1 = fig.add_subplot(111)
+    ax1.plot(val, color=BLUE1)
+    ax1.set_ylabel('Indicator')
+
+    ax2 = ax1.twinx()
+    ax2.plot(market, 'r-')
+    ax2.set_ylabel('S&P500', color='r')
+    for tl in ax2.get_yticklabels():
+        tl.set_color('r')
+    plt.title(title)
+    return plt

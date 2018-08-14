@@ -1,10 +1,4 @@
-from .index import (percentiles, drawdowns, commissions, max_dd, beta, vol, treynor, sharpe_ratio, ir,
-    modigliani, var, cvar, excess_var, conditional_sharpe, omega_ratio, sortino, 
-    kappa_three, gain_loss, upside_potential, calmar, average_dd, average_dd_squared, sterling_ration,
-    burke_ratio, average_month_return, trade_count, percentiles, alpha, average_trade, average_win,
-    average_loss, total_wins, total_losses, win_rate, average_mae, average_mfe, max_mae, min_mfe,
-    ulcer_index, ulcer_performance_index, drawdown_probability, return_probability, returns_by_month, returns_by_year,
-    rolling_sharpe, capital_utilization, average_trades_month, max_dd_duration, stats_printout, stats_values)
+from .index import *
 from .lens import run_analyze
 from .functions import clean_prices, clean_alpha
 
@@ -61,5 +55,9 @@ __ALL__ = [
     'clean_prices',
     'clean_alpha',
     'stats_printout',
-    'stats_values'
+    'stats_values',
+    'parkinson_vol',
+    'incremental_diversification',
+    'information_adjusted_corr',
+    'rolling_id_corr'
 ]

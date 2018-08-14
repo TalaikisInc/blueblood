@@ -9,7 +9,7 @@ import requests_cache
 from raccoon.dataframe import DataFrame
 
 from app.db import get_exchange, Market, DB
-from app.utils import STORAGE_PATH
+from app.utils.vars import STORAGE_PATH
 
 
 def quote(name):

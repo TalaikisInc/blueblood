@@ -6,7 +6,8 @@ from sklearn.utils import indexable
 from sklearn.utils.validation import _num_samples
 from numpy import arange
 
-from .index import filenames, STORAGE_PATH
+from .index import filenames
+from .vars import STORAGE_PATH
 
 
 def train_test_split(data, part=0.7):

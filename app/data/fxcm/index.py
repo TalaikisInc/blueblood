@@ -4,7 +4,8 @@ from datetime import datetime
 
 from requests import get
 
-from app.utils import STORAGE_PATH, filenames
+from app.utils.vars import STORAGE_PATH
+from app.utils import filenames
 
 
 # #TODO examine available data and download only missing/ latest

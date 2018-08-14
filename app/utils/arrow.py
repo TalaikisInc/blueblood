@@ -4,7 +4,7 @@ from os.path import join
 from pyarrow import Table
 from pyarrow.parquet import write_table, read_table
 
-from app.utils import STORAGE_PATH
+from app.utils.vars import STORAGE_PATH
 
 
 def to_arrow(df):

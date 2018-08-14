@@ -8,7 +8,8 @@ from stopwatch import StopWatch, format_report
 sw = StopWatch()
 
 from backtrader import TimeFrame
-from app.utils import STORAGE_PATH, filenames
+from app.utils import filenames
+from app.utils.vars import STORAGE_PATH
 from backtrader.feeds import GenericCSVData
 
 
@@ -126,3 +127,14 @@ def split_ticks(folder, symbol, years=False):
     for i, chunk in enumerate(dfs):
         chunk = chunk.set_index('Time')
         chunk.to_csv(join(STORAGE_PATH, folder, '_split', '{}_{}.csv'.format(symbol, i)))
+
+def leave_returns(df, s):
+    df = df.drop([
+        '{}_Open'.format(s),
+        '{}_High'.format(s),
+        '{}_Low'.format(s),
+        '{}_Close'.format(s),
+        '{}_Volume'.format(s),
+        '{}_AdjClose'.format(s)
+    ], axis=1)
+    return df

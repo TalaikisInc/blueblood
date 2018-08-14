@@ -4,7 +4,7 @@ from pandas import read_csv
 from urllib.request import urlretrieve
 
 from app.data import to_pickle
-from app.utils import STORAGE_PATH
+from app.utils.vars import STORAGE_PATH
 
 
 def download_eurex():

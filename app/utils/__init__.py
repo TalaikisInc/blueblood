@@ -1,14 +1,14 @@
 from .split import train_test_split, count_splits, clean_splits
-from .index import (periodize_returns, filenames, diff, STORAGE_PATH, vwap, zscore, minmaxscaler, slope,
-    roll_slope, rank, makedir, DATA_SOURCE, Owner, Fixed, Pair, common, pct, LongRule, ShortRule, count_zeros,
-    avg_spread, quantity, comm, if_exists, log_returns, META_PATHS, PER_SAHRE_COM, SEC_FEE, FINRA_FEE, detrender,
-    exponential_smoothing)
+from .index import (periodize_returns, filenames, diff, vwap, zscore, minmaxscaler, slope, roll_slope,
+    rank, makedir, common, pct, count_zeros, avg_spread, quantity, comm, if_exists, log_returns, detrender,
+    exponential_smoothing, save_plot)
 from .methods import read_csv_dask, write_parq, read_parq, parq_to_csv
 from .converters import easify_names, convert_to_parq, convert_mt_pickle, parq_to_csv_all, pickle_to_csv_all
 from .resample import resample, resample_dukas_all, resample_df, resample_all, ensure_correctness
 from .arrow import read_pa, write_pa
 from .pandas_tfs import TFS
 from .calendars import us_holidays, thanksgiving, month_x
+from .vars import META_PATHS, PER_SAHRE_COM, SEC_FEE, FINRA_FEE, STORAGE_PATH, DATA_SOURCE, Owner, Fixed, Pair, LongRule, ShortRule
 
 __ALL__ = [
     'train_test_split',
@@ -64,5 +64,6 @@ __ALL__ = [
     'thanksgiving',
     'month_x',
     'detrender',
-    'exponential_smoothing'
+    'exponential_smoothing',
+    'save_plot'
   ]

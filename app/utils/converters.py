@@ -3,7 +3,8 @@ from os import remove, listdir
 
 from clint.textui import colored
 
-from .index import filenames, STORAGE_PATH, META_PATHS
+from .index import filenames
+from .vars import STORAGE_PATH, META_PATHS
 from .methods import read_csv_dask, write_parq, parq_to_csv
 from app.data import get_mt, get_pickle
 

@@ -6,7 +6,7 @@ from clint.textui import colored
 
 from .eodhist.eod import get_eod_data, get_exchanges, get_exchange_symbols, get_dividends, get_currencies, get_indexes
 from app.db import get_exchange as ge, Exchange, Market, DB
-from app.utils import STORAGE_PATH
+from app.utils.vars import STORAGE_PATH
 
 
 def exchanges():

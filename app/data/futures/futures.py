@@ -7,7 +7,7 @@ from clint.textui import colored
 from pandas import DataFrame, read_csv
 from numpy import  nan
 
-from app.utils import STORAGE_PATH
+from app.utils.vars import STORAGE_PATH
 
 
 m_codes = ['F','G','H','J','K','M','N','Q','U','V','X','Z']

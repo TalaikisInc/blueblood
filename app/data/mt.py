@@ -2,7 +2,7 @@ from os.path import join
 
 from pandas import read_csv
 
-from app.utils import META_PATHS
+from app.utils.vars import META_PATHS
 
 
 def get_all_mt():

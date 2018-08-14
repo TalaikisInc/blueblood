@@ -6,7 +6,7 @@ from pandas import read_csv, DataFrame
 from clint.textui import colored
 from numerapi import NumerAPI
 
-from app.utils import STORAGE_PATH
+from app.utils.vars import STORAGE_PATH
 
 
 def getapi():
