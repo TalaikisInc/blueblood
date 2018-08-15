@@ -180,3 +180,6 @@ def save_plot(plt, folder, name):
 
 def save_weights(df, name):
     df.to_pickle(join(STORAGE_PATH, 'portfolios', 'weights', '{}.p'.format(name)))
+
+def save_strategy(df, name):
+    df.to_pickle(join(STORAGE_PATH, 'strategies', '{}.p'.format(name)))

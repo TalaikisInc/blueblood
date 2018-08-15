@@ -379,6 +379,9 @@ def debt_equity_ratio(debt, book_value):
 def roe(net_income, book_value):
     return net_income / book_value
 
+def cagr(log_returns):
+    return exp(log(1 + returns)/len(returns)) - 1
+
 def stats_printout(returns, market):
     c = returns.cumsum()
     perf = calc_stats(returns)
