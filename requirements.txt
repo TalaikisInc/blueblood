@@ -39,3 +39,4 @@ dbx-stopwatch
 pandas_market_calendars
 psutil
 numerapi
+arch

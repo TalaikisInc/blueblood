@@ -382,6 +382,11 @@ def roe(net_income, book_value):
 def cagr(log_returns):
     return exp(log(1 + returns)/len(returns)) - 1
 
+def common_sense(returns):
+    profits = sum(where(returns > 0, returns, 0))
+    losses = sum(where(returns < 0, returns, 0))
+    return (percentile(returns, 95) * profits) / (percentile(returns, 5) * losses)
+
 def stats_printout(returns, market):
     c = returns.cumsum()
     perf = calc_stats(returns)
@@ -471,6 +476,8 @@ def stats_printout(returns, market):
     print('Monthly Sharpe: %.2f' % monthly_sharpe)
     yearly_sharpe = stats['yearly_sharpe']
     print('Yearly Sharpe: %.2f' % yearly_sharpe)
+    cs = common_sense(returns=returns)
+    print('Common Sense Ratio: %.2f' % cs)
     b = beta(returns=returns, benchmark=market)
     print('Beta %.3f' % b)
     a = alpha(returns=returns.mean(), rf=0.0, market_return=market.mean())
@@ -580,6 +587,7 @@ def stats_values(returns, market):
     mdddur = max_dd_duration(cumulative=c)
     dp = drawdown_probability(cumulative=c)
     rp = return_probability(returns=returns)
+    cs = common_sense(returns=returns)
     #mae(high, low, close, pos=0)
     #mfe(high, low, close, pos=0)
     #max_mae(cumulative, mae)
@@ -655,7 +663,8 @@ def stats_values(returns, market):
         'max_dd_duration': mdddur,
         'dd_prob': up,
         'return_prob': rp,
-        'profit_factor': pf
+        'profit_factor': pf,
+        'common_sense': cs
         }
 '''
 'start': start,
