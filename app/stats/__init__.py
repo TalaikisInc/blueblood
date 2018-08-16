@@ -59,5 +59,6 @@ __ALL__ = [
     'parkinson_vol',
     'incremental_diversification',
     'information_adjusted_corr',
-    'rolling_id_corr'
+    'rolling_id_corr',
+    'common_sense'
 ]

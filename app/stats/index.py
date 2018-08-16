@@ -1,4 +1,4 @@
-from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, sqrt, log,
+from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, sqrt, log, exp,
     power, maximum, round, where, percentile, busday_count)
 import scipy.stats as sc
 from pandas import to_datetime, DataFrame, Series

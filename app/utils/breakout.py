@@ -2,7 +2,7 @@ from numpy import where
 
 
 def breakout(df, col, op, per):
-    assert (op == 'dn') | (op == 'down'), 'Operation should be one of: \'up\', \'dn\', '
+    assert (op == 'dn') | (op == 'dn'), 'Operation should be one of: \'up\', \'dn\', '
 
     if op == 'up':
         df['mx'] = df[col].rolling(window=per, min_periods=per).max()
