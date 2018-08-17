@@ -1,5 +1,6 @@
 from os import listdir, makedirs, rename
 from os.path import isfile, join, exists
+from datetime import datetime, timedelta
 
 from numpy import log, cumsum, log2, nonzero, sum, histogram2d, sqrt, polyfit, subtract, std
 from numpy.polynomial import Polynomial
@@ -183,3 +184,10 @@ def save_weights(df, name):
 
 def save_strategy(df, name):
     df.to_pickle(join(STORAGE_PATH, 'strategies', '{}.p'.format(name)))
+
+def ensure_latest(df):
+    latest = df.tail(1).index.strftime('%Y-%m-%d').values[0]
+    yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+    today = datetime.now().strftime('%Y-%m-%d')
+    acceptable = [today, yesterday]
+    assert latest in acceptable, 'Data isn\'t latest! Expected any of %s, got %s' % (acceptable, latest)

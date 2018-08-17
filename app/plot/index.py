@@ -1,9 +1,10 @@
 from os.path import dirname, join
 from collections import Counter
+from datetime import timedelta
 
 from matplotlib import pyplot as plt
 from mpl_finance import candlestick_ohlc
-from numpy import array, sort, unique, linspace
+from numpy import array, sort, unique, linspace, nan, where
 from statsmodels.api import qqplot
 from scipy.stats import t
 from sklearn.manifold import TSNE
@@ -12,6 +13,7 @@ import seaborn as sns
 sns.set_style('darkgrid')
 sns.set_palette(sns.color_palette('RdBu', n_colors=5))
 BLUE1, = sns.color_palette('muted', 1)
+from pandas import date_range
 
 from app.stats import percentiles, drawdowns
 from app.utils.vars import STORAGE_PATH
@@ -147,4 +149,17 @@ def compare(val, title, lim=None):
     for tl in ax2.get_yticklabels():
         tl.set_color('r')
     plt.title(title)
+    return plt
+
+def hline(signal, values, per):
+    index = [i for i in signal.index]
+
+    end_idx = where(signal == 1, index, nan)
+    for e in end_idx:
+        if type(e) != float:
+            x = date_range(end=e, periods=per)
+            val = values.loc[e]
+            y = [val] * per
+            plt.plot(x, y, color='r')
+
     return plt

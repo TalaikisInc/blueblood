@@ -53,7 +53,6 @@ args = parser.parse_args()
 
 def prepare():
     with sw.timer('prepare'):
-        '''
         clean_storage()
         print(colored.yellow('Storage cleaned.'))
         collect_watchers()
@@ -68,7 +67,6 @@ def prepare():
         print(colored.yellow('Indicators geerated.'))
         generate_portfolios()
         print(colored.yellow('Portfolios geerated.'))
-        '''
         generate_strategies()
         print(colored.yellow('Strategies geerated.'))
     print(format_report(sw.get_last_aggregated_report()))
@@ -128,7 +126,7 @@ if __name__ == '__main__':
 
     if args.watch:
         prepare()
-        #run_watchdogs()
+        run_watchdogs()
 
     if args.trade:
         if args.trade == 'balance':

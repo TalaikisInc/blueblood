@@ -67,5 +67,6 @@ __ALL__ = [
     'save_plot',
     'save_weights',
     'save_strategy',
-    'breakout'
+    'breakout',
+    'ensure_latest'
   ]
