@@ -75,11 +75,12 @@ def save_one(symbol):
     data = client.get_dataframe(symbol, startDate='1980-01-01')
     if data is not None:
         to_pickle(data, 'tiingo', '{}'.format(symbol))
+        print(colored.green('Got it.'))
     else:
         print(colored.red('Nothing for this symbols.'))
 
 def run_tiingo(i=0):
-    for s in Market.select()[i+21500:]:
+    for s in Market.select()[i:]:
         try:
             data = get_data(s=s)
             if data is not None:

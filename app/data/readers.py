@@ -4,8 +4,6 @@ from numpy import isinf, isnan
 from clint.textui import colored
 from pandas import read_pickle, read_csv, to_datetime, TimeGrouper
 from fastparquet import ParquetFile
-from stopwatch import StopWatch, format_report
-sw = StopWatch()
 
 from backtrader import TimeFrame
 from app.utils import filenames
@@ -58,14 +56,12 @@ def get_parquet(name):
 
 def join_data(folder, symbols, clr=False, as_is=False):
     ''' Makes one DataFrame for many symbols. '''
-    with sw.timer('join_data'):
-        init = get_pickle(folder=folder, name=symbols[0], basic=clr, as_is=as_is)
-        for symbol in symbols[1:]:
-            data = get_pickle(folder=folder, name=symbol, basic=clr, as_is=as_is)
-            if data is not None:
-                init = init.join(data, how='left')
-        df = fill_forward(data=init)
-    print(format_report(sw.get_last_aggregated_report()))
+    init = get_pickle(folder=folder, name=symbols[0], basic=clr, as_is=as_is)
+    for symbol in symbols[1:]:
+        data = get_pickle(folder=folder, name=symbol, basic=clr, as_is=as_is)
+        if data is not None:
+            init = init.join(data, how='left')
+    df = fill_forward(data=init)
     return df
 
 def get_csv(folder, name, skip=False):

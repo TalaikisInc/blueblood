@@ -6,6 +6,7 @@ app/playground/
 app/strategies/
 app/indicators/
 app/watchdogs/
+app/portfolio/
 .pyc
 logs_file
 *.whl

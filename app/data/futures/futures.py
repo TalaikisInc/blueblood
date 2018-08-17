@@ -73,13 +73,11 @@ def build_table(dataDir):
 
 
 def download_futures():
-    '''
     for year in range(2005, 2018):
         for month in range(12):
             print('Getting data for {0}/{1}'.format(year, month + 1))
             save_data(year, month, DIR)
 
     print('Raw wata was saved to {0}'.format(DIR))
-    '''
     
     build_table(DIR)

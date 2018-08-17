@@ -3,6 +3,10 @@ from os.path import join, dirname, abspath
 
 from dotenv import load_dotenv
 load_dotenv(dotenv_path=join(dirname(abspath(__file__)), '.env'))
+from clint.textui import colored
+from stopwatch import StopWatch, format_report
+sw = StopWatch()
+
 # Db
 from app.db import migrate, create_migrations
 # Data
@@ -14,13 +18,13 @@ from app.playground import run_play
 # Models
 from app.models.alpha import create_owners
 from app.models.clusters import make_clusters
-from app.models.portfolio import generate_portfolios
+from app.portfolio import generate_portfolios
 from app.models.numerai import run_numerai_solutions
 from app.models import run_derivatives
 # Indicators
 from app.indicators import generate_indicators
 # Watchdogs
-from app.watchdogs import run_watchdogs
+from app.watchdogs import run_watchdogs, collect_watchers, clean_storage
 # Stats
 from app.stats import run_analyze
 # Testing
@@ -40,13 +44,34 @@ parser.add_argument('--resample')
 parser.add_argument('--portfolio')
 parser.add_argument('--db')
 parser.add_argument('--get')
-parser.add_argument('--risk')
 parser.add_argument('--trade')
 parser.add_argument('--gen')
 parser.add_argument('--numerai')
 parser.add_argument('--watch')
 
 args = parser.parse_args()
+
+def prepare():
+    with sw.timer('prepare'):
+        '''
+        clean_storage()
+        print(colored.yellow('Storage cleaned.'))
+        collect_watchers()
+        print(colored.yellow('Watchers collected.'))
+        cboe_download()
+        print(colored.yellow('CBOE data downloaded.'))
+        run_fred()
+        print(colored.yellow('FRED data downloaded.'))
+        run_quandl()
+        print(colored.yellow('Quandl data downloaded.'))
+        generate_indicators()
+        print(colored.yellow('Indicators geerated.'))
+        generate_portfolios()
+        print(colored.yellow('Portfolios geerated.'))
+        '''
+        generate_strategies()
+        print(colored.yellow('Strategies geerated.'))
+    print(format_report(sw.get_last_aggregated_report()))
 
 if __name__ == '__main__':
     if args.get:
@@ -60,7 +85,7 @@ if __name__ == '__main__':
             download_eurex()
 
         if args.collect == 'futures':
-            #download_futures()
+            download_futures()
             run_derivatives()
 
         if args.collect == 'fred':
@@ -94,18 +119,16 @@ if __name__ == '__main__':
             run_fxcm()
     
     if args.gen:
-        generate_portfolios()
         generate_indicators()
+        generate_portfolios()
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''
         run_play(args.play)
 
-    #if args.risk:
-        #tbc
-
     if args.watch:
-        run_watchdogs()
+        prepare()
+        #run_watchdogs()
 
     if args.trade:
         if args.trade == 'balance':
