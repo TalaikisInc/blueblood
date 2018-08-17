@@ -12,6 +12,7 @@ from tiingo.restclient import RestClientError
 
 from app.db import Market, DB, Source, News, get_exchange
 from app.data import to_pickle
+from app.utils import ensure_latest
 
 
 def c():
@@ -74,6 +75,7 @@ def save_one(symbol):
     client = c()
     data = client.get_dataframe(symbol, startDate='1980-01-01')
     if data is not None:
+        ensure_latest(df=data)
         to_pickle(data, 'tiingo', '{}'.format(symbol))
         print(colored.green('Got it.'))
     else:
