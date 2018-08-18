@@ -2,7 +2,7 @@ from os import listdir, makedirs, rename
 from os.path import isfile, join, exists
 from datetime import datetime, timedelta
 
-from numpy import log, cumsum, log2, nonzero, sum, histogram2d, sqrt, polyfit, subtract, std
+from numpy import log, cumsum, log2, nonzero, sum, histogram2d, sqrt, polyfit, subtract, std, nan, inf
 from numpy.polynomial import Polynomial
 from pandas import DataFrame, Series
 from peewee import Field
@@ -197,3 +197,6 @@ def ensure_latest(df):
 def save_indicator(df, name):
     ensure_latest(df=df)
     df.to_pickle(join(STORAGE_PATH, 'indicators', '{}.p'.format(name)))
+
+def dedup(df):
+    return df[~df.index.duplicated(keep='first')].replace([inf, -inf], nan).dropna(how='all')

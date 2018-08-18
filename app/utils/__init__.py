@@ -69,5 +69,6 @@ __ALL__ = [
     'save_strategy',
     'breakout',
     'ensure_latest',
-    'save_indicator'
+    'save_indicator',
+    'dedup'
   ]
