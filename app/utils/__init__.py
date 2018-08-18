@@ -68,5 +68,6 @@ __ALL__ = [
     'save_weights',
     'save_strategy',
     'breakout',
-    'ensure_latest'
+    'ensure_latest',
+    'save_indicator'
   ]

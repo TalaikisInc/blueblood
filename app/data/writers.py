@@ -2,7 +2,8 @@ from os.path import join
 
 from fastparquet import write
 
-from app.utils.index import STORAGE_PATH
+from app.utils.index import ensure_latest
+from app.utils.vars import STORAGE_PATH
 
 
 def write_parq(df, name):
@@ -15,4 +16,5 @@ def to_pickle(data, folder, name):
 
 def save_port(data, name):
     ''' Helper for saving portfolios.'''
+    ensure_latest(df=data)
     to_pickle(data=data, folder='portfolios', name=name)
