@@ -188,7 +188,7 @@ def save_strategy(df, name):
     df.to_pickle(join(STORAGE_PATH, 'strategies', '{}.p'.format(name)))
 
 def ensure_latest(df):
-    latest = df.tail(1).index.strftime('%Y-%m-%d').values[0]
+    latest = df.tail(1).index.strftime('%Y-%m-%d')#.values[0]
     yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
     today = datetime.now().strftime('%Y-%m-%d')
     acceptable = [today, yesterday]

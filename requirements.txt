@@ -29,7 +29,6 @@ tiingo
 statsmodels
 pyfinance
 quandl
-pyfolio
 logbook
 alpha_vantage
 patsy
