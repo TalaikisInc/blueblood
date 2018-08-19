@@ -36,9 +36,9 @@ def filenames(folder, resampled=False, mt=False):
             path = join(STORAGE_PATH, folder)
             fs = [f for f in listdir(path) if isfile(join(path, f)) & ('.gitkeep' not in f)]
             if not resampled:
-                fs = [i for i in fs if '_' not in i]
+                fs = [i for i in fs if ('_' not in i) & ('.gitkeep' not in i)]
             else:
-                fs = [i for i in fs if '_' in i]
+                fs = [i for i in fs if ('_' in i) & ('.gitkeep' not in i)]
     except:
         path = folder
         fs = [f for f in listdir(path) if isfile(join(path, f))]
