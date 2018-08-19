@@ -20,3 +20,5 @@ Owner = namedtuple('Owner', 'name email')
 Fixed = namedtuple('Fixed', 'symbol')
 LongRule = namedtuple('LongRule', 'op value')
 ShortRule = namedtuple('ShortRule', 'op value')
+
+CONSTANT_CAPITAL = 100000

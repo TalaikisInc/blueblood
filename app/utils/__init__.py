@@ -6,7 +6,8 @@ from .resample import resample, resample_dukas_all, resample_df, resample_all, e
 from .arrow import read_pa, write_pa
 from .pandas_tfs import TFS
 from .calendars import us_holidays, thanksgiving, month_x
-from .vars import META_PATHS, PER_SAHRE_COM, SEC_FEE, FINRA_FEE, STORAGE_PATH, DATA_SOURCE, Owner, Fixed, Pair, LongRule, ShortRule
+from .vars import (META_PATHS, PER_SAHRE_COM, SEC_FEE, FINRA_FEE, STORAGE_PATH, DATA_SOURCE, Owner, Fixed, Pair, LongRule,
+    ShortRule, CONSTANT_CAPITAL)
 from .breakout import breakout
 
 __ALL__ = [
@@ -70,5 +71,6 @@ __ALL__ = [
     'breakout',
     'ensure_latest',
     'save_indicator',
-    'dedup'
+    'dedup',
+    'CONSTANT_CAPITAL'
   ]

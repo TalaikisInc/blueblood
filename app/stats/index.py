@@ -4,7 +4,7 @@ import scipy.stats as sc
 from pandas import to_datetime, DataFrame, Series
 from ffn import calc_stats
 
-from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM, FINRA_FEE, SEC_FEE
+from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM, FINRA_FEE, SEC_FEE, CONSTANT_CAPITAL
 from app.db import Strategy, Stats
 
 
@@ -171,13 +171,17 @@ def trade_count(signals):
     trades += where((signals == -1) & (signals.shift() == 1), 1, 0)
     return trades.sum()
 
+def port_commissions(df, symbol):
+    com = PER_SAHRE_COM + FINRA_FEE
+    df['quantities'] = quantity(capital=CONSTANT_CAPITAL, price=df['{}_Close'.format(symbol)], alloc=1.0)
+    df['c'] = comm(q=df['quantities'], p=com) + SEC_FEE / (1000000 / CONSTANT_CAPITAL)
+    return df['c'], df['c'] / CONSTANT_CAPITAL, df['quantities']
 
 def commissions(df, symbol, com=None):
-    capital = 100000
     if com is None:
         com = PER_SAHRE_COM + FINRA_FEE
-    df['quantities'] = quantity(capital=capital, price=df['{}_Close'.format(symbol)], alloc=1.0)
-    df['c'] = comm(q=df['quantities'], p=com) + SEC_FEE / (1000000 / capital)
+    df['quantities'] = quantity(capital=CONSTANT_CAPITAL, price=df['{}_Close'.format(symbol)], alloc=1.0)
+    df['c'] = comm(q=df['quantities'], p=com) + SEC_FEE / (1000000 / CONSTANT_CAPITAL)
 
     df['com'] = where((df['sig'] == 0) & (df['sig'].shift() == 1), df['c'], 0)
     df['com'] += where((df['sig'] == 1) & (df['sig'].shift() == 0), df['c'], 0)
@@ -185,7 +189,7 @@ def commissions(df, symbol, com=None):
     df['com'] += where((df['sig'] == -1) & (df['sig'].shift() == 0), df['c'], 0)
     df['com'] += where((df['sig'] == 1) & (df['sig'].shift() == -1), df['c'], 0)
     df['com'] += where((df['sig'] == -1) & (df['sig'].shift() == 1), df['c'], 0)
-    return df['com'], (df['com'] / capital), df['quantities']
+    return df['com'], (df['com'] / CONSTANT_CAPITAL), df['quantities']
 
 def percentiles(returns):
     p_list = [p for p in range(100)]
