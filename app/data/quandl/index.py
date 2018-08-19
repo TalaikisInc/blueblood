@@ -12,6 +12,7 @@ def run_quandl():
     for s in QUANDL_SYMBOLS:
         data = get(s[0])
         name = s[0].replace('/', '_')
-        ensure_latest(df=data)
+        if s[2]:
+            ensure_latest(df=data)
         to_pickle(data, 'futures', name)
         print(colored.green(name))

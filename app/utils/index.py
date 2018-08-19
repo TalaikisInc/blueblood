@@ -190,15 +190,15 @@ def save_strategy(df, name):
 def ensure_latest(df):
     latest = df.tail(1).index.strftime('%Y-%m-%d')
     yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-    ago2 = (datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d')
+    # ago2 = (datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d')
     ago3 = (datetime.now() - timedelta(days=3)).strftime('%Y-%m-%d')
-    today = datetime.now().strftime('%Y-%m-%d')
+    # today = datetime.now().strftime('%Y-%m-%d')
     dow = datetime.today().weekday()
     if (dow == 6) | (dow == 0):
-        acceptable = [ago2, ago3]
+        acceptable = ago3
     else:
-        acceptable = [today, yesterday]
-    assert latest in acceptable, 'Data isn\'t latest! Expected any of %s, got %s' % (acceptable, latest)
+        acceptable = yesterday
+    assert latest >= acceptable, 'Data isn\'t latest! Expected any of %s, got %s' % (acceptable, latest)
 
 def save_indicator(df, name):
     ensure_latest(df=df)
@@ -206,3 +206,11 @@ def save_indicator(df, name):
 
 def dedup(df):
     return df[~df.index.duplicated(keep='first')].replace([inf, -inf], nan).dropna(how='all')
+
+def future_price(S, t, r=0.05):
+    '''
+    S = Current market price of the underlying stock/index
+    R = Risk free rate of return
+    T = Time in days
+    '''
+    return S * exp(r*t)

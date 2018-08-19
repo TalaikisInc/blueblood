@@ -72,5 +72,6 @@ __ALL__ = [
     'ensure_latest',
     'save_indicator',
     'dedup',
-    'CONSTANT_CAPITAL'
+    'CONSTANT_CAPITAL',
+    'future_price'
   ]

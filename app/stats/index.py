@@ -178,18 +178,19 @@ def port_commissions(df, symbol):
     return df['c'], df['c'] / CONSTANT_CAPITAL, df['quantities']
 
 def commissions(df, symbol, com=None):
+    d = df.copy()
     if com is None:
         com = PER_SAHRE_COM + FINRA_FEE
-    df['quantities'] = quantity(capital=CONSTANT_CAPITAL, price=df['{}_Close'.format(symbol)], alloc=1.0)
-    df['c'] = comm(q=df['quantities'], p=com) + SEC_FEE / (1000000 / CONSTANT_CAPITAL)
+    d['quantities'] = quantity(capital=CONSTANT_CAPITAL, price=df['{}_Close'.format(symbol)], alloc=1.0)
+    d['c'] = comm(q=d['quantities'], p=com) + SEC_FEE / (1000000 / CONSTANT_CAPITAL)
 
-    df['com'] = where((df['sig'] == 0) & (df['sig'].shift() == 1), df['c'], 0)
-    df['com'] += where((df['sig'] == 1) & (df['sig'].shift() == 0), df['c'], 0)
-    df['com'] += where((df['sig'] == 0) & (df['sig'].shift() == -1), df['c'], 0)
-    df['com'] += where((df['sig'] == -1) & (df['sig'].shift() == 0), df['c'], 0)
-    df['com'] += where((df['sig'] == 1) & (df['sig'].shift() == -1), df['c'], 0)
-    df['com'] += where((df['sig'] == -1) & (df['sig'].shift() == 1), df['c'], 0)
-    return df['com'], (df['com'] / CONSTANT_CAPITAL), df['quantities']
+    d['com'] = where((df['sig'] == 0) & (d['sig'].shift() == 1), d['c'], 0)
+    d['com'] += where((df['sig'] == 1) & (d['sig'].shift() == 0), d['c'], 0)
+    d['com'] += where((df['sig'] == 0) & (d['sig'].shift() == -1), d['c'], 0)
+    d['com'] += where((df['sig'] == -1) & (d['sig'].shift() == 0), d['c'], 0)
+    d['com'] += where((df['sig'] == 1) & (d['sig'].shift() == -1), d['c'], 0)
+    d['com'] += where((df['sig'] == -1) & (d['sig'].shift() == 1), d['c'], 0)
+    return d['com'], (d['com'] / CONSTANT_CAPITAL), d['quantities']
 
 def percentiles(returns):
     p_list = [p for p in range(100)]
