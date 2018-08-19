@@ -125,7 +125,7 @@ if __name__ == '__main__':
         run_play(args.play)
 
     if args.watch:
-        #prepare()
+        prepare()
         run_watchdogs()
 
     if args.trade:

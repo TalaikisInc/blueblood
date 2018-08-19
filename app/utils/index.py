@@ -188,10 +188,16 @@ def save_strategy(df, name):
     df.to_pickle(join(STORAGE_PATH, 'strategies', '{}.p'.format(name)))
 
 def ensure_latest(df):
-    latest = df.tail(1).index.strftime('%Y-%m-%d')#.values[0]
+    latest = df.tail(1).index.strftime('%Y-%m-%d')
     yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+    ago2 = (datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d')
+    ago3 = (datetime.now() - timedelta(days=3)).strftime('%Y-%m-%d')
     today = datetime.now().strftime('%Y-%m-%d')
-    acceptable = [today, yesterday]
+    dow = datetime.today().weekday()
+    if (dow == 6) | (dow == 0):
+        acceptable = [ago2, ago3]
+    else:
+        acceptable = [today, yesterday]
     assert latest in acceptable, 'Data isn\'t latest! Expected any of %s, got %s' % (acceptable, latest)
 
 def save_indicator(df, name):
