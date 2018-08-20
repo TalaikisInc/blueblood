@@ -13,11 +13,14 @@ URL = 'https://simfin.com/api/v1/'
 KEY = getenv('SIMFIN_API')
 
 def get_id(sym):
-    url = '{}info/find-id/ticker/{}?api-key={}'.format(URL, sym, KEY)
-    res = get(url)
-    json = res.json()
-    df = DataFrame(json)
-    return int(df.iloc[0]['simId'])
+    try:
+        url = '{}info/find-id/ticker/{}?api-key={}'.format(URL, sym, KEY)
+        res = get(url)
+        json = res.json()
+        df = DataFrame(json)
+        return int(df.iloc[0]['simId'])
+    except Exception as err:
+        print(colored.red(err))
 
 def all_entries():
     url = '{}info/all-entities?api-key={}'.format(URL, KEY)
@@ -49,20 +52,21 @@ def get_all_statements(sym):
     years = range(2007, datetime.now().year)
 
     id = get_id(sym=sym)
-    for stype in stypes:
-        print(stype)
-        try:
-            for year in years:
-                print(year)
-                for ptype in ptypes:
-                    print(ptype)
-                    df = get_statements(id=id, stype=stype, ptype=ptype, fyear=year)
-                    if df is not None:
-                        name = construct_name(sym=sym, stype=stype, ptype=ptype, fyear=year)
-                        to_pickle(df, 'fundamentals', name)
-                        print(colored.green('Saved %s' % name))
-        except Exception as err:
-            print(colored.red(err))
+    if id is not None:
+        for stype in stypes:
+            print(stype)
+            try:
+                for year in years:
+                    print(year)
+                    for ptype in ptypes:
+                        print(ptype)
+                        df = get_statements(id=id, stype=stype, ptype=ptype, fyear=year)
+                        if df is not None:
+                            name = construct_name(sym=sym, stype=stype, ptype=ptype, fyear=year)
+                            to_pickle(df, 'fundamentals', name)
+                            print(colored.green('Saved %s' % name))
+            except Exception as err:
+                print(colored.red(err))
 
 def process_fundamentals():
     for sym in SELECTED_FUNDAMENTALS:
