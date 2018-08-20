@@ -14,6 +14,7 @@ from .fxcm import run_fxcm
 from .numerai import download_numerai_dataset, prepare_numerai_data, write_numerai_predictions, upload_predictions
 from .futures import *
 from .eurex import download_eurex
+from .simfin import process_fundamentals
 
 __ALL__ = [
     'PandasData',
@@ -59,5 +60,6 @@ __ALL__ = [
     'cboe_download',
     'download_eurex',
     'download_futures',
-    'leave_returns'
+    'leave_returns',
+    'process_fundamentals'
 ]
