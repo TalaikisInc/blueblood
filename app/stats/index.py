@@ -15,12 +15,12 @@ def beta(returns, benchmark):
     '''
     Measure of the risk arising from exposure to general market, a.k.a. systemic risk.
     '''
-    covariance = cov(returns, benchmark)
+    covariance = cov(returns.values, benchmark.values)
     beta = covariance[0, 1] / covariance[1, 1]
     return beta
 
 def vol(returns):
-    return std(returns)
+    return returns.std()
 
 def treynor(returns, benchmark, rf):
     '''
@@ -44,7 +44,10 @@ def ir(returns, benchmark):
     measured by variability, that the manager takes relative to the benchmark.
     '''
     diff = returns - benchmark
-    return mean(diff) / vol(diff)
+    if diff > 0:
+        return diff.mean() / vol(diff)
+    else:
+        return 0
 
 def modigliani(returns, benchmark, rf):
     '''
