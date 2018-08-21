@@ -8,8 +8,9 @@ from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM, FINRA_FE
 from app.db import Strategy, Stats
 
 
-def max_dd(drawdowns):
-    return abs(drawdowns.min())
+def max_dd(returns):
+    dd = drawdowns(cumulative=returns.cumsum())
+    return abs(dd.min())
 
 def beta(returns, benchmark):
     '''
@@ -555,8 +556,7 @@ def stats_printout(returns, market):
 
     print()
     print('DD ---------------------------')
-    dd = drawdowns(cumulative=c)
-    mdd = max_dd(drawdowns=dd) * 100.0
+    mdd = max_dd(returns=returns) * 100.0
     print('Max DD %.3f%%' % mdd)
     add = average_dd(cumulative=c) * 100.0
     print('Average DD %.2f%%' % add)
@@ -614,8 +614,7 @@ def stats_values(returns, market):
     cvv = cvar(returns=returns, alpha=a)
     ev = excess_var(returns=returns, rf=0.0, alpha=a)
     cs = conditional_sharpe(returns=returns, rf=0.0, alpha=a)
-    dd = drawdowns(cumulative=c)
-    mdd = max_dd(drawdowns=dd) * 100.0
+    mdd = max_dd(returns=returns) * 100.0
     add = average_dd(cumulative=c) * 100.0
     adds = average_dd_squared(cumulative=c) * 100.0
     mdddur = max_dd_duration(cumulative=c)

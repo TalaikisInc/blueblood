@@ -60,5 +60,10 @@ __ALL__ = [
     'incremental_diversification',
     'information_adjusted_corr',
     'rolling_id_corr',
-    'common_sense'
+    'common_sense',
+    'win_loss_ratio',
+    'cpc_index',
+    'tail_ratio',
+    'outlier_win_ratio',
+    'outlier_loss_ratio'
 ]
