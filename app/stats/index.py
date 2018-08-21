@@ -1,5 +1,5 @@
 from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, sqrt, log, exp,
-    power, maximum, round, where, percentile, busday_count)
+    power, maximum, minimum, round, where, percentile, busday_count)
 import scipy.stats as sc
 from pandas import to_datetime, DataFrame, Series
 from ffn import calc_stats
@@ -15,12 +15,12 @@ def beta(returns, benchmark):
     '''
     Measure of the risk arising from exposure to general market, a.k.a. systemic risk.
     '''
-    covariance = cov(returns.values, benchmark.values)
+    covariance = cov(returns, benchmark)
     beta = covariance[0, 1] / covariance[1, 1]
     return beta
 
 def vol(returns):
-    return returns.std()
+    return std(returns)
 
 def treynor(returns, benchmark, rf):
     '''
@@ -33,7 +33,7 @@ def sharpe_ratio(returns, rf):
     Reward-to-variability ratio is a way to examine the performance by adjusting for its risk (variability in this case).
     '''
     if vol(returns) != 0:
-        return (returns.mean() * sqrt(252) - rf) / vol(returns)
+        return (mean(returns) * sqrt(252) - rf) / vol(returns)
     else:
         return 0
 
@@ -44,8 +44,9 @@ def ir(returns, benchmark):
     measured by variability, that the manager takes relative to the benchmark.
     '''
     diff = returns - benchmark
-    if diff > 0:
-        return diff.mean() / vol(diff)
+    v = vol(diff)
+    if v > 0:
+        return mean(diff) / v
     else:
         return 0
 
@@ -113,7 +114,7 @@ def sortino(returns, rf, target=0):
     It is a modification of the Sharpe ratio that penalizes only those returns falling
     below a target and required rate of return.
     '''
-    return (returns.mean() * sqrt(252) - rf) / sqrt(lpm(returns, target, 2))
+    return (mean(returns) * sqrt(252) - rf) / sqrt(lpm(returns=returns, threshold=target, order=2))
 
 def kappa_three(returns, rf, target=0):
     return (returns.mean() * sqrt(252)- rf) / power(lpm(returns=returns, threshold=target, order=3), 1/3.0)
@@ -209,7 +210,7 @@ def alpha(returns, rf, market_return):
     that asset is said to have 'positive alpha' or 'abnormal returns'.
     '''
     b = beta(returns=returns, benchmark=market_return)
-    return returns.mean() - rf - b * (market_return.mean() * rf)
+    return mean(returns) - rf - b * (mean(market_return) * rf)
 
 def average_trade(returns):
     return mean(returns)
@@ -314,7 +315,7 @@ def max_dd_duration(cumulative):
     return busday_count(s, e)
 
 def skew(returns):
-    return 3.0 * (returns.mean() - (returns.max() + returns.min()) / 2.0) / returns.std()
+    return 3.0 * (mean(returns) - (returns.max() + returns.min()) / 2.0) / vol(returns)
 
 def parkinson_vol(returns, per):
     ''' Parkinsons' volatility. '''
@@ -394,6 +395,21 @@ def common_sense(returns):
     profits = sum(where(returns > 0, returns, 0))
     losses = sum(where(returns < 0, returns, 0))
     return (percentile(returns, 95) * profits) / (percentile(returns, 5) * losses)
+
+def win_loss_ratio(returns):
+    return average_win(returns=returns) / average_loss(returns=returns)
+
+def cpc_index(returns):
+    return profit_factor(returns=returns) * win_rate(returns=returns) * win_loss_ratio(returns=returns)
+
+def tail_ratio(returns):
+    return percentile(returns, 95) / percentile(returns, 5)
+
+def outlier_win_ratio(returns):
+    return percentile(returns, 99) / average_win(returns=returns)
+
+def outlier_loss_ratio(returns):
+    return percentile(returns, 1) / average_loss(returns=returns)
 
 def stats_printout(returns, market):
     c = returns.cumsum()
@@ -515,6 +531,16 @@ def stats_printout(returns, market):
         print('Sterling Ratio* %.3f' % stra)
     br = burke_ratio(returns=returns, cumulative=c, rf=0.0)
     print('Burke Ratio* %.3f' % br)
+    wlr = win_loss_ratio(returns=returns)
+    print('Win-Loss Ratio %.2f' % wlr)
+    cpc = cpc_index(returns=returns)
+    print('CPC Index %.3f' % cpc)
+    tailr = tail_ratio(returns=returns)
+    print('Tail ratio %.3f' % tailr)
+    owr = outlier_win_ratio(returns=returns)
+    print('Outlier win ratio %.3f' % owr)
+    olr = outlier_loss_ratio(returns=returns)
+    print('Outlier loss ratio %.3f' % olr)
 
     print()
     print('VaR --------------------------')
@@ -596,6 +622,11 @@ def stats_values(returns, market):
     dp = drawdown_probability(cumulative=c)
     rp = return_probability(returns=returns)
     cs = common_sense(returns=returns)
+    wlr = win_loss_ratio(returns=returns)
+    cpc = cpc_index(returns=returns)
+    tailr = tail_ratio(returns=returns)
+    owr = outlier_win_ratio(returns=returns)
+    olr = outlier_loss_ratio(returns=returns)
     #mae(high, low, close, pos=0)
     #mfe(high, low, close, pos=0)
     #max_mae(cumulative, mae)
@@ -672,7 +703,12 @@ def stats_values(returns, market):
         'dd_prob': up,
         'return_prob': rp,
         'profit_factor': pf,
-        'common_sense': cs
+        'common_sense': cs,
+        'win_loss_ratio': wlr,
+        'cpc_index': cpc,
+        'tail_ratio': tailr,
+        'outlier_win_ratio': owr,
+        'outlier_loss_ratio': olr
         }
 '''
 'start': start,
