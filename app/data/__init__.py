@@ -15,6 +15,7 @@ from .numerai import download_numerai_dataset, prepare_numerai_data, write_numer
 from .futures import *
 from .eurex import download_eurex
 from .simfin import process_fundamentals
+from .crypto import download_all_crypto
 
 __ALL__ = [
     'PandasData',
@@ -61,5 +62,6 @@ __ALL__ = [
     'download_eurex',
     'download_futures',
     'leave_returns',
-    'process_fundamentals'
+    'process_fundamentals',
+    'download_all_crypto'
 ]

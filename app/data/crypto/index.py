@@ -1,14 +1,21 @@
-from ccxt import exchanges
+from os.path import join
+from datetime import datetime
+
+import ccxt
 from clint.textui import colored
 from peewee import IntegrityError
 from pandas import DataFrame
+from requests.exceptions import HTTPError
+from numpy import array
 
 from app.db import DB, CryptoExchange, CryptoMarket
 from app.variables import EXCHANGES
+from app.data import to_pickle, get_pickle
+from app.utils import filenames
 
 
 def put_exchanges():
-    for e in exchaanges:
+    for e in ccxt.exchaanges:
         print(e)
         try:
             if e is not None:
@@ -41,7 +48,7 @@ def put_markets():
         print(colored.green(exchange[0]))
         insert_market(exchange=exchange[1], name=exchange[0])
 
-def get_quote():
+def get_quotes():
     for exchange in EXCHANGES:
         for instrument in get_markets(exchange=exchange[0]):
             try:
@@ -91,8 +98,17 @@ def fetch_ohlc(exchange, symbol, timeframe):
     '1M': '1month',
     '1y': '1year',
     '''
-    ohlc = exchange.fetch_ohlcv(symbol, timeframe)
-    return DataFrame(ohlc)
+    if exchange.has['fetchOHLCV']:
+        ohlc = exchange.fetch_ohlcv(symbol, timeframe)
+        ohlc = array(ohlc)
+        ohlc = ohlc.transpose()
+        ohlc = {'time': ohlc[0], 'open': ohlc[1], 'high': ohlc[2], 'low': ohlc[3], 'close': ohlc[4], 'volume': ohlc[5]}
+        df = DataFrame(ohlc)
+        df['time'] = df['time'].apply(lambda x: datetime.fromtimestamp(x/1000.0))
+        df = df.set_index('time')
+        return df
+    else:
+        print(colored.red('%s doesn\'t support OHLCV' % e))
 
 def fetch_orders(exchange):
     return exchange.fetch_orders()
@@ -103,3 +119,60 @@ def fetch_order(exchange, id):
 def withdraw(exchange, sym, amnt, addr):
     withdraw = exchange.withdraw(sym, amnt, addr)
     print(withdraw)
+
+def generate_crypto_timeframes(exchange, name):
+    try:
+        tfs = exchange.timeframes.keys()
+        df = DataFrame([k for k in tfs])
+        to_pickle(df, join('ccxt', 'tfs'), name)
+        print(colored.green(name))
+    except AttributeError:
+        pass
+    except HTTPError:
+        pass
+    except Exception as err:
+        print(colored.red(err))
+
+def generate_crypto_symbols(exchange, name):
+    try:
+        syms = exchange.load_markets()
+        out = [key for key in syms]
+        df = DataFrame(out)
+        to_pickle(df, join('ccxt', 'symbols'), name)
+        print(colored.green(name))
+        for i in range(len(out)):
+            df = DataFrame(syms[out[i]])
+            to_pickle(df, join('ccxt', 'conditions'), '{}_{}'.format(name, out[i].replace('/', '_')))
+            print(colored.green(out[i]))
+    except HTTPError:
+        pass
+    except Exception as err:
+        print(colored.red(err))
+
+def get_syms(e):
+    try:
+        return [s[0] for s in get_pickle(join('ccxt', 'symbols'), e[0], as_is=True).values]
+    except FileNotFoundError:
+        pass
+
+def get_tfs(e):
+    try:
+        return [s[0] for s in get_pickle(join('ccxt', 'tfs'), e[0], as_is=True).values]
+    except FileNotFoundError:
+        pass
+
+def download_all_crypto(first=False):
+    for e in EXCHANGES:
+        if first:
+            generate_crypto_timeframes(exchange=e[1], name=e[0])
+            generate_crypto_symbols(exchange=e[1], name=e[0])
+
+        syms = get_syms(e=e)
+        tf = get_tfs(e=e)
+        
+        if (tf is not None) & (syms is not None):
+            for s in syms:
+                for t in tf:
+                    data = fetch_ohlc(exchange=e[1], symbol=s, timeframe=t)
+                    to_pickle(data, 'ccxt', '{}_{}_{}'.format(e[0], s.replace('/', '_'), t))
+                    print(colored.green('%s %s %s' % (e[0], s, t)))
