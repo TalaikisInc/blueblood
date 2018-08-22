@@ -98,17 +98,20 @@ def fetch_ohlc(exchange, symbol, timeframe):
     '1M': '1month',
     '1y': '1year',
     '''
-    if exchange.has['fetchOHLCV']:
-        ohlc = exchange.fetch_ohlcv(symbol, timeframe)
-        ohlc = array(ohlc)
-        ohlc = ohlc.transpose()
-        ohlc = {'time': ohlc[0], 'open': ohlc[1], 'high': ohlc[2], 'low': ohlc[3], 'close': ohlc[4], 'volume': ohlc[5]}
-        df = DataFrame(ohlc)
-        df['time'] = df['time'].apply(lambda x: datetime.fromtimestamp(x/1000.0))
-        df = df.set_index('time')
-        return df
-    else:
-        print(colored.red('%s doesn\'t support OHLCV' % e))
+    try:
+        if exchange.has['fetchOHLCV']:
+            ohlc = exchange.fetch_ohlcv(symbol, timeframe)
+            ohlc = array(ohlc)
+            ohlc = ohlc.transpose()
+            ohlc = {'time': ohlc[0], 'open': ohlc[1], 'high': ohlc[2], 'low': ohlc[3], 'close': ohlc[4], 'volume': ohlc[5]}
+            df = DataFrame(ohlc)
+            df['time'] = df['time'].apply(lambda x: datetime.fromtimestamp(x/1000.0))
+            df = df.set_index('time')
+            return df
+        else:
+            print(colored.red('%s doesn\'t support OHLCV' % e))
+    except Exception as err:
+        print(colored.red(err))
 
 def fetch_orders(exchange):
     return exchange.fetch_orders()
@@ -174,5 +177,6 @@ def download_all_crypto(first=False):
             for s in syms:
                 for t in tf:
                     data = fetch_ohlc(exchange=e[1], symbol=s, timeframe=t)
-                    to_pickle(data, 'ccxt', '{}_{}_{}'.format(e[0], s.replace('/', '_'), t))
-                    print(colored.green('%s %s %s' % (e[0], s, t)))
+                    if data is not None:
+                        to_pickle(data, 'ccxt', '{}_{}_{}'.format(e[0], s.replace('/', '_'), t))
+                        print(colored.green('%s %s %s' % (e[0], s, t)))

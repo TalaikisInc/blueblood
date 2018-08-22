@@ -214,3 +214,10 @@ def future_price(S, t, r=0.05):
     T = Time in days
     '''
     return S * exp(r*t)
+
+def intersection(lists):
+    out = lists[0]
+    for i in range(1, len(lists)):
+        out = list(set(lists[i]).intersection(out))
+
+    return out

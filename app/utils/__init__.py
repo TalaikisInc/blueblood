@@ -73,5 +73,6 @@ __ALL__ = [
     'save_indicator',
     'dedup',
     'CONSTANT_CAPITAL',
-    'future_price'
+    'future_price',
+    'intersection'
   ]
