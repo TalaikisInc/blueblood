@@ -34,7 +34,7 @@ def sharpe_ratio(returns, rf):
     Reward-to-variability ratio is a way to examine the performance by adjusting for its risk (variability in this case).
     '''
     if vol(returns) != 0:
-        return (mean(returns) * sqrt(252) - rf) / vol(returns)
+        return (mean(returns) - rf) / vol(returns) * sqrt(252)
     else:
         return 0
 
@@ -299,8 +299,8 @@ def month_histogram(perf):
 def returns_by_year():
     pass
 
-def rolling_sharpe():
-    pass
+def rolling_sharpe(returns, rf, per):
+    return ((returns.rolling(window=per, min_periods=per).mean() - rf) / returns.rolling(window=per, min_periods=per).std()) * sqrt(252)
 
 def capital_utilization():
     pass
@@ -317,6 +317,12 @@ def max_dd_duration(cumulative):
 
 def skew(returns):
     return 3.0 * (mean(returns) - (returns.max() + returns.min()) / 2.0) / vol(returns)
+
+def rolling_skew(returns, per):
+    return 3.0 * (returns.rolling(window=per, min_periods=per).mean() - \
+        (returns.rolling(window=per, min_periods=per).max() + \
+        returns.rolling(window=per, min_periods=per).min()) / 2.0) / \
+        returns.rolling(window=per, min_periods=per).std()
 
 def parkinson_vol(returns, per):
     ''' Parkinsons' volatility. '''

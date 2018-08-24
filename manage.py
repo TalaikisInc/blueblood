@@ -53,8 +53,8 @@ args = parser.parse_args()
 
 def prepare():
     with sw.timer('prepare'):
-        clean_storage()
-        print(colored.yellow('Storage cleaned.'))
+        #clean_storage()
+        #print(colored.yellow('Storage cleaned.'))
         collect_watchers()
         print(colored.yellow('Watchers collected.'))
         cboe_download()
@@ -123,8 +123,11 @@ if __name__ == '__main__':
             run_fxcm()
     
     if args.gen:
-        generate_indicators()
-        generate_portfolios()
+        if args.gen == 'i':
+            generate_indicators()
+
+        if args.gen == 'p':
+            generate_portfolios()
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''

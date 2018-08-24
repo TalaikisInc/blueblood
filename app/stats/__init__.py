@@ -65,5 +65,7 @@ __ALL__ = [
     'cpc_index',
     'tail_ratio',
     'outlier_win_ratio',
-    'outlier_loss_ratio'
+    'outlier_loss_ratio',
+    'rolling_skew',
+    'rolling_sharpe'
 ]
