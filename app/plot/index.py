@@ -105,12 +105,15 @@ def plot_hdbscan(X, labels,  n_clusters):
     hdb_axis.set_title('Estimated number of clusters: %d' % n_clusters)
     plt.show()
 
-def corr_heatmap(returns, save=False):
+def corr_heatmap(returns, name, save=False):
     ''' Helper for correlation heatmap.'''
     ax = heatmap(returns.corr())
+    name = name[0].upper() + name[1:].lower()
+    title = '{} Heatmap'.format(name)
+    file_title = '{}_heatmap'.format(name.lower().replace(' ', '_'))
+    plt.title(title)
     if save:
-        title = 'portfolios_heatmap'
-        path = join(STORAGE_PATH, 'images', 'portfolios', '{}.png'.format(title))
+        path = join(STORAGE_PATH, 'images', 'portfolios', '{}.png'.format(file_title))
         plt.savefig(path)
     else:
         plt.show()
