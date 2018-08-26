@@ -105,10 +105,15 @@ def plot_hdbscan(X, labels,  n_clusters):
     hdb_axis.set_title('Estimated number of clusters: %d' % n_clusters)
     plt.show()
 
-def corr_heatmap(returns):
+def corr_heatmap(returns, save=False):
     ''' Helper for correlation heatmap.'''
     ax = heatmap(returns.corr())
-    plt.show()
+    if save:
+        title = 'portfolios_heatmap'
+        path = join(STORAGE_PATH, 'images', 'portfolios', '{}.png'.format(title))
+        plt.savefig(path)
+    else:
+        plt.show()
 
 def hdns_barplot(hdbs):
     label_counts = Counter(hdbs.labels_)

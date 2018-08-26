@@ -129,6 +129,9 @@ if __name__ == '__main__':
         if args.gen == 'p':
             generate_portfolios()
 
+        if args.gen == 's':
+            generate_strategies()
+
     if args.play:
         ''' Various experimental functions to pay before deployment. '''
         run_play(args.play)
@@ -145,7 +148,6 @@ if __name__ == '__main__':
         run_analyze(args.analyze)
 
     if args.strategy:
-        generate_strategies()
         if args.strategy == 'bt':
             # run_bt_pair_strategy()
             run_bt_fx_ticks()
