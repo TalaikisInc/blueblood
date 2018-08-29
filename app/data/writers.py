@@ -16,5 +16,5 @@ def to_pickle(data, folder, name):
 
 def save_port(data, name):
     ''' Helper for saving portfolios.'''
-    #ensure_latest(df=data)
+    ensure_latest(df=data)
     to_pickle(data=data, folder='portfolios', name=name)
