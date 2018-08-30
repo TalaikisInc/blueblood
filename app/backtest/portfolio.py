@@ -1,8 +1,8 @@
 from matplotlib import pyplot as plt
 from numpy import where
 
-from app.models.alpha import alpha, pair_alpha, fixed_alpha, all_alphas, pair_alphas, fixed_alphas
-from stats import commissions
+from app.models._private.alpha import alpha, pair_alpha, fixed_alpha, all_alphas, pair_alphas, fixed_alphas
+from app.stats import commissions
 
 """
 def res(s, data):

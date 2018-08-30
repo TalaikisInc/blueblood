@@ -11,30 +11,21 @@ from clint.textui import colored
 from stopwatch import StopWatch, format_report
 sw = StopWatch()
 
-# Db
 from app.db import migrate, create_migrations
-# Data
 from app.data import (run_fred, eod_symbols, run_eod, run_tiingo, tii_symbols, tii_news, run_quandl, download_eurex,
     save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, get_crypto_balances, download_numerai_dataset,
     upload_predictions, cboe_download, download_futures, process_fundamentals, download_all_crypto)
-# Playground
 from app.playground import run_play
-# Models
-from app.models.alpha import create_owners
-from app.models.clusters import make_clusters
 from app.portfolio import generate_portfolios
-from app.models.numerai import run_numerai_solutions
+if PRIVATE:
+    from app.models._private.numerai import run_numerai_solutions
 from app.models import run_derivatives
-# Indicators
 from app.indicators import generate_indicators
-# Watchdogs
 from app.watchdogs import run_watchdogs
-# Stats
 from app.stats import run_analyze
-# Testing
 from app.backtest import basic_runs, see_portfolios, run_alpha_strategy
-from app.strategies import run_old_strategies, run_bt_fx_ticks, run_bt_pair_strategy, generate_strategies
-# Utils
+from app.strategies._private import run_old_strategies, run_bt_fx_ticks, run_bt_pair_strategy
+from app.strategies import generate_strategies
 from app.utils import (easify_names, convert_to_parq, resample_all, resample_dukas_all, convert_mt_pickle,
     parq_to_csv_all, pickle_to_csv_all, ensure_correctness, clean_storage, collect_used_data)
 if PRIVATE:
@@ -111,7 +102,6 @@ if __name__ == '__main__':
         if args.collect == 'one_time':
             #iex_symbols()
             #eod_symbols()
-            #create_owners()
             tii_symbols()
 
         if args.collect == 'iex':
@@ -200,9 +190,6 @@ if __name__ == '__main__':
             pickle_to_csv_all()
 
     if args.portfolio:
-        if args.portfolio == 'cluster':
-            make_clusters()
-
         if args.portfolio == 'examine':
             ''' Examine created portfolios (in sampel only). '''
             see_portfolios()

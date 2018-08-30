@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 from clint.textui import colored
 
 from app.data import get_pickle, transform_multi_data, join_data
-from app.models.alpha import all_alphas, alpha
+from app.models._private.alpha import all_alphas, alpha
 from app.stats import clean_prices, clean_alpha, percentiles, sharpe_ratio
 from app.utils import DATA_SOURCE
 from app.variables import BASKETS
