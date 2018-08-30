@@ -1,6 +1,7 @@
 from os.path import join
 
 from .vars import STORAGE_PATH
+from .date_utils import ensure_latest
 
 
 def save_plot(plt, folder, name):

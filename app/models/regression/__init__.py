@@ -1,6 +1,6 @@
-from .index import regression, rolling
+from .index import regression, rolling_regression
 
 __ALL__ = [
     'regression',
-    'rolling'
+    'rolling_regression'
 ]

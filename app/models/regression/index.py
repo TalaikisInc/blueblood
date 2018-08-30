@@ -13,7 +13,7 @@ def regression(x, y):
 
     return(alpha, beta)
 
-def rolling(y, data, per):
+def rolling_regression(y, data, per):
     ''' returns alpha,  beta amd p values.'''
     rolling = ols.PandasRollingOLS(y=y, x=data, window=per)
     return rolling
