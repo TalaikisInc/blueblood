@@ -1,6 +1,6 @@
 .env
 api/
-app/models/
+app/models/_private/
 app/variables/
 app/playground/_private/
 app/strategies/_implementations/*.py
