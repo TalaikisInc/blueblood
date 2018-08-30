@@ -3,7 +3,8 @@ api/
 app/models/
 app/variables/
 app/playground/
-app/strategies/
+app/strategies/_implementations/*.py
+app/strategies/_private/
 app/indicators/_implementations/*.py
 app/indicators/_private/
 app/watchdogs/_implementations/*.py
