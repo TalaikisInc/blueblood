@@ -5,7 +5,7 @@ app/variables/
 app/playground/
 app/strategies/
 app/indicators/
-app/watchdogs/
+app/watchdogs/_implementations/*.py
 app/portfolio/_implementations/*.py
 app/index/
 .pyc

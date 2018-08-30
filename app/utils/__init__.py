@@ -74,5 +74,7 @@ __ALL__ = [
     'dedup',
     'CONSTANT_CAPITAL',
     'future_price',
-    'intersection'
+    'intersection',
+    'clean_storage',
+    'collect_used_data'
   ]

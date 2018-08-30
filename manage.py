@@ -24,7 +24,7 @@ from app.models import run_derivatives
 # Indicators
 from app.indicators import generate_indicators
 # Watchdogs
-from app.watchdogs import run_watchdogs, collect_watchers, clean_storage
+from app.watchdogs import run_watchdogs
 # Stats
 from app.stats import run_analyze
 # Testing
@@ -32,7 +32,7 @@ from app.backtest import basic_runs, see_portfolios, run_alpha_strategy
 from app.strategies import run_old_strategies, run_bt_fx_ticks, run_bt_pair_strategy, generate_strategies
 # Utils
 from app.utils import (easify_names, convert_to_parq, resample_all, resample_dukas_all, convert_mt_pickle,
-    parq_to_csv_all, pickle_to_csv_all, ensure_correctness)
+    parq_to_csv_all, pickle_to_csv_all, ensure_correctness, clean_storage, collect_used_data)
 from app.index import measures_helper, genesis
 
 parser = ArgumentParser(description="BlueBlood management point.")
@@ -51,12 +51,14 @@ parser.add_argument('--numerai')
 parser.add_argument('--watch')
 
 args = parser.parse_args()
+with_cleaner = False
 
 def prepare():
     with sw.timer('prepare'):
-        #clean_storage()
-        #print(colored.yellow('Storage cleaned.'))
-        collect_watchers()
+        if with_cleaner:
+            clean_storage()
+            print(colored.yellow('Storage cleaned.'))
+        collect_used_data()
         print(colored.yellow('Watchers collected.'))
         cboe_download()
         print(colored.yellow('CBOE data downloaded.'))

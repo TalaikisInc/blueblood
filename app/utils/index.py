@@ -14,6 +14,8 @@ from matplotlib import pyplot as plt
 from statsmodels.tsa.api import Holt
 
 from .vars import STORAGE_PATH
+from app.data import save_one
+from app.variables import USED_DATA
 
 
 def peewee_to_df(table):
@@ -221,3 +223,16 @@ def intersection(lists):
         out = list(set(lists[i]).intersection(out))
 
     return out
+
+def clean_storage():
+    folders = ['portfolios', 'indicators', 'strategies']
+    for folder in folders:
+        fs = filenames(folder)
+        for f in fs:
+            remove(join(STORAGE_PATH, folder, f))
+            print(colored.green('Removed %s ' % f))
+
+def collect_used_data():
+    for s in USED_DATA:
+        print('Getting %s ' %s)
+        save_one(s)
