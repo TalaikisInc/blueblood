@@ -1,3 +1,7 @@
+WITH_CLEANER = False
+PRIVATE = True # Set for False for demo purposes
+
+
 from argparse import ArgumentParser
 from os.path import join, dirname, abspath
 
@@ -33,7 +37,9 @@ from app.strategies import run_old_strategies, run_bt_fx_ticks, run_bt_pair_stra
 # Utils
 from app.utils import (easify_names, convert_to_parq, resample_all, resample_dukas_all, convert_mt_pickle,
     parq_to_csv_all, pickle_to_csv_all, ensure_correctness, clean_storage, collect_used_data)
-from app.index import measures_helper, genesis
+if PRIVATE:
+    from app.index import measures_helper, genesis
+
 
 parser = ArgumentParser(description="BlueBlood management point.")
 parser.add_argument('--collect')
@@ -49,13 +55,11 @@ parser.add_argument('--trade')
 parser.add_argument('--gen')
 parser.add_argument('--numerai')
 parser.add_argument('--watch')
-
 args = parser.parse_args()
-with_cleaner = False
 
 def prepare():
     with sw.timer('prepare'):
-        if with_cleaner:
+        if WITH_CLEANER:
             clean_storage()
             print(colored.yellow('Storage cleaned.'))
         collect_used_data()
@@ -141,7 +145,7 @@ if __name__ == '__main__':
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''
-        run_play(args.play)
+        run_play(args.play, private=PRIVATE)
 
     if args.watch:
         prepare()
