@@ -135,14 +135,14 @@ if __name__ == '__main__':
         
         if args.gen == 'x':
             genesis()
-            #measures_helper()
+            measures_helper()
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''
         run_play(args.play)
 
     if args.watch:
-        #prepare()
+        prepare()
         run_watchdogs()
 
     if args.trade:
@@ -178,7 +178,7 @@ if __name__ == '__main__':
 
     if args.convert:
         if args.convert == 'mt_pickle':
-            ''' Converts Metatrader 4 folder csv to pickle.'''
+            ''' Converts Metatrader 4 folder csvs to pickle.'''
             convert_mt_pickle()
 
         if args.convert == 'parq_csv':
@@ -200,9 +200,6 @@ if __name__ == '__main__':
         if args.portfolio == 'examine':
             ''' Examine created portfolios (in sampel only). '''
             see_portfolios()
-
-        ''' deprecated. '''
-        #basic_runs()
 
     if args.numerai:
         download_numerai_dataset()

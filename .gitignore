@@ -6,7 +6,7 @@ app/playground/
 app/strategies/
 app/indicators/
 app/watchdogs/
-app/portfolio/
+app/portfolio/_implementations/*.py
 app/index/
 .pyc
 logs_file
