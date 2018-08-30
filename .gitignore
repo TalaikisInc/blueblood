@@ -4,7 +4,8 @@ app/models/
 app/variables/
 app/playground/
 app/strategies/
-app/indicators/
+app/indicators/_implementations/*.py
+app/indicators/_private/
 app/watchdogs/_implementations/*.py
 app/portfolio/_implementations/*.py
 app/index/
