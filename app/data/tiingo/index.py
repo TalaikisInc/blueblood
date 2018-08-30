@@ -12,7 +12,7 @@ from tiingo.restclient import RestClientError
 
 from app.db import Market, DB, Source, News, get_exchange
 from app.data import to_pickle
-from app.utils import ensure_latest
+from app.utils.date_utils import ensure_latest
 
 
 def c():

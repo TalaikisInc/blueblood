@@ -1,10 +1,9 @@
 from importlib import import_module
 from os.path import dirname, join
-from os import remove
 
 from clint.textui import colored
 
-from app.utils import filenames
+from app.utils.file_utils import filenames
 
 
 def run_watchdogs():

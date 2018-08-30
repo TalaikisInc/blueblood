@@ -5,8 +5,9 @@ from matplotlib import pyplot
 from clint.textui import colored
 from pandas import concat
 
-from app.utils import filenames
-from app.data import get_pickle, save_port
+from app.utils import save_port
+from app.utils.file_utils import filenames
+from app.data import get_pickle
 from app.stats import stats_printout
 from app.plot import drawdown, drawdown_to_percentile
 

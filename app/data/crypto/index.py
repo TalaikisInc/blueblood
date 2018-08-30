@@ -11,7 +11,7 @@ from numpy import array
 from app.db import DB, CryptoExchange, CryptoMarket
 from app.variables import EXCHANGES
 from app.data import to_pickle, get_pickle
-from app.utils import filenames
+from app.utils.file_utils import filenames
 
 
 def put_exchanges():

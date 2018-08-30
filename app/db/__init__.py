@@ -9,7 +9,7 @@ from .reddit import RedditComment, RedditCommentCount, RedditKeyword
 from .symbols import Exchange, Market, get_exchange, TypeChoices, Index
 from .alphas import AlphaOwner, Strategy, Stats, Alpha
 from .news import Source, News
-from app.utils import filenames
+from app.utils.file_utils import filenames
 
 
 def get_last():

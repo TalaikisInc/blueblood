@@ -3,7 +3,8 @@ from os.path import dirname, join
 
 from clint.textui import colored
 
-from app.utils import filenames, save_indicator
+from app.utils import save_indicator
+from app.utils.file_utils import filenames
 
 
 def generate_indicators():

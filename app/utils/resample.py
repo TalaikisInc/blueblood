@@ -4,7 +4,7 @@ from pandas import concat
 from numba import jit
 
 from .methods import write_parq, read_parq
-from .index import filenames
+from .file_utils import filenames
 from app.data import to_pickle, get_pickle
 
 

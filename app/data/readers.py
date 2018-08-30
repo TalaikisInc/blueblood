@@ -6,7 +6,6 @@ from pandas import read_pickle, read_csv, to_datetime, TimeGrouper
 from fastparquet import ParquetFile
 
 from backtrader import TimeFrame
-from app.utils import filenames
 from app.utils.vars import STORAGE_PATH
 from backtrader.feeds import GenericCSVData
 

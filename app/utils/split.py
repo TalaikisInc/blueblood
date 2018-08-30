@@ -6,7 +6,7 @@ from sklearn.utils import indexable
 from sklearn.utils.validation import _num_samples
 from numpy import arange
 
-from .index import filenames
+from .file_utils import filenames
 from .vars import STORAGE_PATH
 
 

@@ -6,7 +6,7 @@ from clint.textui import colored
 
 from app.variables import CBOE_DATA
 from app.data import to_pickle
-from app.utils import ensure_latest
+from app.utils.date_utils import ensure_latest
 
 
 def cboe_download():

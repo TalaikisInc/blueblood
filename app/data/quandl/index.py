@@ -5,7 +5,7 @@ from clint.textui import colored
 from app.data import to_pickle
 from app.variables import QUANDL_SYMBOLS
 ApiConfig.api_key = getenv('QUANDL_KEY')
-from app.utils import ensure_latest
+from app.utils.date_utils import ensure_latest
 
 
 def run_quandl():

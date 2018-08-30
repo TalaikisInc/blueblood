@@ -3,7 +3,7 @@ import datetime
 from pandas import read_html, to_datetime, DataFrame
 
 from .coinmarketcappy import total_market_cap, dominance, historical_snapshots, available_snaps
-from app.utils import filenames
+from app.utils.file_utils import filenames
 from app.data import to_pickle
 
 

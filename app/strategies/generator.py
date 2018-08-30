@@ -3,7 +3,8 @@ from os.path import dirname, join
 
 from clint.textui import colored
 
-from app.utils import filenames, save_strategy
+from app.utils import save_strategy
+from app.utils.file_utils import filenames
 from app.data import get_pickle
 
 

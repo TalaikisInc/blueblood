@@ -1,7 +1,3 @@
-from os import listdir, makedirs, rename
-from os.path import isfile, join, exists
-from datetime import datetime, timedelta
-
 from numpy import log, cumsum, log2, nonzero, sum, histogram2d, sqrt, polyfit, subtract, std, nan, inf
 from numpy.polynomial import Polynomial
 from pandas import DataFrame, Series
@@ -16,6 +12,7 @@ from statsmodels.tsa.api import Holt
 from .vars import STORAGE_PATH
 from app.data import save_one
 from app.variables import USED_DATA
+from .date_utils import ensure_latest
 
 
 def peewee_to_df(table):
@@ -29,22 +26,6 @@ def peewee_to_df(table):
 
 def periodize_returns(r, p=252):
     return r * sqrt(p)
-
-def filenames(folder, resampled=False, mt=False):
-    try:
-        if mt:
-            fs = [f for f in listdir(folder) if isfile(join(folder, f)) if 'DATA_MODEL' in f]
-        else:
-            path = join(STORAGE_PATH, folder)
-            fs = [f for f in listdir(path) if isfile(join(path, f)) & ('.gitkeep' not in f)]
-            if not resampled:
-                fs = [i for i in fs if ('_' not in i) & ('.gitkeep' not in i)]
-            else:
-                fs = [i for i in fs if ('_' in i) & ('.gitkeep' not in i)]
-    except:
-        path = folder
-        fs = [f for f in listdir(path) if isfile(join(path, f))]
-    return fs
 
 def log_returns(x):
     return log(x)
@@ -103,13 +84,6 @@ def compound_interest(principal, rate, years):
         principal *= rate
     return round(principal, 2)
 
-def hurst(ts):
-    ''' Returns the Hurst Exponent. '''
-    lags = range(2, 20)
-    tau = [sqrt(std(subtract(ts[lag:], ts[:-lag]))) for lag in lags]
-    poly = polyfit(log(lags), log(tau), 1)
-    return poly[0] * 2.0
-
 def poly(x, y, plot=False):
     p = Polynomial.fit(y, x, 3)
     if plot:
@@ -121,14 +95,6 @@ def poly(x, y, plot=False):
 def rank(array):
     s = Series(array)
     return s.rank(ascending=False)[len(s)-1]
-
-def makedir(f):
-    path = join(STORAGE_PATH, f)
-    if not exists(path):
-        makedirs(path)
-
-def if_exists(folder, name):
-    return exists(join(STORAGE_PATH, folder, '{}.p'.format(name)))
 
 def common(lst):
     return set.intersection(*map(set, [i for i in lst]))
@@ -178,34 +144,6 @@ def holt(df, chunk=100, smoothing=0.03, slope=0.1):
             plt.plot(test.index, forecast, lw=3, color='r')
     plt.show()
 
-def save_plot(plt, folder, name):
-    plt.savefig(join(STORAGE_PATH, 'images', folder, '{}.png'.format(name)))
-    plt.close()
-
-def save_weights(df, name):
-    df.to_pickle(join(STORAGE_PATH, 'portfolios', 'weights', '{}.p'.format(name)))
-
-def save_strategy(df, name):
-    #ensure_latest(df=df)
-    df.to_pickle(join(STORAGE_PATH, 'strategies', '{}.p'.format(name)))
-
-def ensure_latest(df):
-    latest = df.tail(1).index.strftime('%Y-%m-%d')
-    yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-    ago2 = (datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d')
-    ago3 = (datetime.now() - timedelta(days=3)).strftime('%Y-%m-%d')
-    today = datetime.now().strftime('%Y-%m-%d')
-    dow = datetime.today().weekday()
-    if (dow == 6) | (dow == 0):
-        acceptable = [ago3, ago2]
-    else:
-        acceptable = [ago2, yesterday, today]
-    assert latest in acceptable, 'Data isn\'t latest! Expected any of %s, got %s' % (acceptable, latest)
-
-def save_indicator(df, name):
-    #ensure_latest(df=df)
-    df.to_pickle(join(STORAGE_PATH, 'indicators', '{}.p'.format(name)))
-
 def dedup(df):
     return df[~df.index.duplicated(keep='first')].replace([inf, -inf], nan).dropna(how='all')
 
@@ -223,14 +161,6 @@ def intersection(lists):
         out = list(set(lists[i]).intersection(out))
 
     return out
-
-def clean_storage():
-    folders = ['portfolios', 'indicators', 'strategies']
-    for folder in folders:
-        fs = filenames(folder)
-        for f in fs:
-            remove(join(STORAGE_PATH, folder, f))
-            print(colored.green('Removed %s ' % f))
 
 def collect_used_data():
     for s in USED_DATA:
