@@ -565,13 +565,14 @@ def win_weeks_percent(returns):
 def yearly_mean(returns):
     return returns.resample('1Y').sum().mean() * 100.0
 
-def stats_printout(returns):
-    market = get_pickle('tiingo', 'SPY')['SPY_AdjClose'].pct_change()
-    df = concat([returns, market], axis=1)
-    df.columns = ['returns', 'market']
-    df = df.dropna()
-    returns = df['returns']
-    market = df['market']
+def stats_printout(returns, tf=1440):
+    if tf == 1440:
+        market = get_pickle('tiingo', 'SPY')['SPY_AdjClose'].pct_change()
+        df = concat([returns, market], axis=1)
+        df.columns = ['returns', 'market']
+        df = df.dropna()
+        returns = df['returns']
+        market = df['market']
     c = returns.cumsum()
 
     print('Basics -----------------------')
@@ -668,16 +669,17 @@ def stats_printout(returns):
     print('yearly Sharpe: %.2f' % yearlysharpe)
     cs = common_sense(returns=returns)
     print('Common Sense Ratio: %.2f' % cs)
-    b = beta(returns=returns, benchmark=market)
-    print('Beta %.3f' % b)
-    a = alpha(returns=returns, rf=0.0, market_return=market)
-    print('Alpha %.3f' % a)
-    tr = treynor(returns=returns, benchmark=market, rf=0.0)
-    print('Treynor* %.3f' % tr)
-    infr = ir(returns=returns, benchmark=market)
-    print('Information ratio %.3f' % infr)
-    mod = modigliani(returns=returns, benchmark=market, rf=0.0)
-    print('Modigliani ratio* %.3f' % mod)
+    if tf == 1440:
+        b = beta(returns=returns, benchmark=market)
+        print('Beta %.3f' % b)
+        a = alpha(returns=returns, rf=0.0, market_return=market)
+        print('Alpha %.3f' % a)
+        tr = treynor(returns=returns, benchmark=market, rf=0.0)
+        print('Treynor* %.3f' % tr)
+        infr = ir(returns=returns, benchmark=market)
+        print('Information ratio %.3f' % infr)
+        mod = modigliani(returns=returns, benchmark=market, rf=0.0)
+        print('Modigliani ratio* %.3f' % mod)
     ora = omega_ratio(returns=returns, rf=0.0, target=0.0)
     print('Omega Ratio* %.3f' % ora)
     so = sortino(returns=returns, rf=0.0, target=0)
@@ -708,16 +710,17 @@ def stats_printout(returns):
     olr = outlier_loss_ratio(returns=returns)
     print('Outlier loss ratio %.3f' % olr)
 
-    print()
-    print('VaR --------------------------')
-    v = var(returns=returns, alpha=a)
-    print('VaR %.3f' % v)
-    cvv = cvar(returns=returns, alpha=a)
-    print('Conditional VaR %.3f' % cvv)
-    ev = excess_var(returns=returns, rf=0.0, alpha=a)
-    print('Excess VaR* %.3f' % ev)
-    cs = conditional_sharpe(returns=returns, rf=0.0, alpha=a)
-    print('Conditional Sharpe* %.3f' % (cs * sqrt(252)))
+    if tf == 1440:
+        print()
+        print('VaR --------------------------')
+        v = var(returns=returns, alpha=a)
+        print('VaR %.3f' % v)
+        cvv = cvar(returns=returns, alpha=a)
+        print('Conditional VaR %.3f' % cvv)
+        ev = excess_var(returns=returns, rf=0.0, alpha=a)
+        print('Excess VaR* %.3f' % ev)
+        cs = conditional_sharpe(returns=returns, rf=0.0, alpha=a)
+        print('Conditional Sharpe* %.3f' % (cs * sqrt(252)))
 
     print()
     print('DD ---------------------------')

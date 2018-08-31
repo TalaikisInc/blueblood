@@ -37,13 +37,15 @@ def convert_mt_one(sym):
         try:
             f = join(META_PATHS[0], 'DATA_MODEL_Ava Trade EU Ltd._{}_{}.csv'.format(sym, p))
             data = get_mt(f, which=0)
-            dest_path = join(STORAGE_PATH, 'mt', '{}'.format(0), '{}_{}.p'.format(sym, p))
+            data.rename(columns={'OPEN': 'Open', 'HIGH': 'High', 'LOW': 'Low', 'CLOSE': 'Close', 'VOLUME': 'Volume'}, inplace=True)
+            dest_path = join(STORAGE_PATH, 'mt', '0', '{}_{}.p'.format(sym, p))
+            data.to_pickle(dest_path)
             print(colored.green('Converted for {} {}'.format(sym, p)))
         except Exception as err:
             print(colored.red(err))
 
 def convert_mt_pickle():
-    ''' Converts MT4 exported CSV to lcoal format. '''
+    ''' Converts MT4 exported CSV to local format. '''
     i = 0
     for m in META_PATHS:
         fs = filenames(m, mt=True)
