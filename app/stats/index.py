@@ -181,7 +181,7 @@ def burke_ratio(returns, cumulative, rf):
     return (returns.mean() * sqrt(252) - rf) / sqrt(average_dd_squared(cumulative))
 
 def average_month_return(returns):
-    return sum(returns) / len(returns) * 30.416
+    return returns.resample('1M').sum().mean() * 100.0
 
 def trade_count(signals):
     trades = where((signals == 0) & (signals.shift() == 1), 1, 0)
@@ -435,22 +435,22 @@ def get_end(returns):
     return returns.tail(1).index.strftime('%Y-%m-%d').values[0]
 
 def total_return(returns):
-    return returns.cumsum().tail(1).values[0] * 100.0
+    return returns.sum().values[0] * 100.0
 
 def ytd(returns):
     this_y = datetime.now().year
     returns = returns.loc['{}-01-01'.format(this_y):]
-    return returns.cumsum().tail(1).values[0] * 100.0
+    return returns.sum().values[0] * 100.0
 
 def mtd(returns):
     this_m = datetime.now().month
     this_y = datetime.now().year
     returns = returns.loc['{}-{}-01'.format(this_y, this_m):]
-    return returns.cumsum().tail(1).values[0] * 100.0
+    return returns.sum().values[0] * 100.0
 
 def mos(returns, m):
     returns = returns.iloc[-(m*21):-1]
-    return returns.cumsum().tail(1).values[0] * 100.0
+    return returns.sum().values[0] * 100.0
 
 def best_day(returns):
     return returns.max() * 100.00
@@ -639,7 +639,7 @@ def stats_printout(returns, tf=1440):
     print('Win weeks: %.2f%%' % win_w_perc)
     vv = vol(returns=returns)
     print('Volatility %.3f%%' % (vv * 100.0))
-    amr = average_month_return(returns=returns) * 100.0
+    amr = average_month_return(returns=returns)
     print('Average month return %.3f%%' % amr)
     pf = profit_factor(returns=returns)
     print('Profit factor %.2f' % pf)
@@ -749,7 +749,7 @@ def stats_values(returns):
     c = returns.cumsum()
 
     vv = vol(returns=returns) * 100.0
-    amr = average_month_return(returns=returns) * 100.0
+    amr = average_month_return(returns=returns)
     # trade_count(signals)
     at = average_trade(returns=returns) * 100.0
     aw = average_win(returns=returns) * 100.0
