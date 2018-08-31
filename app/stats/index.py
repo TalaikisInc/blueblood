@@ -1,10 +1,13 @@
+from datetime import datetime, timedelta
+
 from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, sqrt, log, exp,
-    power, maximum, minimum, round, where, percentile, busday_count)
+    power, maximum, minimum, round, where, percentile, busday_count, unique)
 import scipy.stats as sc
 from pandas import to_datetime, DataFrame, Series
-from ffn import calc_stats
+from matplotlib import pyplot as plt
+from seaborn import barplot
 
-from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM, FINRA_FEE, SEC_FEE, CONSTANT_CAPITAL
+from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM, FINRA_FEE, SEC_FEE, CONSTANT_CAPITAL, save_plot
 from app.db import Strategy, Stats
 
 
@@ -395,8 +398,15 @@ def debt_equity_ratio(debt, book_value):
 def roe(net_income, book_value):
     return net_income / book_value
 
-def cagr(log_returns):
-    return exp(log(1 + returns)/len(returns)) - 1
+def get_years_count(returns):
+    return len(unique(returns.index.year))
+
+def cagr(returns):
+    starting_cap = 100000.0
+    c = (1 + returns.cumsum()) * starting_cap
+    a = c.tail(1).values[0] / c.head(1).values[0]
+    years = 1.0 / get_years_count(returns=returns)
+    return (power(a, years) - 1) * 100.0
 
 def common_sense(returns):
     profits = sum(where(returns > 0, returns, 0))
@@ -418,73 +428,177 @@ def outlier_win_ratio(returns):
 def outlier_loss_ratio(returns):
     return percentile(returns, 1) / average_loss(returns=returns)
 
-def stats_printout(returns, market):
-    c = returns.cumsum()
-    perf = calc_stats(returns)
-    stats = perf.stats
+def get_start(returns):
+    return returns.head(1).index.strftime('%Y-%m-%d').values[0]
 
+def get_end(returns):
+    return returns.tail(1).index.strftime('%Y-%m-%d').values[0]
+
+def total_return(returns):
+    return returns.cumsum().tail(1).values[0] * 100.0
+
+def ytd(returns):
+    this_y = datetime.now().year
+    returns = returns.loc['{}-01-01'.format(this_y):]
+    return returns.cumsum().tail(1).values[0] * 100.0
+
+def mtd(returns):
+    this_m = datetime.now().month
+    this_y = datetime.now().year
+    returns = returns.loc['{}-{}-01'.format(this_y, this_m):]
+    return returns.cumsum().tail(1).values[0] * 100.0
+
+def mos(returns, m):
+    returns = returns.iloc[-(m*21):-1]
+    return returns.cumsum().tail(1).values[0] * 100.0
+
+def best_day(returns):
+    return returns.max() * 100.00
+
+def worst_day(returns):
+    return returns.min() * 100.00
+
+def best_month(returns):
+    return returns.resample('1M').sum().max() * 100.00
+
+def worst_month(returns):
+    return returns.resample('1M').sum().min() * 100.00
+
+def daily_skew(returns):
+    return returns.skew()
+
+def daily_kurtosis(returns):
+    return returns.kurtosis()
+
+def monthly_vol(returns):
+    return returns.resample('1M').sum().std()
+
+def monthly_skew(returns):
+    return returns.resample('1M').sum().skew()
+
+def monthly_kurtosis(returns):
+    return returns.resample('1M').sum().kurtosis()
+
+def worst_year(returns):
+    return returns.resample('1Y').sum().min() * 100.0
+
+def returns_by_year(returns):
+    return returns.resample('1Y').sum() * 100.0
+
+def returns_by_month(returns):
+    return returns.resample('1M').sum() * 100.0
+
+def returns_by_week(returns):
+    return returns.resample('1W').sum() * 100.0
+
+def returns_by_day(returns):
+    return returns * 100.0
+
+def save_returns(df, title):
+    plt.bar(df.index.values, df.values, color='g')
+    plt.axhline(0.0)
+    plt.ylabel('%')
+    plt.title('{} Returns'.format(title))
+    save_plot(plt=plt, folder='index', name='{}_returns'.format(title.lower()))
+
+def plot_returns(returns):
+    d = returns_by_day(returns=returns)
+    w = returns_by_week(returns=returns)
+    m = returns_by_month(returns=returns)
+    y = returns_by_year(returns=returns)
+    save_returns(df=d, title='Daily')
+    save_returns(df=w, title='Weekly')
+    save_returns(df=m, title='Minthly')
+    save_returns(df=y, title='Yearly')
+
+def best_year(returns):
+    return returns.resample('1Y').sum().max() * 100.0
+
+def yearly_skew(returns):
+    return returns.resample('1Y').sum().skew()
+
+def yearly_kurtosis(returns):
+    return returns.resample('1Y').sum().kurtosis()
+
+def yearly_vol(returns):
+    return returns.resample('1Y').sum().std()
+
+def yearly_mean(returns):
+    return returns.resample('1Y').sum().mean()
+
+def stats_printout(returns, market):
+    plot_returns(returns=returns)
+    c = returns.cumsum()
     print('Basics -----------------------')
-    start = stats['start']
+    start = get_start(returns=returns)
     print('Start: %s' % start)
-    end = stats['end']
+    end = get_end(returns=returns)
     print('End: %s' % end)
-    total_return = stats['total_return']
-    print('Tital return: %.2f' % total_return)
-    cagr = stats['cagr']
-    print('CAGR: %.2f' % cagr)
-    mtd = stats['mtd']
-    print('Month to date: %.2f' % mtd)
-    three_month = stats['three_month']
-    print('3 months: %.2f' % three_month)
-    six_month = stats['six_month']
-    print('6 months: %.2f' % six_month)
-    ytd = stats['ytd']
-    print('YTD: %.2f' % ytd)
-    three_year = stats['three_year']
-    print('3 years: %.2f' % three_year)
-    daily_skew = stats['daily_skew']
-    print('Daily skew: %.2f' % daily_skew)
-    daily_kurt = stats['daily_kurt']
+    ys = get_years_count(returns=returns)
+    print('years: %.0f' % ys)
+    tr = total_return(returns=returns)
+    print('Total return: %.2f%%' % tr)
+    # @TODO initial valeus should be already reinvested
+    cgr = cagr(returns=returns)
+    print('CAGR: %.2f%%' % cgr)
+    _ytd = ytd(returns=returns)
+    print('YTD: %.2f%%' % _ytd)
+    _mtd = mtd(returns=returns)
+    print('Month to date: %.2f%%' % _mtd)
+    three_month = mos(returns=returns, m=3)
+    print('3 months: %.2f%%' % three_month)
+    six_month = mos(returns=returns, m=6)
+    print('6 months: %.2f%%' % six_month)
+    three_year = mos(returns=returns, m=36)
+    print('3 years: %.2f%%' % three_year)
+    dailyskew = daily_skew(returns=returns)
+    print('Daily skew: %.2f' % dailyskew)
+    daily_kurt = daily_kurtosis(returns=returns)
     print('Daily kurtosis: %.2f' % daily_kurt)
-    best_day = stats['best_day']
-    print('Best day: %.2f' % best_day)
-    worst_day = stats['worst_day']
-    print('Worst day: %.2f' % worst_day)
-    monthly_vol = stats['monthly_vol']
-    print('Monthly volatility: %.2f' % monthly_vol)
-    monthly_skew = stats['monthly_skew']
-    print('Monthly skew: %.2f' % monthly_skew)
-    monthly_kurt = stats['monthly_kurt']
-    print('Monthly kurtosis: %.2f' % monthly_kurt)
-    best_month = stats['best_month']
-    print('Best month: %.2f' % best_month)
-    avg_down_month = stats['avg_down_month']
-    print('Average down month %s' % avg_down_month)
-    worst_month = stats['worst_month']
-    print('Worst month: %.2f' % worst_month)
-    worst_year = stats['worst_year']
-    print('Worst year: %.2f' % worst_year)
-    yearly_mean = stats['yearly_mean']
-    print('Yearly average: %.2f' % yearly_mean)
-    yearly_vol = stats['yearly_vol']
-    print('Yearly volatility: %.2f' % yearly_vol)
-    yearly_skew = stats['yearly_skew']
-    print('Yearly skew: %.2f' % yearly_skew)
-    yearly_kurt = stats['yearly_kurt']
+    bestday = best_day(returns)
+    print('Best day: %.2f%%' % bestday)
+    worstday = worst_day(returns)
+    print('Worst day: %.2f%%' % worstday)
+    monthlyvol = monthly_vol(returns=returns)
+    print('Monthly volatility: %.2f' % monthlyvol)
+    monthlyskew = monthly_skew(returns=returns)
+    print('Monthly skew: %.2f' % monthlyskew)
+    monthlykurt = monthly_skew(returns=returns)
+    print('Monthly kurtosis: %.2f' % monthlykurt)
+    bestmonth = best_month(returns=returns)
+    print('Best month: %.2f%%' % bestmonth)
+    worstmonth = worst_month(returns=returns)
+    print('Worst month: %.2f%%' % worstmonth)
+    bestyear = best_year(returns=returns)
+    print('Best year: %.2f%%' % bestyear)
+    worstyear = worst_year(returns=returns)
+    print('Worst year: %.2f%%' % worstyear)
+    yearlymean = yearly_mean(returns=returns)
+    print('Yearly average: %.2f%%' % yearlymean)
+    yearlyvol = yearly_vol(returns=returns)
+    print('Yearly volatility: %.2f' % yearlyvol)
+    yearlyskew = yearly_skew(returns=returns)
+    print('Yearly skew: %.2f' % yearlyskew)
+    yearly_kurt = yearly_kurtosis(returns=returns)
     print('Yearly kurtosis: %.2f' % yearly_kurt)
+
+    '''
+    avg_down_month = stats['avg_down_month']
+    print('Average down month %.2f%%' % avg_down_month)
     avg_up_month = stats['avg_up_month']
     print('Average up month: %.2f' % avg_up_month)
     win_year_perc = stats['win_year_perc']
     print('Win years: %.2f' % win_year_perc)
     twelve_month_win_perc = stats['twelve_month_win_perc']
     print('12-mo win: %.2f' % twelve_month_win_perc)
+    '''
     vv = vol(returns=returns)
     print('Volatility %.3f%%' % (vv * 100.0))
     amr = average_month_return(returns=returns) * 100.0
     print('Average month return %.3f%%' % amr)
     # trade_count(signals)
     pf = profit_factor(returns=returns)
-    print('Profit factor %.2f%%' % pt)
+    print('Profit factor %.2f' % pf)
     at = average_trade(returns=returns) * 100.0
     print('Average trade %.2f%%' % at)
     aw = average_win(returns=returns) * 100.0
@@ -503,15 +617,17 @@ def stats_printout(returns, market):
     print()
     print('Ratios -----------------------')
     print('Sharpe* %.3f' % (sharpe_ratio(returns, rf=0.0)))
+    '''
     monthly_sharpe = stats['monthly_sharpe']
     print('Monthly Sharpe: %.2f' % monthly_sharpe)
     yearly_sharpe = stats['yearly_sharpe']
     print('Yearly Sharpe: %.2f' % yearly_sharpe)
+    '''
     cs = common_sense(returns=returns)
     print('Common Sense Ratio: %.2f' % cs)
     b = beta(returns=returns, benchmark=market)
     print('Beta %.3f' % b)
-    a = alpha(returns=returns.mean(), rf=0.0, market_return=market.mean())
+    a = alpha(returns=returns, rf=0.0, market_return=market)
     print('Alpha %.3f' % a)
     tr = treynor(returns=returns, benchmark=market, rf=0.0)
     print('Treynor* %.3f' % tr)
@@ -574,8 +690,10 @@ def stats_printout(returns, market):
     print('Drawdown probability %.3f' % dp)
     rp = return_probability(returns=returns)
     print('Return probability %.3f' % rp)
+    '''
     avg_drawdown_days = stats['avg_drawdown_days']
-    print('Average DD duration %s' % avg_drawdown_days)
+    print('Average DD duration %.0f' % avg_drawdown_days)
+    '''
     #mae(high, low, close, pos=0)
     #mfe(high, low, close, pos=0)
     #max_mae(cumulative, mae)
@@ -603,7 +721,7 @@ def stats_values(returns, market):
     acor = correlation(returns=returns)
     sr = sharpe_ratio(returns, rf=0.0) * sqrt(252)
     b = beta(returns=returns, benchmark=market)
-    a = alpha(returns=returns.mean(), rf=0.0, market_return=market.mean())
+    a = alpha(returns=returns, rf=0.0, market_return=market)
     tr = treynor(returns=returns, benchmark=market, rf=0.0)
     infr = ir(returns=returns, benchmark=market)
     mod = modigliani(returns=returns, benchmark=market, rf=0.0)

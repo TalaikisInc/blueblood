@@ -50,7 +50,6 @@ args = parser.parse_args()
 
 def prepare():
     with sw.timer('prepare'):
-        '''
         if WITH_CLEANER:
             clean_storage()
             print(colored.yellow('Storage cleaned.'))
@@ -64,7 +63,6 @@ def prepare():
         print(colored.yellow('Quandl data downloaded.'))
         generate_indicators()
         print(colored.yellow('Indicators geerated.'))
-        '''
         generate_portfolios()
         print(colored.yellow('Portfolios geerated.'))
         generate_strategies()
