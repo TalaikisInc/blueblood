@@ -4,9 +4,10 @@ from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, 
     power, maximum, minimum, round, where, percentile, busday_count, unique)
 import scipy.stats as sc
 from pandas import to_datetime, DataFrame, Series
-from matplotlib import pyplot as plt
-from seaborn import barplot
+from matplotlib import pyplot as plt, figure
+from seaborn import despine
 
+from app.data import get_pickle
 from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM, FINRA_FEE, SEC_FEE, CONSTANT_CAPITAL, save_plot
 from app.db import Strategy, Stats
 
@@ -494,11 +495,13 @@ def returns_by_week(returns):
 def returns_by_day(returns):
     return returns * 100.0
 
-def save_returns(df, title):
-    plt.bar(df.index.values, df.values, color='g')
-    plt.axhline(0.0)
+def save_returns(df, title, bottom_adj=0.25, txt_ymin=-0.4):
+    ax = df.plot.bar(title=title, figsize=(10,8))
+    despine()
     plt.ylabel('%')
-    plt.title('{} Returns'.format(title))
+    plt.tight_layout()
+    #plt.text(0, txt_ymin, asset_info='Returns', transform=ax.transAxes, fontsize=9)
+    plt.gcf().subplots_adjust(bottom=bottom_adj)
     save_plot(plt=plt, folder='index', name='{}_returns'.format(title.lower()))
 
 def plot_returns(returns):
@@ -508,7 +511,7 @@ def plot_returns(returns):
     y = returns_by_year(returns=returns)
     save_returns(df=d, title='Daily')
     save_returns(df=w, title='Weekly')
-    save_returns(df=m, title='Minthly')
+    save_returns(df=m, title='Monthly')
     save_returns(df=y, title='Yearly')
 
 def best_year(returns):
@@ -526,9 +529,17 @@ def yearly_vol(returns):
 def yearly_mean(returns):
     return returns.resample('1Y').sum().mean()
 
-def stats_printout(returns, market):
-    plot_returns(returns=returns)
+def stats_printout(returns):
+    # plot_returns(returns=returns)
+
+    market = get_pickle('tiingo', 'SPY')['SPY_AdjClose'].pct_change()
+    df = concat([returns, market], axis=1)
+    df.columns = ['returns', 'market']
+    df = df.dropna()
+    returns = df['returns']
+    market = df['market']
     c = returns.cumsum()
+
     print('Basics -----------------------')
     start = get_start(returns=returns)
     print('Start: %s' % start)
@@ -703,10 +714,14 @@ def stats_printout(returns, market):
 
     print('* Values are annualized.')
 
-def stats_values(returns, market):
+def stats_values(returns):
+    market = get_pickle('tiingo', 'SPY')['SPY_AdjClose'].pct_change()
+    df = concat([returns, market], axis=1)
+    df.columns = ['returns', 'market']
+    df = df.dropna()
+    returns = df['returns']
+    market = df['market']
     c = returns.cumsum()
-    #perf = calc_stats(returns)
-    #stats = perf.stats
 
     vv = vol(returns=returns) * 100.0
     amr = average_month_return(returns=returns) * 100.0
