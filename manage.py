@@ -27,7 +27,7 @@ from app.backtest import basic_runs, see_portfolios, run_alpha_strategy
 from app.strategies._private import run_old_strategies, run_bt_fx_ticks, run_bt_pair_strategy
 from app.strategies import generate_strategies
 from app.utils import (easify_names, convert_to_parq, resample_all, resample_dukas_all, convert_mt_pickle,
-    parq_to_csv_all, pickle_to_csv_all, ensure_correctness, clean_storage, collect_used_data)
+    parq_to_csv_all, pickle_to_csv_all, ensure_correctness, clean_storage, collect_used_data, convert_mt_one)
 if PRIVATE:
     from app.index import measures_helper, genesis
 
@@ -46,6 +46,7 @@ parser.add_argument('--trade')
 parser.add_argument('--gen')
 parser.add_argument('--numerai')
 parser.add_argument('--watch')
+parser.add_argument('--mt_pickle')
 args = parser.parse_args()
 
 def prepare():
@@ -171,6 +172,10 @@ if __name__ == '__main__':
         if args.resample == 'tiingo':
             resample_all()
             ensure_correctness()
+
+    if args.mt_pickle:
+        '''Converts one MT4 symbol to pickle.'''
+        convert_mt_one(args.mt_pickle)
 
     if args.convert:
         if args.convert == 'mt_pickle':

@@ -31,6 +31,17 @@ def convert_to_parq(folder='dukas'):
         remove(join(STORAGE_PATH, folder, f))
         print(colored.green(name))
 
+def convert_mt_one(sym):
+    periods = [5, 15, 30, 60, 240, 1440, 10080, 43200]
+    for p in periods:
+        try:
+            f = join(META_PATHS[0], 'DATA_MODEL_Ava Trade EU Ltd._{}_{}.csv'.format(sym, p))
+            data = get_mt(f, which=0)
+            dest_path = join(STORAGE_PATH, 'mt', '{}'.format(0), '{}_{}.p'.format(sym, p))
+            print(colored.green('Converted for {} {}'.format(sym, p)))
+        except Exception as err:
+            print(colored.red(err))
+
 def convert_mt_pickle():
     ''' Converts MT4 exported CSV to lcoal format. '''
     i = 0
