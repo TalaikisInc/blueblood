@@ -2,6 +2,7 @@ from os.path import join
 
 from pandas import DataFrame, read_csv
 from numpy import array, nonzero, zeros
+from clint.textui import colored
 
 from app.utils import STORAGE_PATH
 from app.data import to_pickle
@@ -32,7 +33,7 @@ class Future(object):
 
 def returns(df):
     ''' daily return '''
-    return (df / df.shift(1) - 1)
+    return (df / df.shift() - 1)
 
 
 def recounstruct_vxx():
@@ -51,7 +52,7 @@ def recounstruct_vxx():
 
     for code in codes:
         f = Future(X[code], code=code)
-        #print(code,':', f.settleDate)
+        print(code,':', f.settleDate)
         endDates.append(f.settleDate)
         futures.append(f)
 
@@ -60,11 +61,10 @@ def recounstruct_vxx():
     # set roll period of each future
     for i in range(1, len(futures)):
         try:
-            print(i)
             futures[i].dt = futures[i].dr(futures[i-1].settleDate)
-        except:
+        except Exception as err:
             pass
-
+            #print(colored.red(err))
 
     # Y is the result table
     idx = X.index
@@ -84,8 +84,8 @@ def recounstruct_vxx():
             dr = first.dr(date) # number of remaining dates in the first futures contract
             dt = first.dt #number of business days in roll period
             
-            W.set_value(date,codes[i],100*dr/dt)
-            W.set_value(date,codes[i+1],100*(dt-dr)/dt)
+            W.set_value(date, codes[i], 100*dr/dt)
+            W.set_value(date, codes[i+1], 100*(dt-dr)/dt)
         
             # this is all just debug info
             p1 = first.price(date)
@@ -98,17 +98,15 @@ def recounstruct_vxx():
             Y.set_value(date, 'days_left', first.dr(date))
             Y.set_value(date, 'w1', w1)
             Y.set_value(date, 'w2', w2)
-
             Y.set_value(date, '30days_avg', (p1 * w1 + p2 * w2) / 100)
         except:
             pass
     
-    valCurr = (X * W.shift(1)).sum(axis=1) # value on day N
-    valYest = (X.shift(1) * W.shift(1)).sum(axis=1) # value on day N-1
-    Y['ret'] = valCurr / valYest - 1    # index return on day N
+    val_current = (X * W.shift(1)).sum(axis=1) # value on day N
+    val_yesterday = (X.shift(1) * W.shift(1)).sum(axis=1) # value on day N-1
+    Y['ret'] = val_current / val_yesterday - 1
 
     return Y
-
 
 def run_derivatives():
     Y = recounstruct_vxx()

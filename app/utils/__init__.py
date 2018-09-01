@@ -81,5 +81,6 @@ __ALL__ = [
     'intersection',
     'clean_storage',
     'collect_used_data',
-    'save_port'
+    'save_port',
+    'save_tradeable'
   ]

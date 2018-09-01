@@ -435,22 +435,22 @@ def get_end(returns):
     return returns.tail(1).index.strftime('%Y-%m-%d').values[0]
 
 def total_return(returns):
-    return returns.sum().values[0] * 100.0
+    return returns.sum() * 100.0
 
 def ytd(returns):
     this_y = datetime.now().year
     returns = returns.loc['{}-01-01'.format(this_y):]
-    return returns.sum().values[0] * 100.0
+    return returns.sum() * 100.0
 
 def mtd(returns):
     this_m = datetime.now().month
     this_y = datetime.now().year
     returns = returns.loc['{}-{}-01'.format(this_y, this_m):]
-    return returns.sum().values[0] * 100.0
+    return returns.sum() * 100.0
 
 def mos(returns, m):
     returns = returns.iloc[-(m*21):-1]
-    return returns.sum().values[0] * 100.0
+    return returns.sum() * 100.0
 
 def best_day(returns):
     return returns.max() * 100.00

@@ -3,9 +3,9 @@ from os.path import dirname, join
 
 from matplotlib import pyplot
 from clint.textui import colored
-from pandas import concat
+from pandas import concat, DataFrame
 
-from app.utils import save_port
+from app.utils import save_port, save_tradeable
 from app.utils.file_utils import filenames
 from app.data import get_pickle
 from app.stats import stats_printout
@@ -28,6 +28,10 @@ def generate_portfolios():
                 df = concat([i[0], i[1], i[2], market], axis=1)
                 df.columns = ['returns', 'adj_returns', 'comm', 'market']
 
+                tradeable = DataFrame([i[4][k] for k in i[4]], i[4].keys())
+                print(tradeable)
+
+                save_tradeable(i[4], i[3])
                 save_port(data=df, name=i[3])
 
                 if printout:

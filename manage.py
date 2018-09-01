@@ -29,7 +29,7 @@ from app.strategies import generate_strategies
 from app.utils import (easify_names, convert_to_parq, resample_all, resample_dukas_all, convert_mt_pickle,
     parq_to_csv_all, pickle_to_csv_all, ensure_correctness, clean_storage, collect_used_data, convert_mt_one)
 if PRIVATE:
-    from app.index import measures_helper, genesis
+    from app.index import measures_helper, genesis, get_current_weights
 
 
 parser = ArgumentParser(description="BlueBlood management point.")
@@ -47,6 +47,7 @@ parser.add_argument('--gen')
 parser.add_argument('--numerai')
 parser.add_argument('--watch')
 parser.add_argument('--mt_pickle')
+parser.add_argument('--symbols')
 args = parser.parse_args()
 
 def prepare():
@@ -55,9 +56,12 @@ def prepare():
             clean_storage()
             print(colored.yellow('Storage cleaned.'))
         collect_used_data()
-        print(colored.yellow('Watchers collected.'))
+        print(colored.yellow('Data collected.'))
         cboe_download()
         print(colored.yellow('CBOE data downloaded.'))
+        download_futures(last=True, forceDownload=True)
+        run_derivatives()
+        print(colored.yellow('CBOE futures downloaded.'))
         run_fred()
         print(colored.yellow('FRED data downloaded.'))
         run_quandl()
@@ -74,6 +78,16 @@ if __name__ == '__main__':
     if args.get:
         save_one(args.get)
 
+    if args.symbols:
+        if args.symbols == 'iex':
+            iex_symbols()
+
+        if args.symbols == 'eod':
+            eod_symbols()
+
+        if args.symbols == 'tiingo':
+            tii_symbols()
+
     if args.collect:
         if args.collect == 'cboe':
             cboe_download()
@@ -88,7 +102,7 @@ if __name__ == '__main__':
             download_eurex()
 
         if args.collect == 'futures':
-            download_futures()
+            download_futures(forceDownload=True)
             run_derivatives()
 
         if args.collect == 'fred':
@@ -99,11 +113,6 @@ if __name__ == '__main__':
 
         if args.collect == 'crypto':
             get_capitalization()
-
-        if args.collect == 'one_time':
-            #iex_symbols()
-            #eod_symbols()
-            tii_symbols()
 
         if args.collect == 'iex':
             run_iex()
@@ -132,6 +141,7 @@ if __name__ == '__main__':
         
         if args.gen == 'x':
             genesis()
+            get_current_weights()
             measures_helper()
 
     if args.play:

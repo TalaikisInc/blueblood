@@ -162,7 +162,7 @@ def compare(val, title, lim=None):
 def hline(signal, values, per):
     index = [i for i in signal.index]
 
-    end_idx = where(signal == 1, index, nan)
+    end_idx = where(signal != 0, index, nan)
     for e in end_idx:
         if type(e) != float:
             x = date_range(end=e, periods=per)
