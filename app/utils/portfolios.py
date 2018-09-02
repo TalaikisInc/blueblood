@@ -1,10 +1,12 @@
 from os.path import join
 from os import listdir
 
-from pandas import concat
+from pandas import concat, DataFrame
+from numpy import dot, sqrt, random, sum
 
 from app.data import get_pickle
 from .vars import STORAGE_PATH
+from .saves import save_weights
 
 
 def get_latest_allocs(name, symbols):
@@ -69,3 +71,46 @@ def portfolio_returns(data, adj_data, symbols, name, comms, min_var=False):
     assert round(w, 2) == 1.0, 'Allocations {}'.format(w)
     data['combined'].to_pickle(join(STORAGE_PATH, 'portfolios', 'weights', 'returns', '{}.p'.format(name)))
     adj_data['adj_combined'].to_pickle(join(STORAGE_PATH, 'portfolios', 'weights', 'adj_returns', '{}.p'.format(name)))
+
+def portfolio_generator(df, chunk_size, algo, com_df, symbols, name):
+    num_assets = len(symbols)
+    num_portfolios = 5000
+    random.seed(101)
+
+    for i in range(int(len(df.index)/chunk_size)):
+        data = df.iloc[i*chunk_size:(i+1)*chunk_size]
+        adj_future_data = adjdf.iloc[(i+1)*chunk_size:(i+2)*chunk_size]
+        future_data = df.iloc[(i+1)*chunk_size:(i+2)*chunk_size]
+        chunked_com = com_df.iloc[(i+1)*chunk_size:(i+2)*chunk_size]
+        returns = data.copy()
+        cov_daily = returns.cov()
+        cov_annual = cov_daily * sqrt(252)
+
+        port_returns = []
+        port_volatility = []
+        ratios = []
+        stock_weights = []
+
+        for portfolio in range(num_portfolios):
+            weights = random.random(num_assets)
+            weights /= sum(weights)
+            returns_dot = dot(weights, returns.mean() * sqrt(252))
+            volatility = sqrt(dot(weights.T, dot(cov_annual, weights)))
+            returns_for_stats = (weights.T * returns).sum(axis=1)
+            val = eval(algo[0])
+            ratios.append(val)
+            port_returns.append(returns_dot)
+            port_volatility.append(volatility)
+            stock_weights.append(weights)
+
+        portfolio = { 'Returns': port_returns, 'Volatility': port_volatility,'Ratio': ratios }
+
+        for counter, symbol in enumerate(all_symbols):
+            portfolio[symbol] = [weight[counter] for weight in stock_weights]
+
+        out = DataFrame(portfolio)
+        column_order = ['Returns', 'Volatility', 'Ratio'] + ['{}'.format(stock) for stock in all_symbols]
+        out = out[column_order]
+        out.sort_values('Ratio', axis=0, ascending=False, inplace=True)
+        save_weights(df=out, name='{}_{}'.format(name, i))
+        portfolio_returns(data=future_data.copy(), adj_data=adj_future_data.copy(), symbols=symbols, name='{}_{}'.format(name, i), comms=chunked_com)

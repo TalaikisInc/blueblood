@@ -86,5 +86,6 @@ __ALL__ = [
     'save_tradeable',
     'get_latest_allocs',
     'reconstruct_returns',
-    'portfolio_returns'
+    'portfolio_returns',
+    'portfolio_generator'
   ]
