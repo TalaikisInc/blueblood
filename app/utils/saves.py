@@ -27,5 +27,8 @@ def save_port(data, name):
     data.to_pickle(join(STORAGE_PATH, 'portfolios', '{}.p'.format(name)))
 
 def save_tradeable(data, name):
-    df = DataFrame([data[k] for k in data], data.keys())
-    df.to_pickle(join(STORAGE_PATH, 'portfolios', 'tradeable', '{}.p'.format(name)))
+    try:
+        data = DataFrame([data[k] for k in data], data.keys())
+        data.to_pickle(join(STORAGE_PATH, 'portfolios', 'tradeable', '{}.p'.format(name)))
+    except:
+        data['alloc'].to_pickle(join(STORAGE_PATH, 'portfolios', 'tradeable', '{}.p'.format(name)))

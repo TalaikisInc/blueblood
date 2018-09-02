@@ -213,6 +213,15 @@ def commissions(df, symbol, com=None):
     d['com'] += where((df['sig'] == -1) & (d['sig'].shift() == 1), d['c'], 0)
     return d['com'], (d['com'] / CONSTANT_CAPITAL), d['quantities']
 
+def short_costs(df, symbol, p):
+    df = df.dropna()
+    d = df.copy()
+    in_trade = sum(where((df['sig'] == -1) | (df['sig'] == 1), 1, 0))
+    total_cost = p * get_years_count(returns=d)
+    d['per_trade'] = total_cost / in_trade
+    d['com'] = where((df['sig'] == -1) | (df['sig'] == 1), d['per_trade'], 0)
+    return d['com']
+
 def percentiles(returns):
     p_list = [p for p in range(100)]
     res = []

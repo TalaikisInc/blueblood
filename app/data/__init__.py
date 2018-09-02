@@ -16,6 +16,7 @@ from .futures import *
 from .eurex import download_eurex
 from .simfin import process_fundamentals
 from .crypto import download_all_crypto
+from .asset_macro import *
 
 __ALL__ = [
     'PandasData',
@@ -62,5 +63,7 @@ __ALL__ = [
     'download_futures',
     'leave_returns',
     'process_fundamentals',
-    'download_all_crypto'
+    'download_all_crypto',
+    'get_am_vars',
+    'get_am_data'
 ]

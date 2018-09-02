@@ -14,7 +14,7 @@ sw = StopWatch()
 from app.db import migrate, create_migrations
 from app.data import (run_fred, eod_symbols, run_eod, run_tiingo, tii_symbols, tii_news, run_quandl, download_eurex,
     save_one, iex_symbols, run_iex, get_capitalization, run_fxcm, get_crypto_balances, download_numerai_dataset,
-    upload_predictions, cboe_download, download_futures, process_fundamentals, download_all_crypto)
+    upload_predictions, cboe_download, download_futures, process_fundamentals, download_all_crypto, get_am_vars)
 from app.playground import run_play
 from app.portfolio import generate_portfolios
 if PRIVATE:
@@ -48,6 +48,7 @@ parser.add_argument('--numerai')
 parser.add_argument('--watch')
 parser.add_argument('--mt_pickle')
 parser.add_argument('--symbols')
+parser.add_argument('--am')
 args = parser.parse_args()
 
 def prepare():
@@ -77,6 +78,9 @@ def prepare():
 if __name__ == '__main__':
     if args.get:
         save_one(args.get)
+    
+    if args.am:
+        get_am_vars()
 
     if args.symbols:
         if args.symbols == 'iex':

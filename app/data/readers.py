@@ -36,8 +36,8 @@ def leave_basic(folder, data):
 
 def get_pickle(folder, name, basic=True, resampler=False, as_is=False):
     df = read_pickle(join(STORAGE_PATH, folder, '{}.p'.format(name)))
-    df.index = to_datetime(df.index)
     if not as_is:
+        df.index = to_datetime(df.index)
         df = normalize(folder=folder, data=df)
         if basic:
             df = leave_basic(folder=folder, data=df)

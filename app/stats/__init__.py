@@ -68,5 +68,6 @@ __ALL__ = [
     'outlier_loss_ratio',
     'rolling_skew',
     'rolling_sharpe',
-    'plot_returns'
+    'plot_returns',
+    'short_costs'
 ]

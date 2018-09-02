@@ -27,10 +27,6 @@ def generate_portfolios():
 
                 df = concat([i[0], i[1], i[2], market], axis=1)
                 df.columns = ['returns', 'adj_returns', 'comm', 'market']
-
-                tradeable = DataFrame([i[4][k] for k in i[4]], i[4].keys())
-                print(tradeable)
-
                 save_tradeable(i[4], i[3])
                 save_port(data=df, name=i[3])
 
