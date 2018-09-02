@@ -12,6 +12,7 @@ from .breakout import breakout
 from .date_utils import *
 from .file_utils import *
 from .saves import *
+from .portfolios import *
 
 __ALL__ = [
     'train_test_split',
@@ -82,5 +83,8 @@ __ALL__ = [
     'clean_storage',
     'collect_used_data',
     'save_port',
-    'save_tradeable'
+    'save_tradeable',
+    'get_latest_allocs',
+    'reconstruct_returns',
+    'portfolio_returns'
   ]
