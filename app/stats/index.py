@@ -4,10 +4,9 @@ from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, 
     power, maximum, minimum, round, where, percentile, busday_count, unique)
 import scipy.stats as sc
 from pandas import to_datetime, DataFrame, Series, concat
-from matplotlib import pyplot as plt, cm
 
 from app.data import get_pickle
-from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM, FINRA_FEE, SEC_FEE, CONSTANT_CAPITAL, save_plot
+from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM, FINRA_FEE, SEC_FEE, CONSTANT_CAPITAL
 from app.db import Strategy, Stats
 
 

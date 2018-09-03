@@ -2,21 +2,22 @@ from os.path import dirname, join
 from collections import Counter
 from datetime import timedelta
 
-from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt, cm
 from mpl_finance import candlestick_ohlc
 from numpy import array, sort, unique, linspace, nan, where
 from statsmodels.api import qqplot
 from scipy.stats import t
 from sklearn.manifold import TSNE
-from seaborn import heatmap
+from seaborn import heatmap, despine
 import seaborn as sns
 sns.set_style('darkgrid')
 sns.set_palette(sns.color_palette('RdBu', n_colors=5))
 BLUE1, = sns.color_palette('muted', 1)
 from pandas import date_range
 
-from app.stats import percentiles, drawdowns
+from app.stats import percentiles, drawdowns, returns_by_day, returns_by_year
 from app.utils.vars import STORAGE_PATH
+from app.utils import save_plot
 from app.data import get_pickle
 
 
@@ -171,3 +172,49 @@ def hline(signal, values, per):
             plt.plot(x, y, color='r')
 
     return plt
+
+def save_yearly_returns(returns, folder):
+    plt.figure(figsize=(12,8))
+    ax = plt.gca()
+    despine()
+    ax.yaxis.grid(linestyle=':')
+    returns.plot(kind='bar')
+    ax.set_title('Yearly Returns, %', fontweight='bold')
+    ax.set_ylabel('%')
+    ax.set_xlabel('Year')
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+    ax.xaxis.grid(False)
+    save_plot(plt=plt, folder=folder, name='yearly_returns')
+
+def cumulate_returns(x):
+    return x.cumsum()[-1]
+
+def monthly_heatmap(returns, folder):
+    returns = returns.groupby([lambda x: x.year, lambda x: x.month]).apply(cumulate_returns)
+    returns = returns.to_frame().unstack()
+    returns = round(returns, 3)
+    returns.rename(columns={ 1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr',
+        5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug',
+        9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'},
+        inplace=True)
+    plt.figure(figsize=(12,8))
+    ax = plt.gca()
+    heatmap(returns, annot=True, fmt='0.2f', annot_kws={'size': 8}, alpha=1.0, center=0.0, cbar=False, cmap=cm.RdYlGn, ax=ax)
+    ax.set_title('Monthly Returns, %', fontweight='bold')
+    save_plot(plt=plt, folder=folder, name='monthly_returns')
+
+def rolling_yearly_returns(returns, folder):
+    yr = returns.rolling(window=252).mean()
+    plt.figure(figsize=(12,8))
+    ax = plt.gca()
+    yr.plot()
+    ax.axhline(0.0)
+    ax.set_title('Rolling Yearly Returns, %', fontweight='bold')
+    save_plot(plt=plt, folder=folder, name='rolling_yearly_returns')
+
+def plot_returns(returns, folder):
+    d = returns_by_day(returns=returns)
+    y = returns_by_year(returns=returns)
+    save_yearly_returns(returns=y, folder=folder)
+    monthly_heatmap(returns=d, folder=folder)
+    rolling_yearly_returns(returns=d, folder=folder)
