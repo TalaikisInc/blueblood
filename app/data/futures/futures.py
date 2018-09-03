@@ -5,28 +5,16 @@ from datetime import datetime, timedelta
 
 from clint.textui import colored
 from pandas import DataFrame, read_csv
-from pandas.tseries.offsets import Week
 from numpy import  nan
 
 from app.utils.vars import STORAGE_PATH
+from app.utils.date_utils import vx_expiry
 
 
 m_codes = ['F','G','H','J','K','M','N','Q','U','V','X','Z']
 codes = dict(list(zip(m_codes,list(range(1,len(m_codes)+1)))))
 SYMBOL = 'VX'
 DIR = join(STORAGE_PATH, 'futures', SYMBOL)
-
-def vx_expiry(year, month):
-    # @TODO add holidays and should be month here:
-    # # https://markets.cboe.com/us/futures/market_statistics/historical_data/
-    t = datetime(year, month, 1) + timedelta(days=30)
-    offset = Week(weekday=4)
-    if t.weekday() != 4:
-        t_new = t + 3 * offset
-    else:
-        t_new = t + 2 * offset
-    t_exp = t_new - timedelta(days=30)
-    return t_exp
 
 def save_data(year, month, path, forceDownload=False):
     ''' Get future from CBOE and save to file '''

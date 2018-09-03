@@ -87,5 +87,6 @@ __ALL__ = [
     'get_latest_allocs',
     'reconstruct_returns',
     'portfolio_returns',
-    'portfolio_generator'
+    'portfolio_generator',
+    'vx_expiry'
   ]

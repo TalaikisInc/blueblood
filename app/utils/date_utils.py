@@ -1,4 +1,7 @@
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
+from pandas.tseries.offsets import Week
 
 
 def ensure_latest(df):
@@ -13,3 +16,13 @@ def ensure_latest(df):
     else:
         acceptable = [ago2, yesterday, today]
     assert latest in acceptable, 'Data isn\'t latest! Expected any of %s, got %s' % (acceptable, latest)
+
+def vx_expiry(year, month):
+    t = datetime(year, month, 1) + relativedelta(months=1)
+    offset = Week(weekday=4)
+    if t.weekday() != 4:
+        t_new = t + 3 * offset
+    else:
+        t_new = t + 2 * offset
+    t_exp = t_new - timedelta(days=30)
+    return t_exp
