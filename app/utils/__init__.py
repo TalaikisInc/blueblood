@@ -88,5 +88,7 @@ __ALL__ = [
     'reconstruct_returns',
     'portfolio_returns',
     'portfolio_generator',
-    'vx_expiry'
+    'vx_expiry',
+    'reinvested',
+    'NamedDict'
   ]

@@ -144,9 +144,9 @@ if __name__ == '__main__':
             generate_strategies()
         
         if args.gen == 'x':
-            #genesis()
+            genesis()
             get_current_weights()
-            #measures_helper()
+            measures_helper()
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''

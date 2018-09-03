@@ -1,6 +1,6 @@
 from numpy import log, cumsum, log2, nonzero, sum, histogram2d, sqrt, polyfit, subtract, std, nan, inf
 from numpy.polynomial import Polynomial
-from pandas import DataFrame, Series
+from pandas import DataFrame, Series, cut
 from peewee import Field
 from sklearn.metrics import mutual_info_score, log_loss, mean_squared_error
 from statsmodels.api import OLS
@@ -166,3 +166,23 @@ def collect_used_data():
     for s in USED_DATA:
         print('Getting %s ' %s)
         save_one(s)
+
+class NamedDict(dict):
+    def __init__(self, *args, **kwargs):
+        try:
+            self._name = kwargs.pop('name')
+        except KeyError:
+            raise KeyError('A \'name\' keyword argument should be supplied!')
+        super(NamedDict, self).__init__(*args, **kwargs)
+
+    @classmethod
+    def fromkeys(cls, name, seq, value=None):
+        return cls(dict.fromkeys(seq, value), name=name)
+
+    @property
+    def name(self):
+        return self._name
+
+def reinvested(df, symbol):
+    start_vals = cut(df['sig'], bins=(0,1), labels=[1])
+

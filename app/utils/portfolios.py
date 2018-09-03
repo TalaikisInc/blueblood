@@ -7,6 +7,7 @@ from numpy import dot, sqrt, random, sum
 from app.data import get_pickle
 from .vars import STORAGE_PATH
 from .saves import save_weights
+from app.stats import *
 
 
 def get_latest_allocs(name, symbols):
@@ -105,11 +106,11 @@ def portfolio_generator(df, adj_df, chunk_size, algo, com_df, symbols, name):
 
         portfolio = { 'Returns': port_returns, 'Volatility': port_volatility,'Ratio': ratios }
 
-        for counter, symbol in enumerate(all_symbols):
+        for counter, symbol in enumerate(symbols):
             portfolio[symbol] = [weight[counter] for weight in stock_weights]
 
         out = DataFrame(portfolio)
-        column_order = ['Returns', 'Volatility', 'Ratio'] + ['{}'.format(stock) for stock in all_symbols]
+        column_order = ['Returns', 'Volatility', 'Ratio'] + ['{}'.format(stock) for stock in symbols]
         out = out[column_order]
         out.sort_values('Ratio', axis=0, ascending=False, inplace=True)
         save_weights(df=out, name='{}_{}'.format(name, i))

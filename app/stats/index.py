@@ -5,7 +5,6 @@ from numpy import (cov, std, array, matrix, abs, mean, empty, sort, empty, sum, 
 import scipy.stats as sc
 from pandas import to_datetime, DataFrame, Series, concat
 from matplotlib import pyplot as plt, cm
-from seaborn import despine, heatmap
 
 from app.data import get_pickle
 from app.utils import periodize_returns, comm, quantity, PER_SAHRE_COM, FINRA_FEE, SEC_FEE, CONSTANT_CAPITAL, save_plot
@@ -502,42 +501,6 @@ def returns_by_week(returns):
 
 def returns_by_day(returns):
     return returns * 100.0
-
-def save_yearly_returns(returns):
-    plt.figure(figsize=(12,8))
-    ax = plt.gca()
-    despine()
-    ax.yaxis.grid(linestyle=':')
-    returns.plot(kind='bar')
-    ax.set_title('Yearly Returns, %', fontweight='bold')
-    ax.set_ylabel('%')
-    ax.set_xlabel('Year')
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
-    ax.xaxis.grid(False)
-    save_plot(plt=plt, folder='index', name='yearly_returns')
-
-def cumulate_returns(x):
-    return x.cumsum()[-1]
-
-def monthly_heatmap(returns):
-    returns = returns.groupby([lambda x: x.year, lambda x: x.month]).apply(cumulate_returns)
-    returns = returns.to_frame().unstack()
-    returns = round(returns, 3)
-    returns.rename(columns={ 1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr',
-        5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug',
-        9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'},
-        inplace=True)
-    plt.figure(figsize=(12,8))
-    ax = plt.gca()
-    heatmap(returns, annot=True, fmt='0.12f', annot_kws={'size': 8}, alpha=1.0, center=0.0, cbar=False, cmap=cm.RdYlGn, ax=ax)
-    ax.set_title('Monthly Returns, %', fontweight='bold')
-    save_plot(plt=plt, folder='index', name='monthly_returns')
-
-def plot_returns(returns):
-    d = returns_by_day(returns=returns)
-    y = returns_by_year(returns=returns)
-    save_yearly_returns(returns=y)
-    monthly_heatmap(returns=d)
 
 def best_year(returns):
     return returns.resample('1Y').sum().max() * 100.0

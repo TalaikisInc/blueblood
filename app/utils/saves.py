@@ -14,11 +14,11 @@ def save_weights(df, name):
     df.to_pickle(join(STORAGE_PATH, 'portfolios', 'weights', '{}.p'.format(name)))
 
 def save_strategy(df, name):
-    #ensure_latest(df=df)
+    ensure_latest(df=df)
     df.to_pickle(join(STORAGE_PATH, 'strategies', '{}.p'.format(name)))
 
 def save_indicator(df, name):
-    #ensure_latest(df=df)
+    ensure_latest(df=df)
     df.to_pickle(join(STORAGE_PATH, 'indicators', '{}.p'.format(name)))
 
 def save_port(data, name):
