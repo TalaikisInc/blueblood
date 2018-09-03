@@ -72,14 +72,14 @@ def portfolio_returns(data, adj_data, symbols, name, comms, min_var=False):
     data['combined'].to_pickle(join(STORAGE_PATH, 'portfolios', 'weights', 'returns', '{}.p'.format(name)))
     adj_data['adj_combined'].to_pickle(join(STORAGE_PATH, 'portfolios', 'weights', 'adj_returns', '{}.p'.format(name)))
 
-def portfolio_generator(df, chunk_size, algo, com_df, symbols, name):
+def portfolio_generator(df, adj_df, chunk_size, algo, com_df, symbols, name):
     num_assets = len(symbols)
     num_portfolios = 5000
     random.seed(101)
 
     for i in range(int(len(df.index)/chunk_size)):
         data = df.iloc[i*chunk_size:(i+1)*chunk_size]
-        adj_future_data = adjdf.iloc[(i+1)*chunk_size:(i+2)*chunk_size]
+        adj_future_data = adj_df.iloc[(i+1)*chunk_size:(i+2)*chunk_size]
         future_data = df.iloc[(i+1)*chunk_size:(i+2)*chunk_size]
         chunked_com = com_df.iloc[(i+1)*chunk_size:(i+2)*chunk_size]
         returns = data.copy()
