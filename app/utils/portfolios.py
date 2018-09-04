@@ -13,13 +13,10 @@ from app.stats import *
 def get_latest_allocs(name, symbols):
     tot = len([f for f in listdir(join(STORAGE_PATH, 'portfolios', 'weights')) if (name in f) & (f != '.gitkeep')]) - 1
     weights = get_pickle(join('portfolios', 'weights'), '{}_{}'.format(name, tot), as_is=True)
-
-    ws = []
-    for i in range(len(weights.iloc[0].index)):
-        for s in symbols:
-            if s == weights.iloc[0].index[i]:
-                ws.append(weights.iloc[0].values[i])
-    return ws
+    del weights['Returns']
+    del weights['Volatility']
+    del weights['Ratio']
+    return weights.iloc[0].to_dict()
 
 def reconstruct_returns(name, symbols):
     fs = [f for f in listdir(join(STORAGE_PATH, 'portfolios', 'weights', 'returns')) if (name in f) & (f != '.gitkeep')]

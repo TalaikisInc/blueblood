@@ -1,4 +1,5 @@
-from os.path import join
+from os.path import join, isdir
+from os import makedirs
 
 from pandas import DataFrame
 
@@ -7,7 +8,10 @@ from .date_utils import ensure_latest
 
 
 def save_plot(plt, folder, name):
-    plt.savefig(join(STORAGE_PATH, 'images', folder, '{}.png'.format(name)))
+    path = join(STORAGE_PATH, 'images', folder)
+    if not isdir(path):
+        makedirs(path)
+    plt.savefig(join(path, '{}.png'.format(name)))
     plt.close()
 
 def save_weights(df, name):
@@ -27,8 +31,5 @@ def save_port(data, name):
     data.to_pickle(join(STORAGE_PATH, 'portfolios', '{}.p'.format(name)))
 
 def save_tradeable(data, name):
-    try:
-        data = DataFrame([data[k] for k in data], data.keys())
-        data.to_pickle(join(STORAGE_PATH, 'portfolios', 'tradeable', '{}.p'.format(name)))
-    except:
-        data['alloc'].to_pickle(join(STORAGE_PATH, 'portfolios', 'tradeable', '{}.p'.format(name)))
+    data = DataFrame(data)
+    data.to_pickle(join(STORAGE_PATH, 'portfolios', 'tradeable', '{}.p'.format(name)))

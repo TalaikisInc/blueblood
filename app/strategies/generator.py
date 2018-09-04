@@ -6,6 +6,7 @@ from clint.textui import colored
 from app.utils import save_strategy, save_tradeable
 from app.utils.file_utils import filenames
 from app.data import get_pickle
+from app.plot import plot_returns
 
 
 def generate_strategies():
@@ -19,6 +20,7 @@ def generate_strategies():
             for i in imported_module.main():
                 save_tradeable(i[2], i[1])
                 save_strategy(df=i[0].dropna(), name=i[1])
+                plot_returns(returns=i[0].dropna(), folder=join('strategies', i[1]))
                 print(colored.green('Saved %s' % i[1]))
         except Exception as err:
             print(colored.red(err))

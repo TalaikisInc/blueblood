@@ -15,41 +15,25 @@ sns.set_palette(sns.color_palette('RdBu', n_colors=5))
 BLUE1, = sns.color_palette('muted', 1)
 from pandas import date_range
 
-from app.stats import percentiles, drawdowns, returns_by_day, returns_by_year
+from app.stats import percentiles, drawdowns, returns_by_day, returns_by_year, rolling_sharpe
 from app.utils.vars import STORAGE_PATH
 from app.utils import save_plot
 from app.data import get_pickle
 
 
-def plot(data, title, comparison=[], save=False):
-    plt.style.use(['bmh'])
-    fig, ax = plt.subplots(1)
-    fig.suptitle(title, fontsize=16)
-    ax.set_xlabel('Time, t')
-    ax.set_ylabel(title)
-    ax.plot(data, lw=2, color='b')
-    if len(comparison) > 0:
-        for p in comparison:
-            ax.plot(p)
-    if save:
-        path = join(STORAGE_PATH, '{}.png'.format(title))
-        plt.savefig(path)
-    else:
-        plt.show()
-
-def drawdown(cumulative, title='', save=False):
+def drawdown(cumulative, folder, save=False):
     dd = drawdowns(cumulative=cumulative)
     plt.plot(dd, label='Drawdown', lw=3)
     plt.xlabel('Time, t')
     plt.ylabel('Value')
     plt.legend()
     if save:
-        path = join(STORAGE_PATH, '{}.png'.format(title))
+        path = join(STORAGE_PATH, folder, 'drawdowns.png')
         plt.savefig(path)
     else:
         plt.show()
 
-def drawdown_to_percentile(cumulative, title='', save=False):
+def drawdown_to_percentile(cumulative, folder, save=False):
     d = drawdowns(cumulative=cumulative).dropna()
     dd = d.loc[d != 0]
     if len(dd) > 100:
@@ -59,7 +43,7 @@ def drawdown_to_percentile(cumulative, title='', save=False):
         plt.xlabel('Drawdown')
         plt.ylabel('Probability')
         if save:
-            path = join(STORAGE_PATH, '{}.png'.format(title))
+            path = join(STORAGE_PATH, folder, 'drawdown_percentile.png')
             plt.savefig(path)
         else:
             plt.show()
@@ -212,9 +196,21 @@ def rolling_yearly_returns(returns, folder):
     ax.set_title('Rolling Yearly Returns, %', fontweight='bold')
     save_plot(plt=plt, folder=folder, name='rolling_yearly_returns')
 
+def rolling_sharpe_plot(returns):
+    rs = rolling_sharpe(returns=returns, rf=0.0, per=63)
+    plt.figure(figsize=(12,8))
+    ax = plt.gca()
+    rs.plot()
+    ax.axhline(0.0)
+    ax.set_title('Rolling Yearly Returns, %', fontweight='bold')
+    save_plot(plt=plt, folder=folder, name='rolling_yearly_returns')
+
 def plot_returns(returns, folder):
     d = returns_by_day(returns=returns)
     y = returns_by_year(returns=returns)
     save_yearly_returns(returns=y, folder=folder)
     monthly_heatmap(returns=d, folder=folder)
     rolling_yearly_returns(returns=d, folder=folder)
+    drawdown(cumulative=d.cumsum(), folder=folder, save=True)
+    rolling_sharpe_plot(returns=d)
+    drawdown_to_percentile(cumulative=d.cumsum(), folder=folder, save=True)
