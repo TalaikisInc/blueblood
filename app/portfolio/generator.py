@@ -9,7 +9,7 @@ from app.utils import save_port, save_tradeable
 from app.utils.file_utils import filenames
 from app.data import get_pickle
 from app.stats import stats_printout
-from app.plot import drawdown, drawdown_to_percentile
+from app.plot import drawdown, drawdown_to_percentile, plot_returns
 
 
 def generate_portfolios(check_latest=True):
@@ -23,10 +23,10 @@ def generate_portfolios(check_latest=True):
             imported_module = import_module(module_name, package='blueblood')
             for i in imported_module.main():
                 market = get_pickle('tiingo', 'SPY')['SPY_AdjClose'].pct_change()
-
+                ws = DataFrame(i[4])
                 df = concat([i[0], i[1], i[2], market], axis=1)
                 df.columns = ['returns', 'adj_returns', 'comm', 'market']
-                save_tradeable(i[4], i[3])
+                save_tradeable(ws, i[3])
                 save_port(data=df, name=i[3], check_latest=check_latest)
                 plot_returns(returns=df['adj_returns'].dropna(), folder=join('portfolios', i[3]))
 

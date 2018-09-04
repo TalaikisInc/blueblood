@@ -53,7 +53,6 @@ args = parser.parse_args()
 
 def prepare():
     with sw.timer('prepare'):
-        '''
         if WITH_CLEANER:
             clean_storage()
             print(colored.yellow('Storage cleaned.'))
@@ -68,7 +67,6 @@ def prepare():
         print(colored.yellow('FRED data downloaded.'))
         run_quandl(check_latest=CHECK_LATEST)
         print(colored.yellow('Quandl data downloaded.'))
-        '''
         generate_indicators(check_latest=CHECK_LATEST)
         print(colored.yellow('Indicators geerated.'))
         generate_portfolios(check_latest=CHECK_LATEST)
@@ -137,13 +135,13 @@ if __name__ == '__main__':
     
     if args.gen:
         if args.gen == 'i':
-            generate_indicators()
+            generate_indicators(check_latest=CHECK_LATEST)
 
         if args.gen == 'p':
-            generate_portfolios()
+            generate_portfolios(check_latest=CHECK_LATEST)
 
         if args.gen == 's':
-            generate_strategies()
+            generate_strategies(check_latest=CHECK_LATEST)
         
         if args.gen == 'x':
             genesis()

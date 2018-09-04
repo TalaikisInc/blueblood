@@ -16,7 +16,6 @@ BLUE1, = sns.color_palette('muted', 1)
 from pandas import date_range
 
 from app.stats import percentiles, drawdowns, returns_by_day, returns_by_year, rolling_sharpe
-from app.utils.vars import STORAGE_PATH
 from app.utils import save_plot
 from app.data import get_pickle
 
@@ -28,8 +27,7 @@ def drawdown(cumulative, folder, save=False):
     plt.ylabel('Value')
     plt.legend()
     if save:
-        path = join(STORAGE_PATH, folder, 'drawdowns.png')
-        plt.savefig(path)
+        save_plot(plt=plt, folder=folder, name='drawdowns.png')
     else:
         plt.show()
 
@@ -43,8 +41,7 @@ def drawdown_to_percentile(cumulative, folder, save=False):
         plt.xlabel('Drawdown')
         plt.ylabel('Probability')
         if save:
-            path = join(STORAGE_PATH, folder, 'drawdown_percentile.png')
-            plt.savefig(path)
+            save_plot(plt=plt, folder=folder, name='drawdown_percentile.png')
         else:
             plt.show()
 
@@ -95,11 +92,9 @@ def corr_heatmap(returns, name, save=False):
     ax = heatmap(returns.corr())
     name = name[0].upper() + name[1:].lower()
     title = '{} Heatmap'.format(name)
-    file_title = '{}_heatmap'.format(name.lower().replace(' ', '_'))
     plt.title(title)
     if save:
-        path = join(STORAGE_PATH, 'images', 'portfolios', '{}.png'.format(file_title))
-        plt.savefig(path)
+        save_plot(plt=plt, folder=folder, name='corr_heatmap.png')
     else:
         plt.show()
 
@@ -196,7 +191,7 @@ def rolling_yearly_returns(returns, folder):
     ax.set_title('Rolling Yearly Returns, %', fontweight='bold')
     save_plot(plt=plt, folder=folder, name='rolling_yearly_returns')
 
-def rolling_sharpe_plot(returns):
+def rolling_sharpe_plot(returns, folder):
     rs = rolling_sharpe(returns=returns, rf=0.0, per=63)
     plt.figure(figsize=(12,8))
     ax = plt.gca()
@@ -212,5 +207,5 @@ def plot_returns(returns, folder):
     monthly_heatmap(returns=d, folder=folder)
     rolling_yearly_returns(returns=d, folder=folder)
     drawdown(cumulative=d.cumsum(), folder=folder, save=True)
-    rolling_sharpe_plot(returns=d)
+    rolling_sharpe_plot(returns=d, folder=folder)
     drawdown_to_percentile(cumulative=d.cumsum(), folder=folder, save=True)
