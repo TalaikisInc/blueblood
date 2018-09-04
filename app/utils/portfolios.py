@@ -10,13 +10,13 @@ from .saves import save_weights
 from app.stats import *
 
 
-def get_latest_allocs(name, symbols):
+def get_latest_allocs(name):
     tot = len([f for f in listdir(join(STORAGE_PATH, 'portfolios', 'weights')) if (name in f) & (f != '.gitkeep')]) - 1
     weights = get_pickle(join('portfolios', 'weights'), '{}_{}'.format(name, tot), as_is=True)
     del weights['Returns']
     del weights['Volatility']
     del weights['Ratio']
-    return weights.iloc[0].to_dict()
+    return [weights.iloc[0].to_dict()]
 
 def reconstruct_returns(name, symbols):
     fs = [f for f in listdir(join(STORAGE_PATH, 'portfolios', 'weights', 'returns')) if (name in f) & (f != '.gitkeep')]
@@ -33,8 +33,7 @@ def reconstruct_returns(name, symbols):
         adjdfs.append(d)
     df = concat(dfs, axis=1).sum(axis=1)
     adjdf = concat(adjdfs, axis=1).sum(axis=1)
-    last_allocs = { 'sym': symbols, 'alloc': get_latest_allocs(name=name, symbols=symbols) }
-    return df, adjdf, last_allocs
+    return df, adjdf, get_latest_allocs(name=name)
 
 # @TODO:
 def plot_portfolios(df):

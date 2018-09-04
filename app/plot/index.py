@@ -94,7 +94,7 @@ def corr_heatmap(returns, name, save=False):
     title = '{} Heatmap'.format(name)
     plt.title(title)
     if save:
-        save_plot(plt=plt, folder=folder, name='corr_heatmap.png')
+        save_plot(plt=plt, folder='index', name=name)
     else:
         plt.show()
 

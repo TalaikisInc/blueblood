@@ -8,9 +8,10 @@ from app.utils import save_strategy, save_tradeable
 from app.utils.file_utils import filenames
 from app.data import get_pickle
 from app.plot import plot_returns
+from app.stats import stats_printout
 
 
-def generate_strategies(check_latest=True):
+def generate_strategies(check_latest=True, printout=False):
     fs = filenames(join(dirname(__file__), '_implementations'))
 
     for f in fs:
@@ -23,6 +24,8 @@ def generate_strategies(check_latest=True):
                 save_tradeable(ws, i[1])
                 save_strategy(df=i[0].dropna(), name=i[1], check_latest=check_latest)
                 plot_returns(returns=i[0].dropna(), folder=join('strategies', i[1]))
+                if printout:
+                    stats_printout(returns=i[0])
                 print(colored.green('Saved %s' % i[1]))
         except Exception as err:
             print(colored.red(err))
