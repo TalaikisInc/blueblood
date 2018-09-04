@@ -90,5 +90,6 @@ __ALL__ = [
     'portfolio_generator',
     'vx_expiry',
     'reinvested',
-    'NamedDict'
+    'NamedDict',
+    'get_current_weights'
   ]

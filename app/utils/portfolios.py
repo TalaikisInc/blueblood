@@ -8,6 +8,7 @@ from app.data import get_pickle
 from .vars import STORAGE_PATH
 from .saves import save_weights
 from app.stats import *
+from .file_utils import filenames
 
 
 def get_latest_allocs(name):
@@ -111,3 +112,37 @@ def portfolio_generator(df, adj_df, chunk_size, algo, com_df, symbols, name):
         out.sort_values('Ratio', axis=0, ascending=False, inplace=True)
         save_weights(df=out, name='{}_{}'.format(name, i))
         portfolio_returns(data=future_data.copy(), adj_data=adj_future_data.copy(), symbols=symbols, name='{}_{}'.format(name, i), comms=chunked_com)
+
+def get_current_weights(SELECTED_PORTFOLIOS, SELECTED_STRATEGIES):
+    path = join('portfolios', 'tradeable')
+    fs = filenames(path, resampled=True)
+    fs += filenames(path, resampled=False)
+    selected = SELECTED_PORTFOLIOS + SELECTED_STRATEGIES
+    selected_lst = [s['name'] for s in SELECTED_PORTFOLIOS] + [s['name'] for s in SELECTED_STRATEGIES]
+
+    res = []
+    total_weights = []
+    for f in fs:
+        name = f.split('.')[0]
+        if name in selected_lst:
+            d = get_pickle(path, name, as_is=True)
+            for s in selected:
+                if s['name'] == name:
+                    if s['type'] == 'cash':
+                        arr = d * s['weight']
+                    elif s['type'] == 'ports':
+                        arr = d * s['weight'] / len([s['name'] for s in SELECTED_PORTFOLIOS if s['type'] == 'ports'])
+                    elif s['type'] == 'strats':
+                        arr = d * s['weight'] / len([s['name'] for s in SELECTED_STRATEGIES if s['type'] == 'strats'])
+                    res.append(arr.T)
+                    total_weights += list(arr.values[0])
+
+    out = concat(res, axis=0)
+    out.columns = ['W']
+    out = out.groupby(out.index).sum()
+    assert round(sum(total_weights), 2) == 1.0, 'Total index weights are not equal 100%!'
+    print('% Weights')
+    print(out)
+    print('$ Weights')
+    print(round(out * 100000, 2)) # Use defined capital if not via Trader API
+    # @TODO count in shares

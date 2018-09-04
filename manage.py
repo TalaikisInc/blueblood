@@ -29,7 +29,7 @@ from app.strategies import generate_strategies
 from app.utils import (easify_names, convert_to_parq, resample_all, resample_dukas_all, convert_mt_pickle,
     parq_to_csv_all, pickle_to_csv_all, ensure_correctness, clean_storage, collect_used_data, convert_mt_one)
 if PRIVATE:
-    from app.index import measures_helper, genesis, get_current_weights
+    from app.index import genesis, run_indexes
 
 
 parser = ArgumentParser(description="BlueBlood management point.")
@@ -145,8 +145,7 @@ if __name__ == '__main__':
         
         if args.gen == 'x':
             genesis()
-            get_current_weights()
-            measures_helper()
+            run_indexes()
 
     if args.play:
         ''' Various experimental functions to pay before deployment. '''
