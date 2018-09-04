@@ -8,11 +8,12 @@ ApiConfig.api_key = getenv('QUANDL_KEY')
 from app.utils.date_utils import ensure_latest
 
 
-def run_quandl():
+def run_quandl(check_latest=True):
     for s in QUANDL_SYMBOLS:
         data = get(s[0])
         name = s[0].replace('/', '_')
-        if s[2]:
-            ensure_latest(df=data)
+        if check_latest:
+            if s[2]:
+                ensure_latest(df=data)
         to_pickle(data, 'futures', name)
         print(colored.green(name))

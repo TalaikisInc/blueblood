@@ -1,6 +1,6 @@
 WITH_CLEANER = False
 PRIVATE = True # Set for False for demo purposes
-
+CHECK_LATEST = False
 
 from argparse import ArgumentParser
 from os.path import join, dirname, abspath
@@ -53,25 +53,27 @@ args = parser.parse_args()
 
 def prepare():
     with sw.timer('prepare'):
+        '''
         if WITH_CLEANER:
             clean_storage()
             print(colored.yellow('Storage cleaned.'))
         collect_used_data()
         print(colored.yellow('Data collected.'))
-        cboe_download()
+        cboe_download(check_latest=CHECK_LATEST)
         print(colored.yellow('CBOE data downloaded.'))
         download_futures(last=True, forceDownload=True)
         run_derivatives()
         print(colored.yellow('CBOE futures downloaded.'))
         run_fred()
         print(colored.yellow('FRED data downloaded.'))
-        run_quandl()
+        run_quandl(check_latest=CHECK_LATEST)
         print(colored.yellow('Quandl data downloaded.'))
-        generate_indicators()
+        '''
+        generate_indicators(check_latest=CHECK_LATEST)
         print(colored.yellow('Indicators geerated.'))
-        generate_portfolios()
+        generate_portfolios(check_latest=CHECK_LATEST)
         print(colored.yellow('Portfolios geerated.'))
-        generate_strategies()
+        generate_strategies(check_latest=CHECK_LATEST)
         print(colored.yellow('Strategies geerated.'))
     print(format_report(sw.get_last_aggregated_report()))
 
