@@ -499,7 +499,7 @@ def returns_by_week(returns):
     return returns.resample('1W').sum() * 100.0
 
 def returns_by_day(returns):
-    return returns * 100.0
+    return returns
 
 def best_year(returns):
     return returns.resample('1Y').sum().max() * 100.0

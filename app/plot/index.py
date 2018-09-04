@@ -159,7 +159,7 @@ def save_yearly_returns(returns, folder):
     ax.yaxis.grid(linestyle=':')
     returns.plot(kind='bar')
     ax.set_title('Yearly Returns, %', fontweight='bold')
-    ax.set_ylabel('%')
+    ax.set_ylabel('*100%')
     ax.set_xlabel('Year')
     ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
     ax.xaxis.grid(False)
@@ -183,11 +183,13 @@ def monthly_heatmap(returns, folder):
     save_plot(plt=plt, folder=folder, name='monthly_returns')
 
 def rolling_yearly_returns(returns, folder):
-    yr = returns.rolling(window=252).mean()
+    yr = returns.rolling(window=252).mean() * 252
     plt.figure(figsize=(12,8))
     ax = plt.gca()
     yr.plot()
     ax.axhline(0.0)
+    ax.set_ylabel('*100%')
+    ax.set_xlabel('Time')
     ax.set_title('Rolling Yearly Returns, %', fontweight='bold')
     save_plot(plt=plt, folder=folder, name='rolling_yearly_returns')
 
@@ -197,8 +199,20 @@ def rolling_sharpe_plot(returns, folder):
     ax = plt.gca()
     rs.plot()
     ax.axhline(0.0)
-    ax.set_title('Rolling Yearly Returns, %', fontweight='bold')
-    save_plot(plt=plt, folder=folder, name='rolling_yearly_returns')
+    ax.set_ylabel('Sharpe Ratio')
+    ax.set_xlabel('Time')
+    ax.set_title('Rolling Sharpe', fontweight='bold')
+    save_plot(plt=plt, folder=folder, name='rolling_sharpe_ratio')
+
+def simple_plot(returns, folder):
+    plt.figure(figsize=(12,8))
+    ax = plt.gca()
+    returns.cumsum().plot()
+    ax.set_ylabel('*100%')
+    ax.set_xlabel('Time')
+    ax.set_title('Cumulative Returns, %', fontweight='bold')
+    ax.axhline(0.0)
+    save_plot(plt=plt, folder=folder, name='returns_cumsum')
 
 def plot_returns(returns, folder):
     d = returns_by_day(returns=returns)
@@ -209,3 +223,4 @@ def plot_returns(returns, folder):
     drawdown(cumulative=d.cumsum(), folder=folder, save=True)
     rolling_sharpe_plot(returns=d, folder=folder)
     drawdown_to_percentile(cumulative=d.cumsum(), folder=folder, save=True)
+    simple_plot(returns=d, folder=folder)
