@@ -1,6 +1,6 @@
 WITH_CLEANER = False
 PRIVATE = True # Set for False for demo purposes
-CHECK_LATEST = False
+CHECK_LATEST = True
 
 from argparse import ArgumentParser
 from os.path import join, dirname, abspath

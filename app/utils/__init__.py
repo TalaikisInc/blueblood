@@ -91,5 +91,6 @@ __ALL__ = [
     'vx_expiry',
     'reinvested',
     'NamedDict',
-    'get_current_weights'
+    'get_current_weights',
+    'latest_date_foreeach'
   ]

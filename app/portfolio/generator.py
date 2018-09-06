@@ -5,7 +5,7 @@ from matplotlib import pyplot
 from clint.textui import colored
 from pandas import concat, DataFrame
 
-from app.utils import save_port, save_tradeable
+from app.utils import save_port, save_tradeable, latest_date_foreeach
 from app.utils.file_utils import filenames
 from app.data import get_pickle
 from app.stats import stats_printout
@@ -22,6 +22,7 @@ def generate_portfolios(check_latest=True, printout=False):
             imported_module = import_module(module_name, package='blueblood')
             for i in imported_module.main():
                 ws = DataFrame(i[4])
+                latest_date_foreeach(symbols=list(i[4][0].keys()))
                 df = concat([i[0], i[1], i[2]], axis=1)
                 df.columns = ['returns', 'adj_returns', 'comm']
                 save_tradeable(ws, i[3])

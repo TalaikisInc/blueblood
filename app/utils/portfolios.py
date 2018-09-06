@@ -1,6 +1,7 @@
 from os.path import join
 from os import listdir
 
+from clint.textui import colored
 from pandas import concat, DataFrame
 from numpy import dot, sqrt, random, sum
 
@@ -9,6 +10,7 @@ from .vars import STORAGE_PATH
 from .saves import save_weights
 from app.stats import *
 from .file_utils import filenames
+from .date_utils import ensure_latest
 
 
 def get_latest_allocs(name):
@@ -118,13 +120,13 @@ def get_current_weights(SELECTED_PORTFOLIOS, SELECTED_STRATEGIES):
     fs = filenames(path, resampled=True)
     fs += filenames(path, resampled=False)
     selected = SELECTED_PORTFOLIOS + SELECTED_STRATEGIES
-    selected_lst = [s['name'] for s in SELECTED_PORTFOLIOS] + [s['name'] for s in SELECTED_STRATEGIES]
+    SELECTED_LST = [s['name'] for s in SELECTED_PORTFOLIOS] + [s['name'] for s in SELECTED_STRATEGIES]
 
     res = []
     total_weights = []
     for f in fs:
         name = f.split('.')[0]
-        if name in selected_lst:
+        if name in SELECTED_LST:
             d = get_pickle(path, name, as_is=True)
             for s in selected:
                 if s['name'] == name:
@@ -146,3 +148,11 @@ def get_current_weights(SELECTED_PORTFOLIOS, SELECTED_STRATEGIES):
     print('$ Weights')
     print(round(out * 100000, 2)) # Use defined capital if not via Trader API
     # @TODO count in shares
+
+def latest_date_foreeach(symbols):
+    for s in symbols:
+        try:
+            d = get_pickle('tiingo', s)
+            ensure_latest(d, symbol=s)
+        except Exception as err:
+            print(colored.red('{}: {}'.format(s, err)))
