@@ -21,7 +21,7 @@ def generate_strategies(check_latest=True, printout=False):
             imported_module = import_module(module_name, package='blueblood')
             for i in imported_module.main():
                 ws = DataFrame(i[2])
-                latest_date_foreeach(symbols=list(i[4][0].keys()))
+                latest_date_foreeach(symbols=list(i[2][0].keys()))
                 save_tradeable(ws, i[1])
                 save_strategy(df=i[0].dropna(), name=i[1], check_latest=check_latest)
                 plot_returns(returns=i[0].dropna(), folder=join('strategies', i[1]))
