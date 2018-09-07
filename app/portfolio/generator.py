@@ -12,7 +12,7 @@ from app.stats import stats_printout
 from app.plot import drawdown, drawdown_to_percentile, plot_returns
 
 
-def generate_portfolios(check_latest=True, printout=False):
+def generate_portfolios():
     fs = filenames(join(dirname(__file__), '_implementations'))
 
     for f in fs:
@@ -26,7 +26,7 @@ def generate_portfolios(check_latest=True, printout=False):
                 df = concat([i[0], i[1], i[2]], axis=1)
                 df.columns = ['returns', 'adj_returns', 'comm']
                 save_tradeable(ws, i[3])
-                save_port(data=df, name=i[3], check_latest=check_latest)
+                save_port(data=df, name=i[3], check_latest=i[5])
                 plot_returns(returns=df['adj_returns'].dropna(), folder=join('portfolios', i[3]))
 
                 if printout:

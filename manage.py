@@ -69,7 +69,7 @@ def prepare():
         print(colored.yellow('Quandl data downloaded.'))
         generate_indicators()
         print(colored.yellow('Indicators geerated.'))
-        generate_portfolios(check_latest=CHECK_LATEST)
+        generate_portfolios()
         print(colored.yellow('Portfolios geerated.'))
         generate_strategies(check_latest=CHECK_LATEST)
         print(colored.yellow('Strategies geerated.'))
@@ -138,7 +138,7 @@ if __name__ == '__main__':
             generate_indicators()
 
         if args.gen == 'p':
-            generate_portfolios(check_latest=CHECK_LATEST)
+            generate_portfolios()
 
         if args.gen == 's':
             generate_strategies(check_latest=CHECK_LATEST)
