@@ -67,7 +67,7 @@ def prepare():
         print(colored.yellow('FRED data downloaded.'))
         run_quandl(check_latest=CHECK_LATEST)
         print(colored.yellow('Quandl data downloaded.'))
-        generate_indicators(check_latest=CHECK_LATEST)
+        generate_indicators()
         print(colored.yellow('Indicators geerated.'))
         generate_portfolios(check_latest=CHECK_LATEST)
         print(colored.yellow('Portfolios geerated.'))
@@ -135,7 +135,7 @@ if __name__ == '__main__':
     
     if args.gen:
         if args.gen == 'i':
-            generate_indicators(check_latest=CHECK_LATEST)
+            generate_indicators()
 
         if args.gen == 'p':
             generate_portfolios(check_latest=CHECK_LATEST)
