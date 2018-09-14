@@ -81,7 +81,6 @@ def download_futures(last=False, forceDownload=False):
         r = range(ty-1, ty)
     else:
         r = range(2005, ty)
-    print(r)
 
     for year in r:
         for month in range(12):

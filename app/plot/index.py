@@ -157,9 +157,11 @@ def save_yearly_returns(returns, folder):
     ax = plt.gca()
     despine()
     ax.yaxis.grid(linestyle=':')
-    returns.plot(kind='bar')
+    returns.index = returns.index.strftime('%Y')
+    plt.bar(x=returns.index, height=returns.values)
     ax.set_title('Yearly Returns, %', fontweight='bold')
-    ax.set_ylabel('*100%')
+    ax.set_ylabel('%')
+    plt.xticks(range(len(returns.index)), tuple(returns.index))
     ax.set_xlabel('Year')
     ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
     ax.xaxis.grid(False)
@@ -170,6 +172,7 @@ def cumulate_returns(x):
 
 def monthly_heatmap(returns, folder):
     returns = returns.groupby([lambda x: x.year, lambda x: x.month]).apply(cumulate_returns)
+    print(returns)
     returns = returns.to_frame().unstack()
     returns = round(returns, 3)
     returns.rename(columns={ 1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr',
