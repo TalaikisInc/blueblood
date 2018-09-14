@@ -172,7 +172,6 @@ def cumulate_returns(x):
 
 def monthly_heatmap(returns, folder):
     returns = returns.groupby([lambda x: x.year, lambda x: x.month]).apply(cumulate_returns)
-    print(returns)
     returns = returns.to_frame().unstack()
     returns = round(returns, 3)
     returns.rename(columns={ 1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr',
@@ -181,7 +180,7 @@ def monthly_heatmap(returns, folder):
         inplace=True)
     plt.figure(figsize=(12,8))
     ax = plt.gca()
-    heatmap(returns, annot=True, fmt='0.2f', annot_kws={'size': 8}, alpha=1.0, center=0.0, cbar=False, cmap=cm.RdYlGn, ax=ax)
+    heatmap(returns*100.0, xticklabels=[i[1] for i in list(returns.columns)], annot=True, fmt='0.2f', annot_kws={'size': 8}, alpha=1.0, center=0.0, cbar=False, cmap=cm.RdYlGn, ax=ax)
     ax.set_title('Monthly Returns, %', fontweight='bold')
     save_plot(plt=plt, folder=folder, name='monthly_returns')
 
