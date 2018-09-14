@@ -22,9 +22,9 @@ from app.data import get_pickle
 
 def drawdown(cumulative, folder, save=False):
     dd = drawdowns(cumulative=cumulative)
-    plt.plot(dd, label='Drawdown', lw=3)
+    plt.plot(dd*100.0, label='Drawdown', lw=3)
     plt.xlabel('Time, t')
-    plt.ylabel('Value')
+    plt.ylabel('Value, %')
     plt.legend()
     if save:
         save_plot(plt=plt, folder=folder, name='drawdowns.png')
@@ -38,7 +38,7 @@ def drawdown_to_percentile(cumulative, folder, save=False):
         x = percentiles(dd)
         y = array([i for i in range(100)])
         plt.plot(x, y/100)
-        plt.xlabel('Drawdown')
+        plt.xlabel('Drawdown, *100%')
         plt.ylabel('Probability')
         if save:
             save_plot(plt=plt, folder=folder, name='drawdown_percentile.png')
@@ -185,12 +185,12 @@ def monthly_heatmap(returns, folder):
     save_plot(plt=plt, folder=folder, name='monthly_returns')
 
 def rolling_yearly_returns(returns, folder):
-    yr = returns.rolling(window=252).mean() * 252
+    yr = returns.rolling(window=252).mean() * 252 * 100.0
     plt.figure(figsize=(12,8))
     ax = plt.gca()
     yr.plot()
     ax.axhline(0.0)
-    ax.set_ylabel('*100%')
+    ax.set_ylabel('%')
     ax.set_xlabel('Time')
     ax.set_title('Rolling Yearly Returns, %', fontweight='bold')
     save_plot(plt=plt, folder=folder, name='rolling_yearly_returns')
@@ -209,8 +209,9 @@ def rolling_sharpe_plot(returns, folder):
 def simple_plot(returns, folder):
     plt.figure(figsize=(12,8))
     ax = plt.gca()
+    returns = returns * 100.0
     returns.cumsum().plot()
-    ax.set_ylabel('*100%')
+    ax.set_ylabel('%')
     ax.set_xlabel('Time')
     ax.set_title('Cumulative Returns, %', fontweight='bold')
     ax.axhline(0.0)
