@@ -1,16 +1,18 @@
 <p align="center">
-  <a href="https://blueblood.ltd/">
+  <a href="https://blueblood.talaikis.com/">
     <img alt="Bkue Blood" src="https://github.com/BlueBloodLtd/blueblood.ltd/blob/master/media/logo.png" width="685">
   </a>
 </p>
 
 # Blue Blood Engine
 
+![Structure (not fully implemented)](https://github.com/TalaikisInc/blueblood/blob/master/media/s-index.png)
+
 Blue Blood Engine is a set of trading and analysis related tools and other software.
 
 ## Predecessor
 
-This project is the child, not compatible next generation of the [Quantrade](https://github.com/quant-trade/Quantrade) project.
+This project is the child, not compatible next generation of the [Quantrade](https://github.com/TalaikisInc/Quantrade) project.
 
 ## Install
 

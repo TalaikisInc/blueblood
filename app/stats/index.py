@@ -552,7 +552,7 @@ def stats_printout(returns, tf=1440):
     end = get_end(returns=returns)
     print('End: %s' % end)
     ys = get_years_count(returns=returns)
-    print('years: %.0f' % ys)
+    print('Years: %.0f' % ys)
     tret = total_return(returns=returns)
     print('Total return: %.2f%%' % tret)
     # @TODO initial valeus should be already reinvested
